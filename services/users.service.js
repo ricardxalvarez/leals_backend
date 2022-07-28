@@ -13,27 +13,23 @@ export async function checkUser(data) {
   }
   if (!user) {
     if (referrer) {
-      if (referrer.id_progenitor) {
-        return {
-          user: {
-            id: user?.id, nombre_usuario: user?.nombre_usuario, email: user?.email, is_email_verified: user?.is_email_verified
-          }, referrer: {
-            id: referrer.id, sponsor: referrer.id_sponsor, progenitor: referrer.id_progenitor
-          }
-        };
-      } else return {
+      return {
         user: {
           id: user?.id, nombre_usuario: user?.nombre_usuario, email: user?.email, is_email_verified: user?.is_email_verified
         }, referrer: {
-          id: referrer.id, sponsor: referrer.id, progenitor: referrer.id
+          id: referrer.id, sponsor: referrer.id_sponsor, progenitor: referrer.id_progenitor
         }
       };
-    } else return {
-      user: {
-        id: user?.id, nombre_usuario: user?.nombre_usuario, email: user?.email, is_email_verified: user?.is_email_verified
-      }, referrer: { id: null, progenitor: null }
-    };
-  } else return
+    } else return { status: false, content: "you've entered a false username" };
+  } else return { status: false, content: "this user already exists" };
+}
+
+export async function checkUserExists(data) {
+  let user = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1)',
+    [data.username])).rows[0];
+  if (user) {
+    return user
+  } else return { status: false, content: "User does not exist" }
 }
 export async function addCuenta(data) {
   let name = data.fullname.toUpperCase();

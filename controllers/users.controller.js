@@ -23,6 +23,9 @@ export function postSignup(req, res, next) {
     .checkUser(values)
     .then(data => {
       let results
+      if (!data.status) {
+        return res.send(data)
+      }
       if (data.referrer.id === data.referrer.progenitor && !data.referrer.progenitor) {
         results = {
           ...values,
@@ -392,8 +395,11 @@ export function recoveryPassword(req, res) {
 
 export async function sendVerificationEmail(req, res, next) {
   const user = req.user
-  userService.checkUser(user.nombre_usuario)
+  userService.checkUserExists(user.nombre_usuario)
     .then(async usuario => {
+      if (!usuario.status) {
+        return res.send(usuario)
+      }
       if (!usuario.user.is_email_verified) {
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)

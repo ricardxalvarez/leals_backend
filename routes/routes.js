@@ -2,7 +2,7 @@ import express from 'express'
 import { referralsController, usersController } from '../controllers/index.js';
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
-import countries from '../middlewares/contries.js';
+import countries from '../middlewares/countries.js';
 import upload from '../middlewares/upload.js';
 import validate from '../middlewares/validate.js';
 import { referralsValidation, userValidation } from '../validations/index.js'
@@ -29,6 +29,7 @@ router.put('/users/paymentmethod', validate(userValidation.paymentMethods), auth
 
 router.get('/countries', countriesController.retrieveCountry)
 router.get('/countries/:currency', countriesController.currencyControl)
+router.get('/contry/dial', countriesController.getCurrencyWithDial)
 
 // Referrals
 router.get('/referrals/children', validate(referralsValidation.getReferralChildren), authPswd1, referralsController.getReferralChildren)

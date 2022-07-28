@@ -1,12 +1,12 @@
 import conexion from '../database/conexion.js'
 
 export async function searchReferral(text, id_sponsor) {
-  const users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor FROM usuarios WHERE (id=($1) OR id_progenitor=($1)) AND nombre_usuario LIKE $2", [id_sponsor, `%${text}%`])).rows
+  const users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE (id=($1) OR id_progenitor=($1)) AND nombre_usuario LIKE $2", [id_sponsor, `%${text}%`])).rows
   return users
 }
 
 export async function referralChildren({ iduser, level }) {
-  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor FROM usuarios WHERE id_progenitor=($1) OR id=($1)", [iduser])).rows
+  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE id_progenitor=($1) OR id=($1)", [iduser])).rows
   function Node(user) {
     this.user = user,
       this.children = [];

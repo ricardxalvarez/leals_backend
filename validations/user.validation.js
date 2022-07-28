@@ -6,7 +6,7 @@ export const register = {
         idcountry: joi.string().id().min(2).max(2),
         username: joi.string().required(),
         password1: joi.string().trim().required(),
-        referralusername: joi.string().id().optional()
+        referralusername: joi.string().id().required()
     })
 }
 
@@ -76,6 +76,6 @@ export const paymentMethods = {
     body: joi.object().keys({
         usd_direction: joi.string().required(),
         leal_direction: joi.string().required(),
-        payment_methods: joi.array().max(3).optional()
+        payment_methods: joi.array().optional()
     })
 }
