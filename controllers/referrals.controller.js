@@ -1,5 +1,5 @@
 import { referralsService } from "../services/index.js"
-export async function getReferralChildren(req, res, next) {
+export async function getReferralChildren(req, res) {
     const iduser = req.user.id_progenitor || req.user.id
     const level = parseInt(req.query.level)
     referralsService.referralChildren({ iduser: iduser, level })
