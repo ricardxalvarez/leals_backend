@@ -68,6 +68,7 @@ export async function referralChildren({ iduser, level }) {
 
   let tree = new Tree()
   let results = []
+  let lastLevel
   for (const object of users) {
     if (object.id_sponsor) {
       tree.add(object, object.id_sponsor)
@@ -76,8 +77,9 @@ export async function referralChildren({ iduser, level }) {
   tree.traverseBFS((node) => {
     results.push(node)
   })
+  lastLevel = results[results.length - 1].user.level
   if (level) {
     results = results.filter(object => object.user.level === level)
   } else results = results[0]
-  return results
+  return { results, last_level: lastLevel }
 }

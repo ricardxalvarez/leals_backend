@@ -20,7 +20,7 @@ export async function checkUser(data) {
           id: referrer.id, sponsor: referrer.id_sponsor, progenitor: referrer.id_progenitor
         }
       };
-    } else return { status: false, content: "you've entered a false username" };
+    } else return { status: false, content: "you've entered a not valid username" };
   } else return { status: false, content: "this user already exists" };
 }
 

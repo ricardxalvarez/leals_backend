@@ -23,10 +23,10 @@ export function postSignup(req, res, next) {
     .checkUser(values)
     .then(data => {
       let results
-      if (!data.status) {
+      if (data.user?.id) {
         return res.send(data)
       }
-      if (data.referrer.id === data.referrer.progenitor && !data.referrer.progenitor) {
+      if (!data.referrer.progenitor) {
         results = {
           ...values,
           referralid: data.referrer.id,
