@@ -295,13 +295,13 @@ export function updatePassword2(req, res) {
   userService.updateUserPassword2(values)
     .then(user => {
       if (user.rowCount > 0) {
-        result = {
+        let result = {
           status: true,
           content: "Password successfully updated"
         }
         res.status(200).json(result)
       } else {
-        result = {
+        let result = {
           status: false,
           content: "User does not exist"
         }
@@ -310,7 +310,7 @@ export function updatePassword2(req, res) {
     })
     .catch(err => {
       console.log(err)
-      result = {
+      let result = {
         content: "Password Update Error"
       }
       res.status(500).json(result)
