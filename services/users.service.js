@@ -62,25 +62,25 @@ export async function listUsers() {
 }
 
 export async function searchUser(iduser) {
-  var user = await conexion.query("SELECT * FROM usuarios WHERE id_usuario = ($1)",
+  var user = await conexion.query("SELECT * FROM usuarios WHERE id=($1)",
     [iduser]);
   return user;
 }
 
 export async function updateUser(data) {
-  let user = await conexion.query("UPDATE usuarios SET correo=($1),habilidades=($2),telefono=($3),codigo_pais=($4) WHERE id_usuario=($5)",
+  let user = await conexion.query("UPDATE usuarios SET email=($1),habilidades=($2),telefono=($3),codigo_pais=($4) WHERE id=($5)",
     [data.email, data.skills, data.phone, data.idcountry, data.iduser])
   return user
 }
 
 export async function updateUserPassword1(data) {
-  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE id_usuario=($2)",
+  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE id=($2)",
     [data.pass1, data.iduser])
   return user
 }
 
 export async function updateUserPassword2(data) {
-  let user = await conexion.query("UPDATE usuarios SET password2=($1) WHERE id_usuario=($2)",
+  let user = await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2)",
     [data.pass2, data.iduser])
   return user
 }
@@ -89,7 +89,7 @@ export async function recoveryPasswordUser(email) {
   let newPassSeek = getReferralCode();
   let salt = bcrypt.genSaltSync(10);
   let password = bcrypt.hashSync(newPassSeek, salt);
-  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE correo=($2)",
+  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE email=($2)",
     [password, email])
   let resp = {
     status: user.rowCount,
