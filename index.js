@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import conexion from './database/conexion.js';
 import routes from './routes/routes.js';
 import passport from 'passport';
 import passportPswd1 from './config/passport.pswd1.js';
@@ -26,8 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', async (req, res) => {
-  const users = await (await conexion.query('SELECT * FROM usuarios')).rows
-  res.send(users)
+  res.send('Welcome')
 })
 app.use('/', routes);
 app.use((req, res, next) => {
