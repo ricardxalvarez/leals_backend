@@ -8,7 +8,7 @@ import session from 'express-session';
 import helmet from 'helmet';
 import config from './config/config.js';
 const app = express();
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 4200
 
 app.use(helmet());
 app.use(cors());
