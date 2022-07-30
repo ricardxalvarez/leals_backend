@@ -249,10 +249,10 @@ export function search(req, res, next) {
 }
 
 export function updatePassword1(req, res) {
-  const { password1 } = req.body
+  const { password } = req.body
   const iduser = req.user.id
   let salt = bcrypt.genSaltSync(10);
-  let pass1 = bcrypt.hashSync(password1, salt);
+  let pass1 = bcrypt.hashSync(password, salt);
   var values = {
     iduser,
     pass1
@@ -284,10 +284,10 @@ export function updatePassword1(req, res) {
 }
 
 export function updatePassword2(req, res) {
-  const { password2 } = req.body
+  const { password } = req.body
   const iduser = req.user.id
   let salt = bcrypt.genSaltSync(10);
-  let pass2 = bcrypt.hashSync(password2, salt);
+  let pass2 = bcrypt.hashSync(password, salt);
   var values = {
     iduser,
     pass2
