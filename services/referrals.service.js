@@ -58,7 +58,7 @@ export async function referralChildren({ iduser, level }) {
 
           cb(node)
 
-          for (const child of node.children) {
+          for (const child of node?.children) {
             queue.push(child)
           }
         }
