@@ -7,6 +7,7 @@ export async function searchReferral(text, id_sponsor) {
 
 export async function referralChildren({ iduser, level }) {
   let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE id_progenitor=($1) OR id=($1)", [iduser])).rows
+  console.log(users);
   function Node(user) {
     this.user = user,
       this.children = [];
