@@ -58,8 +58,8 @@ export async function referralChildren({ iduser, level }) {
           const node = queue.shift()
 
           cb(node)
-
-          for (const child of node?.children) {
+          console.log(node)
+          for (const child of node.children) {
             queue.push(child)
           }
         }
@@ -71,6 +71,7 @@ export async function referralChildren({ iduser, level }) {
   let results = []
   let lastLevel
   for (const object of users) {
+    console.log(object);
     if (object.id_sponsor) {
       tree.add(object, object.id_sponsor)
     } else tree.add(object)
