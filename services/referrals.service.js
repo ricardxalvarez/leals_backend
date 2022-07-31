@@ -42,6 +42,7 @@ export async function referralChildren({ iduser, level }) {
     findBFS(data) {
       let _node = null
       this.traverseBFS((node) => {
+        console.log(node)
         if (node?.user.id === data) {
           _node = node
         }
