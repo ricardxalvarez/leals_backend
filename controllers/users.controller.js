@@ -330,14 +330,14 @@ export function updateUser(req, res) {
   userService.updateUser(values)
     .then(user => {
       if (user.rowCount > 0) {
-        result = {
+        let result = {
           status: true,
           content: "User successfully updated"
         }
         res.status(200).send(result)
       } else {
         console.log("El Usuario no existe")
-        result = {
+        let result = {
           status: false,
           content: "User not found"
         }
@@ -346,7 +346,7 @@ export function updateUser(req, res) {
     })
     .catch(err => {
       console.log(err)
-      result = {
+      let result = {
         content: "Error Updating User"
       }
       res.status(500).json(result)
