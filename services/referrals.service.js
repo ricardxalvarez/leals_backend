@@ -18,7 +18,7 @@ export async function referralChildren({ iduser, level }) {
     }
     add(data, toNodeData) {
       const node = new Node(data);
-
+      console.log(toNodeData);
       const parent = toNodeData ? this.findBFS(toNodeData) : null;
       if (parent) {
         if (parent.children[parent.children.length - 1]) {
@@ -42,7 +42,7 @@ export async function referralChildren({ iduser, level }) {
     findBFS(data) {
       let _node = null
       this.traverseBFS((node) => {
-        if (node.id === data) {
+        if (node.user.id === data) {
           _node = node
         }
       })
