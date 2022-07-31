@@ -372,13 +372,13 @@ export function recoveryPassword(req, res) {
           html: compiledTemplate.render(data)
         };
         sendMailToClient(mailOptions)
-        result = {
+        let result = {
           status: true,
           content: "Password successfully reset. Your new password has been sent to your email address."
         }
         res.status(200).send(result)
       } else {
-        result = {
+        let result = {
           status: false,
           content: "Unable to Reset Password"
         }
@@ -386,7 +386,9 @@ export function recoveryPassword(req, res) {
       }
     })
     .catch(err => {
-      result = {
+      console.log(err);
+      let result = {
+        status: false,
         content: "Error Updating User"
       }
       res.status(500).send(result)
