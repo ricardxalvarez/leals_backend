@@ -6,7 +6,7 @@ export async function searchReferral(text, id_sponsor) {
 }
 
 export async function referralChildren({ iduser, level }) {
-  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE id_progenitor=($1) OR id=($1)", [iduser])).rows.filter(e => e)
+  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE id_progenitor=($1) OR id=($1)", [iduser])).rows
   function Node(user) {
     this.user = user,
       this.children = [];
@@ -42,8 +42,7 @@ export async function referralChildren({ iduser, level }) {
     findBFS(data) {
       let _node = null
       this.traverseBFS((node) => {
-        console.log(node)
-        if (node?.user.id === data) {
+        if (node.user.id === data) {
           _node = node
         }
       })
