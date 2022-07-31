@@ -354,20 +354,20 @@ export function updateUser(req, res) {
 }
 
 export function recoveryPassword(req, res) {
-  const { mail } = req.body
+  const { email } = req.body
   userService
-    .recoveryPasswordUser(mail)
+    .recoveryPasswordUser(email)
     .then(user => {
       if (user.status > 0) {
         let data = {
-          email: mail,
+          email,
           pass: user.password
         }
         var template = fs.readFileSync('./views/restartPassword.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
           from: config.email.auth.user,
-          to: mail,
+          to: email,
           subject: 'LEALS - Reinicio de Password',
           html: compiledTemplate.render(data)
         };
