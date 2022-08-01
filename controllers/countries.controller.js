@@ -36,11 +36,10 @@ export const currencyControl = async (req, res, next) => {
 
     var requestOptions = {
         method: 'GET',
-        redirect: 'follow',
         headers: myHeaders
     };
 
-    fetch(`http://api.exchangeratesapi.io/v1/latest?access_key=nx4fRpHqyfycX58eydu8R1qjFQDMJKhK`, requestOptions)
+    fetch(`http://api.apilayer.com/currency_data/live?source=USD&currencies=EUR`, requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
