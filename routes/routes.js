@@ -23,7 +23,7 @@ router.put('/users/update', validate(userValidation.updateUser), authPswd1, user
 router.put('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
 // new
 router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
-router.post('/email/verify', validate(userValidation.emailVerify), usersController.verifyEmail)
+router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
 router.put('/users/paymentmethod', validate(userValidation.paymentMethods), authPswd1, usersController.addPaymentMethods)
 // Countries
 
