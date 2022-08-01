@@ -25,7 +25,7 @@ export const retrieveCountry = (req, res, next) => {
 }
 
 export const getCurrencyWithDial = (req, res, next) => {
-    const country = countries.find(object => object.dialCode === req.query.dialCode)
+    const country = countries.filter(object => object.dialCode !== req.query.dialCode)
     res.send(country.dialCode);
 }
 
