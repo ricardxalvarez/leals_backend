@@ -2,7 +2,7 @@ import conexion from '../database/conexion.js'
 
 export async function createToken(userid) {
     const code = Math.floor(100000 + Math.random() * 900000)
-    const token = await conexion.query('INSERT INTO tokens(owner, code) VALUES($1, $2) REURNING *', [userid, code])
+    const token = await conexion.query('INSERT INTO tokens(owner, code) VALUES($1, $2)', [userid, code])
     return token
 }
 
