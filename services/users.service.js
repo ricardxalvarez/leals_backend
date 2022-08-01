@@ -1,15 +1,13 @@
 import conexion from '../database/conexion.js'
 import bcrypt from 'bcrypt'
-import ApiError from '../utils/ApiError.js'
-import { StatusCodes } from 'http-status-codes'
 
 export async function checkUser(data) {
-  let user = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1)',
-    [data.username])).rows[0];
+  let user = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1) OR email=($2)',
+    [data.username, data.email])).rows[0];
   let referrer = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1)',
     [data.referralusername])).rows[0];
   if (user) {
-    return { status: false, content: "this user already exists" };
+    return { status: false, content: "already exists a usr with this username or password" };
   }
   if (referrer) {
     return {
