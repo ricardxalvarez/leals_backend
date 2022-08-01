@@ -9,19 +9,17 @@ export async function checkUser(data) {
   let referrer = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1)',
     [data.referralusername])).rows[0];
   if (user) {
-    return new ApiError(StatusCodes.CONFLICT, "nombre de usuario ya existente");
+    return { status: false, content: "this user already exists" };
   }
-  if (!user) {
-    if (referrer) {
-      return {
-        user: {
-          id: user?.id, nombre_usuario: user?.nombre_usuario, email: user?.email, is_email_verified: user?.is_email_verified
-        }, referrer: {
-          id: referrer.id, sponsor: referrer.id_sponsor, progenitor: referrer.id_progenitor
-        }
-      };
-    } else return { status: false, content: "you've entered a not valid username" };
-  } else return { status: false, content: "this user already exists" };
+  if (referrer) {
+    return {
+      user: {
+        id: user?.id, nombre_usuario: user?.nombre_usuario, email: user?.email, is_email_verified: user?.is_email_verified
+      }, referrer: {
+        id: referrer.id, sponsor: referrer.id_sponsor, progenitor: referrer.id_progenitor
+      }
+    };
+  } else return { status: false, content: "you've entered a not existing username" };
 }
 
 export async function checkUserExists(data) {
