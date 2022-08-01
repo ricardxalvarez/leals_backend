@@ -401,7 +401,7 @@ export async function sendVerificationEmail(req, res, next) {
   console.log(user);
   userService.checkUserExists(user)
     .then(async usuario => {
-      if (!usuario.status) {
+      if (usuario.status === false) {
         return res.send(usuario)
       }
       const token = generateToken(user)
