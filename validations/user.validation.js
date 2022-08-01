@@ -3,7 +3,7 @@ export const register = {
     body: joi.object().keys({
         fullname: joi.string().trim().required(),
         email: joi.string().email().required(),
-        idcountry: joi.string().id().min(2).max(2),
+        idcountry: joi.string().id().min(2).max(2).required(),
         username: joi.string().required(),
         password1: joi.string().trim().required(),
         referralusername: joi.string().id().required()
