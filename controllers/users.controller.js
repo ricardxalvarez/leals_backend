@@ -6,7 +6,6 @@ import fs from 'fs'
 import config from '../config/config.js';
 import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
-import decodeToken from '../utils/decodeToken.js';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername } = req.body
@@ -416,8 +415,8 @@ export async function sendVerificationEmail(req, res, next) {
         return res.send(usuario)
       }
       if (!usuario.is_email_verified) {
-        await tokenService.deleteTokens(user.id)
-        const code = await (await tokenService.createToken(user.id)).rows[0]
+        await tokenService.deleteTokensEmailVerification(user.id)
+        const code = await (await tokenService.createTokenEmailVerification(user.id)).rows[0]
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
@@ -442,13 +441,10 @@ export async function sendVerificationEmail(req, res, next) {
 }
 
 export async function verifyEmail(req, res, next) {
-  const token = req.body.token
-  const user = decodeToken(token)
-  if (user.exp < Date.now()) {
-    userService.verifyEmail(user.iduser)
-      .then(response => res.send(response))
-      .catch(error => res.send(error))
-  } else res.send({ status: false, content: 'Token expired' })
+  const code = req.body.code
+  const userid = req.body.userid
+  // this endpoint must remove all tokens and update the user to is_email_veirfied to true
+  res.send({ status: 'building this endpoint' })
 }
 
 export async function addPaymentMethods(req, res, next) {

@@ -68,7 +68,8 @@ export const recoverPassword = {
 
 export const emailVerify = {
     body: joi.object().keys({
-        token: joi.string().required()
+        code: joi.string().required(),
+        userid: joi.string().id().required()
     })
 }
 

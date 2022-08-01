@@ -1,11 +1,11 @@
-CREATE TABLE tokens (
+CREATE TABLE email_verification_tokens (
     id BIGSERIAL NOT NULL,
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
     code BIGINT NOT NULL,
     timestamp timestamp NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX owner ON tokens(owner);
+CREATE INDEX owner ON email_verification_tokens(owner);
 
 CREATE FUNCTION tokens_delete_old_rows() RETURNS trigger
     LANGUAGE plpgsql
