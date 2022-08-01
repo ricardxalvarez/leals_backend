@@ -411,7 +411,7 @@ export async function sendVerificationEmail(req, res, next) {
           from: config.email.auth.user,
           to: user.email,
           subject: 'LEALS - Reinicio de Password',
-          html: compiledTemplate.render({ ...user, token: `localhost:3000/${token}` })
+          html: compiledTemplate.render({ ...user, direction: `http://localhost:3000/${token}` })
         };
         await
           sendMailToClient(mailOptions)
