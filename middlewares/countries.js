@@ -1,11 +1,10 @@
-import { createRequire } from "module";
-import ApiError from "../utils/ApiError.js";
 import { StatusCodes } from "http-status-codes";
+import { createRequire } from "module";
 const countries = (req, res, next) => {
     const require = createRequire(import.meta.url);
     const countries = require("../data/contries.json")
     if (countries.some(c => c.countryCode === req.body.idcountry)) next()
-    else throw res.send(new ApiError(StatusCodes.BAD_REQUEST, "This is a not valid id country"))
+    else throw res.status(StatusCodes.BAD_REQUEST).send("This is a not valid id country")
 }
 
 export default countries;
