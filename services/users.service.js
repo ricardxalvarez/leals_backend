@@ -110,10 +110,10 @@ export async function verifyEmail(userid) {
     return { status: false, content: 'User does not exists' }
   }
   if (!user.is_email_verified) {
-    const newUser = await (await conexion.query('UPDATE usuarios SET is_email_verified=($1) WHERE id=($2) RETURNING *', [true, userid])).rows[0]
+    await (await conexion.query('UPDATE usuarios SET is_email_verified=($1) WHERE id=($2) RETURNING *', [true, userid])).rows[0]
     await conexion.query('DELETE FROM tokens WHERE owner=($1)', [userid])
-    return newUser
-  } else return
+    return { status: true, content: "User's email verified succesfully" }
+  } else return { status: false, content: "User's email already verified" }
 }
 
 export async function addPaymentMethods(userid, data) {

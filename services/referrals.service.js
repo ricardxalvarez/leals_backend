@@ -1,4 +1,5 @@
 import conexion from '../database/conexion.js'
+import imageThumbnail from 'image-thumbnail'
 
 export async function searchReferral(text, id_sponsor) {
   const users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE (id=($1) OR id_progenitor=($1)) AND nombre_usuario LIKE $2", [id_sponsor, `%${text}%`])).rows
@@ -6,7 +7,11 @@ export async function searchReferral(text, id_sponsor) {
 }
 
 export async function referralChildren({ iduser, level }) {
-  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE id_progenitor=($1) OR id=($1)", [iduser])).rows.sort((a, b) => a.id - b.id)
+  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor", [iduser])).rows
+  users = users.map(object => {
+    const avatar = object.avatar ? imageThumbnail(object.avatar, { width: 50, height: 50, fit: 'cover' }) : null
+    return { ...object, avatar }
+  })
   function Node(user) {
     this.user = user,
       this.children = [];

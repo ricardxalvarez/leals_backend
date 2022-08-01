@@ -6,9 +6,13 @@ export async function createTokenEmailVerification(userid) {
     return token
 }
 
-export async function getTokenEmailVerification(userid) {
+export async function getTokenEmailVerification(userid, code) {
     const token = await (await conexion.query('SELECT * FROM email_verification_tokens WHERE owner=($1)', [userid])).rows[0]
-    return token
+    if (token) {
+        if (token.code === code) {
+            return { status: true, content: "successfull verification" }
+        } else return { status: false, content: "this code is not valid" }
+    } else return { status: false, content: "this code is no longer available" }
 }
 
 export async function deleteTokensEmailVerification(userid) {

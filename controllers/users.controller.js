@@ -442,7 +442,26 @@ export async function sendVerificationEmail(req, res, next) {
 
 export async function verifyEmail(req, res, next) {
   const code = req.body.code
-  const userid = req.body.userid
+  const userid = req.user.id
+  tokenService.getTokenEmailVerification(userid, code)
+    .then(response => {
+      if (response.status === false) {
+        res.send(response)
+      } else {
+        userService.verifyEmail(userid)
+          .then(response => {
+            res.send(response)
+          })
+          .catch(error => {
+            console.log(error);
+            res.send({ status: false, content: "error verifing email" })
+          })
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.send({ status: false, content: "error verifing email" })
+    })
   // this endpoint must remove all tokens and update the user to is_email_veirfied to true
   res.send({ status: 'building this endpoint' })
 }
