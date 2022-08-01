@@ -417,9 +417,7 @@ export async function sendVerificationEmail(req, res, next) {
       }
       if (!usuario.is_email_verified) {
         await tokenService.deleteTokens(user.id)
-        console.log(user)
         const code = await (await tokenService.createToken(user.id)).rows[0]
-        console.log(code)
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
@@ -433,7 +431,10 @@ export async function sendVerificationEmail(req, res, next) {
             .then(response => {
               res.send({ status: true, content: `Check your inbox at ${user.email}`, token })
             })
-            .catch(error => res.send({ status: false, content: 'error sending email' }))
+            .catch(error => {
+              console.log(error);
+              res.send({ status: false, content: 'error sending email' })
+            })
       } else res({ error: 'user already veified' })
     })
     .catch(error => console.log(error))
