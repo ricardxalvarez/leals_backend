@@ -328,30 +328,41 @@ export function updateUser(req, res) {
     phone,
     idcountry
   };
-  userService.updateUser(values)
-    .then(user => {
-      if (user.rowCount > 0) {
-        let result = {
-          status: true,
-          content: "User successfully updated"
-        }
-        res.status(200).send(result)
-      } else {
-        console.log("El Usuario no existe")
-        let result = {
-          status: false,
-          content: "User not found"
-        }
-        res.status(400).send(result)
-      }
+  userService.checkEmailExists(email)
+    .then(response => {
+      if (response.status) {
+        userService.updateUser(values)
+          .then(user => {
+            if (user.rowCount > 0) {
+              let result = {
+                status: true,
+                content: "User successfully updated"
+              }
+              res.status(200).send(result)
+            } else {
+              let result = {
+                status: false,
+                content: "User not found"
+              }
+              res.status(400).send(result)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+            let result = {
+              content: "Error Updating User"
+            }
+            res.status(500).json(result)
+          });
+      } else res.send(response)
     })
-    .catch(err => {
-      console.log(err)
+    .catch(error => {
       let result = {
         content: "Error Updating User"
       }
-      res.status(500).json(result)
-    });
+      console.log(error);
+      res.send(result)
+    })
 }
 
 export function recoveryPassword(req, res) {

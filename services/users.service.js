@@ -31,6 +31,13 @@ export async function checkUserExists(data) {
     return user
   } else return { status: false, content: "User does not exist" }
 }
+export async function checkEmailExists(email) {
+  let user = await (await conexion.query('SELECT * from usuarios WHERE email=($1)',
+    [email])).rows[0];
+  if (user) {
+    return { status: false, content: "Already exists a user with that username" }
+  } else return user
+}
 export async function addCuenta(data) {
   let name = data.fullname.toUpperCase();
   let newUser = await (await conexion.query("INSERT INTO usuarios(full_nombre,email,codigo_pais,nombre_usuario,password1,id_sponsor, id_progenitor) VALUES ($1,$2,$3,$4,$5,$6, $7) RETURNING *",
