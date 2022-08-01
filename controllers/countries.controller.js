@@ -40,7 +40,7 @@ export const currencyControl = async (req, res, next) => {
         headers: myHeaders
     };
 
-    fetch(`https://api.apilayer.com/currency_data/live?source=USD&currencies=EUR`, requestOptions)
+    fetch(`http://api.apilayer.com/currency_data/live?source=USD&currencies=EUR`, requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
