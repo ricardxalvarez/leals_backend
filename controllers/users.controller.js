@@ -463,7 +463,6 @@ export async function verifyEmail(req, res, next) {
       res.send({ status: false, content: "error verifing email" })
     })
   // this endpoint must remove all tokens and update the user to is_email_veirfied to true
-  res.send({ status: 'building this endpoint' })
 }
 
 export async function addPaymentMethods(req, res, next) {
