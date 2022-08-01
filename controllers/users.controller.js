@@ -123,7 +123,7 @@ export function postSignin(req, res, next) {
         } else {
           console.log("Clave Incorrecta")
           let result = {
-            status: 'false',
+            status: false,
             content: 'Incorrect Password'
           }
           res.status(200).send(result)
@@ -139,7 +139,10 @@ export function postSignin(req, res, next) {
     })
     .catch(err => {
       console.log(err);
-      return res.status(500).send("Error getting account");
+      return res.status(500).send({
+        status: false,
+        content: 'There was an error creating your account'
+      });
     });
 
 }
@@ -170,7 +173,7 @@ export function postSigninPsswd2(req, res, next) {
             status: 'false',
             content: 'Incorrect Password'
           }
-          res.status(500).send(result)
+          res.status(403).send(result)
         }
       } else {
         console.log("Cuenta de usuario no afilida")
