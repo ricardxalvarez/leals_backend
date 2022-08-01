@@ -404,7 +404,7 @@ export async function sendVerificationEmail(req, res, next) {
         return res.send(usuario)
       }
       const token = generateToken(user)
-      if (!usuario.user.is_email_verified) {
+      if (!usuario.is_email_verified) {
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
