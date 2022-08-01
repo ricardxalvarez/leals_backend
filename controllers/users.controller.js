@@ -442,9 +442,9 @@ export async function verifyEmail(req, res, next) {
   const user = decodeToken(token)
   console.log(user)
   if (user.exp < Date.now()) {
-    userService.verifyEmail(user.id)
-      .then(response => res.send({ status: true, content: "Email verificado" }))
-      .catch(error => res.send({ status: false, content: "Error verificando email" }))
+    userService.verifyEmail(user.iduser)
+      .then(response => res.send(response))
+      .catch(error => res.send(error))
   } else res.send({ status: false, content: 'Token expired' })
 }
 
