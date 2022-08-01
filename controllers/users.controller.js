@@ -398,6 +398,7 @@ export function recoveryPassword(req, res) {
 
 export async function sendVerificationEmail(req, res, next) {
   const user = req.user
+  console.log(user);
   userService.checkUserExists(user)
     .then(async usuario => {
       if (!usuario.status) {
