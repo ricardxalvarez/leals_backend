@@ -42,17 +42,11 @@ export function postSignup(req, res, next) {
       }
       userService
         .addCuenta(results)
-        .then(cuenta => {
-          if (cuenta) {
-            res.status(200).send({
-              status: true,
-              content: "Cuenta creada con éxito"
-            })
+        .then(response => {
+          if (response.status) {
+            res.send(response)
           } else {
-            res.status(StatusCodes.BAD_GATEWAY).send({
-              status: false,
-              content: "there was an error"
-            })
+            res.status(StatusCodes.BAD_GATEWAY).send(response)
           }
         })
         .catch(err => {
@@ -421,7 +415,7 @@ export async function sendVerificationEmail(req, res, next) {
         var mailOptions = {
           from: config.email.auth.user,
           to: user.email,
-          subject: 'LEALS - Reinicio de Password',
+          subject: 'LEALS - Verificación de usuario',
           html: compiledTemplate.render({ ...user, direction: `http://localhost:3000/${token}` })
         };
         await

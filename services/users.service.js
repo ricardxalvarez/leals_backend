@@ -40,12 +40,15 @@ export async function checkEmailExists(email) {
 }
 export async function addCuenta(data) {
   let name = data.fullname.toUpperCase();
-  let newUser = await (await conexion.query("INSERT INTO usuarios(full_nombre,email,codigo_pais,nombre_usuario,password1,id_sponsor, id_progenitor) VALUES ($1,$2,$3,$4,$5,$6, $7) RETURNING *",
-    [name, data.email, data.idcountry, data.username, data.pass1, data.referralid, data.id_progenitor])).rows[0];
-  if (newUser) {
-    return newUser;
-  } else return 0;
-
+  const userExists = await (await conexion.query("SELECT id FROM usuarios WHERE nombre_usuario=($1) OR email=($2)",
+    [data.username, data.email])).rows[0];
+  if (!userExists) {
+    let newUser = await (await conexion.query("INSERT INTO usuarios(full_nombre,email,codigo_pais,nombre_usuario,password1,id_sponsor, id_progenitor) VALUES ($1,$2,$3,$4,$5,$6, $7) RETURNING *",
+      [name, data.email, data.idcountry, data.username, data.pass1, data.referralid, data.id_progenitor])).rows[0];
+    if (newUser) {
+      return { status: true, content: "Account succesfully created" }
+    }
+  } else return { status: false, content: "Already exists an account with same email or username" }
 }
 export async function completeUserRegister(data) {
   let skills = data.skills.toUpperCase();
