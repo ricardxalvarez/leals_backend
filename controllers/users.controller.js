@@ -6,6 +6,7 @@ import fs from 'fs'
 import config from '../config/config.js';
 import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
+import decodeToken from '../utils/decodeToken.js';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername } = req.body
@@ -402,6 +403,7 @@ export async function sendVerificationEmail(req, res, next) {
       if (!usuario.status) {
         return res.send(usuario)
       }
+      const token = generateToken(user)
       if (!usuario.user.is_email_verified) {
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
@@ -409,12 +411,14 @@ export async function sendVerificationEmail(req, res, next) {
           from: config.email.auth.user,
           to: user.email,
           subject: 'LEALS - Reinicio de Password',
-          html: compiledTemplate.render(user)
+          html: compiledTemplate.render({ ...user, token: `localhost:3000/${token}` })
         };
-        await tokenService.createToken(user.id)
         await
           sendMailToClient(mailOptions)
-        res.send({ status: true, content: `Check your inbox at ${user.email}` })
+            .then(response => {
+              res.send({ status: true, content: `Check your inbox at ${user.email}`, token })
+            })
+            .catch(error => res.send({ status: false, content: 'error sending email' }))
       } else res({ error: 'user already veified' })
     })
     .catch(error => console.log(error))
@@ -422,11 +426,12 @@ export async function sendVerificationEmail(req, res, next) {
 }
 
 export async function verifyEmail(req, res, next) {
-  const userid = req.body.userid
-  const token = await tokenService.getToken(userid)
-  if (token) {
-    const user = await userService.verifyEmail(userid)
-    res.send({ status: true, content: "Email verificado" })
+  const token = req.body.token
+  const user = decodeToken(token)
+  if (user.payload.exp < new Date.now()) {
+    userService.verifyEmail(user.id)
+      .then(response => res.send({ status: true, content: "Email verificado" }))
+      .catch(error => res.send({ status: false, content: "Error verificando email" }))
   } else res.send({ status: false, content: 'Token expired' })
 }
 

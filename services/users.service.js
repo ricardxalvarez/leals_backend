@@ -101,7 +101,7 @@ export async function recoveryPasswordUser(email) {
 export async function verifyEmail(userid) {
   const user = (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [userid])).rows[0]
   if (!user) {
-    return 'User does not exists'
+    return { status: false, content: 'User does not exists' }
   }
   if (!user.is_email_verified) {
     const newUser = await (await conexion.query('UPDATE usuarios SET is_email_verified=($1) WHERE id=($2) RETURNING *', [true, userid])).rows[0]
@@ -111,7 +111,6 @@ export async function verifyEmail(userid) {
 }
 
 export async function addPaymentMethods(userid, data) {
-  console.log(data);
   const user = await (await conexion.query('UPDATE usuarios SET usd_direction=($2), leal_direction=($3), payment_methods=($4) WHERE id=($1) RETURNING *', [userid, data.usd_direction, data.leal_direction, data.payment_methods])).rows[0]
   return user;
 }

@@ -19,7 +19,8 @@
                 <h4 style="text-align:center;">
                     Para disfrutar de nuestros servicios debe verificar su cuenta de correo asociada
                 </h4>
-                <a style="background:black; padding: 10px 15px; color: white; cursor: pointer;">Click here</a>
+                <a style="background:black; padding: 10px 15px; color: white; cursor: pointer;" href={{direction}}>Click
+                    here</a>
                 <p style="color:#000000; text-align:justify; margin-right:20px; margin-left: 20px;">
                     Este es su nueva contraseña de acceso. Por favor, acceda con ella e inmediatamente modifiquela por
                     una

@@ -10,7 +10,7 @@ CREATE FUNCTION tokens_delete_old_rows() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-  DELETE FROM tokens WHERE timestamp < NOW() - INTERVAL '1 hour';
+  DELETE FROM tokens WHERE timestamp < NOW() - INTERVAL '1 minute';
   RETURN NEW;
 END;
 $$;
