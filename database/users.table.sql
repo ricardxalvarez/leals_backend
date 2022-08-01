@@ -20,6 +20,7 @@ CREATE TABLE usuarios (
 );
 
 CREATE INDEX nombre_usuario ON usuarios(nombre_usuario);
+CREATE INDEX email ON usuarios(email);
 
 -- main user
 INSERT INTO usuarios(full_nombre, email, codigo_pais, nombre_usuario, password1) VALUES (leal leals, support@leals.app, PE, birthleals, $2a$10$OL9mZiU7IITPuDvfVMw4ie.G.MHSvOmSkr.PkpNchq4tdmfV51LAa)

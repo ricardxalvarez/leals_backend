@@ -1,6 +1,7 @@
 CREATE TABLE tokens (
     id BIGSERIAL NOT NULL,
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
+    code BIGINT NOT NULL,
     timestamp timestamp NOT NULL DEFAULT NOW()
 );
 

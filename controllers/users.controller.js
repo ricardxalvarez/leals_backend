@@ -415,15 +415,16 @@ export async function sendVerificationEmail(req, res, next) {
       if (usuario.status === false) {
         return res.send(usuario)
       }
-      const token = generateToken(user)
       if (!usuario.is_email_verified) {
+        await tokenService.deleteTokens(req.user.id)
+        const code = await (await tokenService.createToken(req.user.id)).rows[0]
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
           from: config.email.auth.user,
           to: user.email,
-          subject: 'LEALS - Verificación de usuario',
-          html: compiledTemplate.render({ ...user, direction: `http://localhost:3000/${token}` })
+          subject: 'LEALS - Verificación de email',
+          html: compiledTemplate.render({ ...user, code })
         };
         await
           sendMailToClient(mailOptions)
@@ -440,7 +441,6 @@ export async function sendVerificationEmail(req, res, next) {
 export async function verifyEmail(req, res, next) {
   const token = req.body.token
   const user = decodeToken(token)
-  console.log(user)
   if (user.exp < Date.now()) {
     userService.verifyEmail(user.iduser)
       .then(response => res.send(response))

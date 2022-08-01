@@ -19,9 +19,7 @@
                 <h4 style="text-align:center;">
                     Estás a un paso de verificar tu cuenta!
                 </h4>
-                <a style="background:black; padding: 10px 15px; color: white; cursor: pointer;text-decoration: none;"
-                    href={{direction}}>Click
-                    here</a>
+                <p>Este es tu codigo de verificacion {{code}}</p>
                 <br>
             </div>
         </div>
