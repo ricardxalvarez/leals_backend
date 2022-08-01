@@ -27,7 +27,6 @@ export async function checkUser(data) {
 export async function checkUserExists(data) {
   let user = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1)',
     [data.nombre_usuario])).rows[0];
-  console.log(user);
   if (user) {
     return user
   } else return { status: false, content: "User does not exist" }
