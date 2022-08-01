@@ -24,7 +24,6 @@ export function postSignup(req, res, next) {
     .checkUser(values)
     .then(data => {
       let results
-      console.log(data);
       if (data.status === false) {
         return res.send(data)
       }
