@@ -30,7 +30,7 @@ export function postSignup(req, res, next) {
       if (data.user?.id) {
         return res.send(data)
       }
-      if (!data.referrer.progenitor) {
+      if (!data.referrer?.progenitor) {
         results = {
           ...values,
           referralid: data.referrer.id,
