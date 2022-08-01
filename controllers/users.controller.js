@@ -24,6 +24,9 @@ export function postSignup(req, res, next) {
     .checkUser(values)
     .then(data => {
       let results
+      if (data.status === false) {
+        return res.send(data)
+      }
       if (data.user?.id) {
         return res.send(data)
       }
