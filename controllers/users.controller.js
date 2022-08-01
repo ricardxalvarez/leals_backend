@@ -424,12 +424,12 @@ export async function sendVerificationEmail(req, res, next) {
           from: config.email.auth.user,
           to: user.email,
           subject: 'LEALS - Verificación de email',
-          html: compiledTemplate.render({ ...user, code })
+          html: compiledTemplate.render({ ...user, code: code.code })
         };
         await
           sendMailToClient(mailOptions)
             .then(response => {
-              res.send({ status: true, content: `Check your inbox at ${user.email}`, token })
+              res.send({ status: true, content: `Check your inbox at ${user.email}` })
             })
             .catch(error => {
               console.log(error);
