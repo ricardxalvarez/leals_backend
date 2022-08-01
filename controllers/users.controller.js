@@ -227,15 +227,15 @@ export function search(req, res, next) {
     .searchUser(idclient)
     .then(user => {
       if (user.rows.length > 0) {
-        respuesta = {
-          existe: true,
-          contenido: user.rows
+        let respuesta = {
+          status: true,
+          content: user.rows
         }
         res.send(respuesta);
       } else {
-        respuesta = {
-          existe: false,
-          contenido: "User does not exist"
+        let respuesta = {
+          status: false,
+          content: "User does not exist"
         }
         res.send(respuesta);
       }
