@@ -7,7 +7,7 @@ export async function checkUser(data) {
   let referrer = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1)',
     [data.referralusername])).rows[0];
   if (user) {
-    return { status: false, content: "already exists a usr with this username or password" };
+    return { status: false, content: "already exists a user with this username or email" };
   }
   if (referrer) {
     return {
