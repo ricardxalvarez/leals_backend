@@ -414,6 +414,7 @@ export async function sendVerificationEmail(req, res, next) {
       if (usuario.status === false) {
         return res.send(usuario)
       }
+      console.log(usuario);
       if (!usuario.is_email_verified) {
         await tokenService.deleteTokensEmailVerification(user.id)
         const code = await (await tokenService.createTokenEmailVerification(user.id)).rows[0]
@@ -434,7 +435,7 @@ export async function sendVerificationEmail(req, res, next) {
               console.log(error);
               res.send({ status: false, content: 'error sending email' })
             })
-      } else res({ error: 'user already veified' })
+      } else res({ error: 'user already verified' })
     })
     .catch(error => console.log(error))
 
