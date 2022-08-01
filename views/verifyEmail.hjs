@@ -17,16 +17,11 @@
                     Bienvenido a LEALS {{email}}<br />
                 </h3>
                 <h4 style="text-align:center;">
-                    Para disfrutar de nuestros servicios debe verificar su cuenta de correo asociada
+                    Estás a un paso de verificar tu cuenta!
                 </h4>
-                <a style="background:black; padding: 10px 15px; color: white; cursor: pointer;" href={{direction}}>Click
+                <a style="background:black; padding: 10px 15px; color: white; cursor: pointer;text-decoration: none;"
+                    href={{direction}}>Click
                     here</a>
-                <p style="color:#000000; text-align:justify; margin-right:20px; margin-left: 20px;">
-                    Este es su nueva contraseña de acceso. Por favor, acceda con ella e inmediatamente modifiquela por
-                    una
-                    de su preferencia
-                    <b style="color:#008496"> {{data}}</b>
-                </p>
                 <br>
             </div>
         </div>
