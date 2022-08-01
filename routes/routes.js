@@ -3,10 +3,10 @@ import { referralsController, usersController } from '../controllers/index.js';
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
 import countries from '../middlewares/countries.js';
-import upload from '../middlewares/upload.js';
 import validate from '../middlewares/validate.js';
 import { referralsValidation, userValidation } from '../validations/index.js'
 import { countriesController } from '../controllers/index.js';
+
 const router = express.Router();
 /* Rutas de Users. */
 router.post('/register', validate(userValidation.register), countries, usersController.postSignup);
