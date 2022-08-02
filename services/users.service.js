@@ -57,18 +57,18 @@ export async function completeUserRegister(data) {
 }
 
 export async function getAccount(username) {
-  let user = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre   from usuarios WHERE nombre_usuario=($1)",
+  let user = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais from usuarios WHERE nombre_usuario=($1)",
     [username]);
   return user;
 }
 
 export async function listUsers() {
-  var users = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre FROM usuarios");
+  var users = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais FROM usuarios");
   return users;
 }
 
 export async function searchUser(iduser) {
-  var user = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre FROM usuarios WHERE id=($1)",
+  var user = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais FROM usuarios WHERE id=($1)",
     [iduser]);
   return user;
 }
