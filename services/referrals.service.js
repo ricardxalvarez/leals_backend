@@ -83,7 +83,7 @@ export async function referralChildren({ iduser, level, id }) {
   tree.traverseBFS((node) => {
     results.push(node)
   })
-  lastLevel = results[results.length - 1].user.level
+  lastLevel = results[results.length - 1].user.level < 10 ? 10 : results[results.length - 1].user.level
   const childsCount = [];
   for (let i = 1; i <= lastLevel; i++) {
     const element = results.filter(object => object.user.level === i);
