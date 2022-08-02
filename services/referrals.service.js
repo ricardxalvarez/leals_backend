@@ -85,7 +85,7 @@ export async function searchReferral(text, iduser, id) {
     childsCount.push(element.length)
   }
   if (text) {
-    results = results.filter(object => object.user.username === text)
+    results = results.filter(object => object.user.nombre_usuario === text)
   } else results[0]
   return results
 }
