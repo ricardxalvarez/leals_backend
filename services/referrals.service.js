@@ -79,6 +79,7 @@ export async function referralChildren({ iduser, level }) {
   const childsCount = [];
   for (let i = 0; i < lastLevel; i++) {
     const element = results.filter(object => object.user.level === i);
+    console.log(element);
     childsCount.push(element.length + 1)
   }
   if (level) {
