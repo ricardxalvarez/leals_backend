@@ -88,7 +88,7 @@ export async function searchReferral(text, iduser, id) {
     var re = new RegExp(`\\b${text}\\b`, 'gi');
     results = results.filter(object => object.user.nombre_usuario.match(re))
   } else results[0]
-  return results
+  return { results, last_level: lastLevel, childs_count: childsCount }
 }
 
 export async function referralChildren({ iduser, level, id }) {

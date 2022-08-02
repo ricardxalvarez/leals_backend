@@ -13,12 +13,11 @@ export async function getReferralChildren(req, res) {
 };
 
 export async function searchReferral(req, res, next) {
-    const id_sponsor = req.user.id_sponsor || req.user.id
     const id_progenitor = req.user.id_progenitor || req.user.id
     const userid = req.user.id
     referralsService.searchReferral(req.body.text, id_progenitor, userid)
         .then(users => {
-            res.send({ status: true, content: users })
+            res.send({ status: true, content: content.results, last_level: content.last_level, childs_count: content.childs_count })
         })
         .catch(error => console.log(error))
 }
