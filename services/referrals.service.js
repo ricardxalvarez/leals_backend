@@ -85,7 +85,8 @@ export async function searchReferral(text, iduser, id) {
     childsCount.push(element.length)
   }
   if (text) {
-    results = results.filter(object => object.user.nombre_usuario === text)
+    var re = new RegExp("/\b" + text + "\b/");
+    results = results.filter(object => object.user.nombre_usuario.includes(re))
   } else results[0]
   return results
 }
