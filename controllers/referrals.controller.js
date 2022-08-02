@@ -4,7 +4,7 @@ export async function getReferralChildren(req, res) {
     const level = parseInt(req.query.level)
     referralsService.referralChildren({ iduser: iduser, level })
         .then(content => {
-            res.send({ status: true, content: content.results, last_level: content.last_level })
+            res.send({ status: true, content: content.results, last_level: content.last_level, childs_count: content.childs_count })
         })
         .catch(error => {
             console.log(error)
