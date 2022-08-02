@@ -1,8 +1,8 @@
 import conexion from '../database/conexion.js'
 
-export async function searchReferral(text, id_sponsor, iduser, id) {
-  req.session.searchTreeUsername = req.session.searchTreeUsername || await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
-  const users = req.session.searchTreeUsername
+export async function searchReferral(text, id_sponsor, iduser, id, searchTree) {
+  searchTree = searchTree || await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
+  const users = searchTree
   return users
 }
 

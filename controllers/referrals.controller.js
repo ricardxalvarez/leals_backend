@@ -16,7 +16,8 @@ export async function searchReferral(req, res, next) {
     const id_sponsor = req.user.id_sponsor || req.user.id
     const id_progenitor = req.user.id_progenitor || req.user.id
     const userid = req.user.id
-    referralsService.searchReferral(req.body.text, id_sponsor, id_progenitor, userid)
+    const searchTree = req.session.searchTreeUsername
+    referralsService.searchReferral(req.body.text, id_sponsor, id_progenitor, userid, searchTree)
         .then(users => {
             res.send({ status: true, content: users })
         })
