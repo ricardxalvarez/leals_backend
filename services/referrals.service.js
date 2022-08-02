@@ -14,7 +14,7 @@ export async function referralChildren({ iduser, level }) {
   class Tree {
     constructor() {
       this.root = null;
-      this.level = 1;
+      this.level = 0;
     }
     add(data, toNodeData) {
       const node = new Node(data);
@@ -76,8 +76,13 @@ export async function referralChildren({ iduser, level }) {
     results.push(node)
   })
   lastLevel = results[results.length - 1].user.level
+  const childsCount = [];
+  for (let i = 0; i < lastLevel; i++) {
+    const element = results.filter(object => object.user.level === i);
+    childsCount.push(element.length + 1)
+  }
   if (level) {
     results = results.filter(object => object.user.level === level)
   } else results = results[0]
-  return { results, last_level: lastLevel }
+  return { results, last_level: lastLevel, childs_count: childsCount }
 }
