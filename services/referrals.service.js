@@ -86,7 +86,7 @@ export async function searchReferral(text, iduser, id) {
   }
   if (text) {
     var re = new RegExp(`\\b${text}\\b`, 'gi');
-    results = results.filter(object => object.user.nombre_usuario.match(re))
+    results = results.filter(object => object.user.nombre_usuario.match(re)).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario)
   } else results[0]
   return { results, last_level: lastLevel, childs_count: childsCount }
 }
