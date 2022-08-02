@@ -41,7 +41,6 @@ export async function referralChildren({ iduser, level, id }) {
     findBFS(data) {
       let _node = null
       this.traverseBFS((node) => {
-        console.log(node)
         if (node) {
           if (node.user.id === data) {
             _node = node
@@ -74,7 +73,6 @@ export async function referralChildren({ iduser, level, id }) {
   for (const object of users) {
     if (object.id === id) isParent = true
     if (isParent) {
-      console.log(object)
       if (object.id_sponsor) {
         if (object.id === id) {
           tree.add(object)
