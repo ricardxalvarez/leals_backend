@@ -91,8 +91,7 @@ export async function searchReferral(text, iduser, id) {
 }
 
 export async function referralChildren({ iduser, level, id }) {
-  console.log(iduser)
-  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, id_progenitor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) OR id_sponsor=($2) ORDER BY id_sponsor NULLS FIRST", [iduser, id])).rows
+  let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
   function Node(user) {
     this.user = user,
       this.children = [];
@@ -155,12 +154,16 @@ export async function referralChildren({ iduser, level, id }) {
   let tree = new Tree()
   let results = []
   let lastLevel
+  let isParent = false
   for (const object of users) {
-    if (object.id_sponsor) {
-      if (object.id === id) {
-        tree.add(object)
-      } else tree.add(object, object.id_sponsor)
-    } else tree.add(object)
+    if (object.id === id) isParent = true
+    if (isParent) {
+      if (object.id_sponsor) {
+        if (object.id === id) {
+          tree.add(object)
+        } else tree.add(object, object.id_sponsor)
+      } else tree.add(object)
+    }
   }
   tree.traverseBFS((node) => {
     results.push(node)
