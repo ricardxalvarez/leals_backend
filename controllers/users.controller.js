@@ -333,7 +333,7 @@ export function updateUser(req, res) {
   userService.checkEmailExists(email, emailUser)
     .then(response => {
       if (response.status) {
-        userService.updateUser(values)
+        userService.updateUser(values, email, emailUser)
           .then(user => {
             if (user.rowCount > 0) {
               let result = {

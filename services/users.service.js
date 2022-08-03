@@ -73,10 +73,16 @@ export async function searchUser(iduser) {
   return user;
 }
 
-export async function updateUser(data) {
-  let user = await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5) WHERE id=($6)",
-    [data.fullname, data.email, data.skills, data.phone, data.idcountry, data.iduser])
-  return user
+export async function updateUser(data, newEmail, oldEmail) {
+  if (newEmail === oldEmail) {
+    let user = await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5) WHERE id=($6)",
+      [data.fullname, data.email, data.skills, data.phone, data.idcountry, data.iduser])
+    return user
+  } else {
+    let user = await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5), is_email_verified=($6) WHERE id=($7)",
+      [data.fullname, data.email, data.skills, data.phone, data.idcountry, false, data.iduser])
+    return user
+  }
 }
 
 export async function updateUserPassword1(data) {
