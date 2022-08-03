@@ -32,7 +32,7 @@ export async function checkEmailExists(email, emailUser) {
     [email])).rows[0];
   console.log(user.email)
   console.log(emailUser)
-  if (user && user.email === emailUser) {
+  if (!user || user.email === emailUser) {
     return user
   } else return { status: false, content: "Already exists a user with that email" }
 }
