@@ -27,12 +27,12 @@ export async function checkUserExists(data) {
     return user
   } else return { status: false, content: "User does not exist" }
 }
-export async function checkEmailExists(email) {
+export async function checkEmailExists(email, emailUser) {
   let user = await (await conexion.query('SELECT * from usuarios WHERE email=($1)',
     [email])).rows[0];
-  if (user && user.email === email) {
-    return { status: false, content: "Already exists a user with that email" }
-  } else return user
+  if (user && user.email === emailUser) {
+    return user
+  } else return { status: false, content: "Already exists a user with that email" }
 }
 export async function addCuenta(data) {
   let name = data.fullname.toUpperCase();

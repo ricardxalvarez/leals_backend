@@ -321,6 +321,7 @@ export function updatePassword2(req, res) {
 export function updateUser(req, res) {
   const { fullname, email, skills, idcountry, phone } = req.body
   const iduser = req.user.id
+  const emailUser = req.user.email
   var values = {
     iduser,
     email,
@@ -329,7 +330,7 @@ export function updateUser(req, res) {
     idcountry,
     fullname
   };
-  userService.checkEmailExists(email)
+  userService.checkEmailExists(email, emailUser)
     .then(response => {
       console.log(response)
       if (response.status) {
