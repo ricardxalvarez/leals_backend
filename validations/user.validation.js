@@ -51,6 +51,7 @@ export const updateUser = {
         idcountry: joi.string().trim().max(5),
         skills: joi.string().trim().max(50),
         phone: joi.string().trim().required(),
+        fullname: joi.string().trim().required()
     })
 }
 
