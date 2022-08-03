@@ -33,7 +33,7 @@ export async function checkEmailExists(email, emailUser) {
   console.log(user?.email)
   console.log(emailUser)
   if (!user || user?.email === emailUser) {
-    return user
+    return { status: true }
   } else return { status: false, content: "Already exists a user with that email" }
 }
 export async function addCuenta(data) {
