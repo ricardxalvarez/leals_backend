@@ -9,7 +9,7 @@ const jwtOptions = {
 
 const verifyJwt = async (payload, done) => {
     try {
-        const user = await (await conexion.query('SELECT id, email, full_nombre, nombre_usuario, password1 FROM usuarios WHERE id = ($1)', [payload.iduser])).rows[0]
+        const user = await (await conexion.query('SELECT id, email, full_nombre, nombre_usuario, password1, id_progenitor, id_sponsor FROM usuarios WHERE id = ($1)', [payload.iduser])).rows[0]
         if (!user) {
             done(null, false)
         } else {
