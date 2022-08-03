@@ -105,7 +105,7 @@ export function postSignin(req, res, next) {
       if (account.rowCount > 0) {
         let user = account.rows[0]
         let fullname = user.full_nombre
-        let idusuario = user.id_usuario
+        let idusuario = user.id
         //compara la clave del form con la de la BD
         if (bcrypt.compareSync(password, user.password1)) {
           // Se genera el token
