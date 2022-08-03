@@ -222,9 +222,9 @@ export function list(req, res) {
 }
 
 export function search(req, res, next) {
-  const idclient = req.user.id
+  const id = req.user.id
   userService
-    .searchUser(idclient)
+    .searchUser(id)
     .then(user => {
       if (user.rows.length > 0) {
         let respuesta = {

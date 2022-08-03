@@ -68,7 +68,7 @@ export async function listUsers() {
 }
 
 export async function searchUser(iduser) {
-  var user = await conexion.query("SELECT id, email, telefono, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais FROM usuarios WHERE id=($1)",
+  var user = await conexion.query("SELECT id, email, telefono, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais, is_email_verified, is_phone_verified FROM usuarios WHERE id=($1)",
     [iduser]);
   return user;
 }
