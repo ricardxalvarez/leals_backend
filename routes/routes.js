@@ -14,7 +14,7 @@ router.put('/registercompleted', validate(userValidation.registerCompleted), use
 router.post('/login', validate(userValidation.login), usersController.postSignin);
 router.post('/login/password2', validate(userValidation.loginPassword2), usersController.postSigninPsswd2)
 router.get('/users/list', authPswd1, usersController.list);
-router.post('/users/search', authPswd1, usersController.search);
+router.get('/users/search', authPswd1, usersController.search);
 // id user is not necessary, since we are already using bearer token
 router.put('/users/updatepass1', validate(userValidation.updatePass1), authPswd1, usersController.updatePassword1);
 router.put('/users/updatepass2', validate(userValidation.updatePass2), authPswd1, usersController.updatePassword2);
