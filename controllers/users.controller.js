@@ -104,7 +104,6 @@ export function postSignin(req, res, next) {
     .then(account => {
       if (account.rowCount > 0) {
         let user = account.rows[0]
-        console.log(user)
         let fullname = user.full_nombre
         let idusuario = user.id
         //compara la clave del form con la de la BD
