@@ -63,7 +63,7 @@ export async function getAccount(username) {
 }
 
 export async function listUsers() {
-  var users = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais FROM usuarios");
+  var users = await conexion.query("SELECT id, email, phone, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais, payment_methods FROM usuarios");
   return users;
 }
 

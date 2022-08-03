@@ -34,12 +34,6 @@ export const loginPassword2 = {
     })
 }
 
-export const searchUser = {
-    body: joi.object().keys({
-        idclient: joi.string().id().required()
-    })
-}
-
 export const updatePass1 = {
     body: joi.object().keys({
         password: joi.string().trim().required()

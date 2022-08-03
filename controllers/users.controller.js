@@ -140,7 +140,7 @@ export function postSignin(req, res, next) {
       console.log(err);
       return res.status(500).send({
         status: false,
-        content: 'There was an error creating your account'
+        content: 'There was an error logging to your account'
       });
     });
 
@@ -222,14 +222,14 @@ export function list(req, res) {
 }
 
 export function search(req, res, next) {
-  const { idclient } = req.body
+  const idclient = req.user.id
   userService
     .searchUser(idclient)
     .then(user => {
       if (user.rows.length > 0) {
         let respuesta = {
           status: true,
-          content: user.rows
+          content: user.rows[0]
         }
         res.send(respuesta);
       } else {
