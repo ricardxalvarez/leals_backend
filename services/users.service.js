@@ -57,7 +57,7 @@ export async function completeUserRegister(data) {
 }
 
 export async function getAccount(username) {
-  let user = await conexion.query("SELECT id, email, telefono, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais from usuarios WHERE nombre_usuario=($1)",
+  let user = await conexion.query("SELECT * from usuarios WHERE nombre_usuario=($1)",
     [username]);
   return user;
 }
