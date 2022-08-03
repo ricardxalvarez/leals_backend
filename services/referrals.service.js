@@ -92,6 +92,7 @@ export async function searchReferral(text, iduser, id) {
 
 export async function referralChildren({ iduser, level, id }) {
   let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
+  console.log(users)
   function Node(user) {
     this.user = user,
       this.children = [];
