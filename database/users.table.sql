@@ -8,7 +8,7 @@ CREATE TABLE usuarios (
     status_p2p VARCHAR(35) DEFAULT('Incompleto'),
     nombre_usuario VARCHAR(25) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    codigo_pais VARCHAR(5),
+    codigo_pais VARCHAR(2),
     avatar VARCHAR(100000),
     is_email_verified BOOLEAN DEFAULT(false),
     is_phone_verified BOOLEAN DEFAULT(false),
