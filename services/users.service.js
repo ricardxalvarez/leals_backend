@@ -74,8 +74,8 @@ export async function searchUser(iduser) {
 }
 
 export async function updateUser(data) {
-  let user = await conexion.query("UPDATE usuarios SET email=($1),habilidades=($2),telefono=($3),codigo_pais=($4) WHERE id=($5)",
-    [data.email, data.skills, data.phone, data.idcountry, data.iduser])
+  let user = await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5) WHERE id=($6)",
+    [data.fullname, data.email, data.skills, data.phone, data.idcountry, data.iduser])
   return user
 }
 

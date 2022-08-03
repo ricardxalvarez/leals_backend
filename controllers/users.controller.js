@@ -319,14 +319,15 @@ export function updatePassword2(req, res) {
 }
 
 export function updateUser(req, res) {
-  const { email, skills, idcountry, phone } = req.body
+  const { fullname, email, skills, idcountry, phone } = req.body
   const iduser = req.user.id
   var values = {
     iduser,
     email,
     skills,
     phone,
-    idcountry
+    idcountry,
+    fullname
   };
   userService.checkEmailExists(email)
     .then(response => {

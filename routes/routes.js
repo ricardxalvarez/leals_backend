@@ -19,7 +19,7 @@ router.post('/users/search', authPswd1, usersController.search);
 router.put('/users/updatepass1', validate(userValidation.updatePass1), authPswd1, usersController.updatePassword1);
 router.put('/users/updatepass2', validate(userValidation.updatePass2), authPswd1, usersController.updatePassword2);
 // id user is not necessary, since we are already using bearer token
-router.put('/users/update', validate(userValidation.updateUser), authPswd1, usersController.updateUser);
+router.put('/users/update', validate(userValidation.updateUser), countries, authPswd1, usersController.updateUser);
 router.put('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
 // new
 router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
