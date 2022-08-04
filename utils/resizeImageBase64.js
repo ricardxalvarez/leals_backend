@@ -1,4 +1,6 @@
 import jimp from 'jimp'
+import Canvas from 'canvas'
+const Image = Canvas.Image
 
 async function resizeImageBase64(width, height, quality, data) {
     if (!data) return null
