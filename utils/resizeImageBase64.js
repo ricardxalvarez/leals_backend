@@ -19,6 +19,7 @@ async function resizeImageBase64(width, height, quality, image) {
                 })
         }
     })
+    return response
 }
 
 export default resizeImageBase64
