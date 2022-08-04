@@ -112,7 +112,7 @@ export async function updateUserPassword2(data) {
 
 export async function updateAvatar(userid, avatar) {
   let user = await conexion.query('UPDATE usuarios SET avatar=($1) WHERE id=($2)', [avatar, userid])
-  return { status: true, content: 'profile pic successfully updated' }
+  return { status: true, content: 'avatar successfully updated' }
 }
 
 export async function recoveryPasswordUser(email) {

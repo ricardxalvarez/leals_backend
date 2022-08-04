@@ -12,7 +12,7 @@ import cropAvatarImage from '../middlewares/cropAvatarImage.js';
 const router = express.Router();
 /* Rutas de Users. */
 router.post('/register', validate(userValidation.register), countries, usersController.postSignup);
-router.put('/registercompleted', validate(userValidation.registerCompleted), validateAvatarURL, usersController.completeRegister);
+router.put('/registercompleted', validate(userValidation.registerCompleted), validateAvatarURL, cropAvatarImage, usersController.completeRegister);
 router.post('/login', validate(userValidation.login), usersController.postSignin);
 router.post('/login/password2', validate(userValidation.loginPassword2), usersController.postSigninPsswd2)
 router.get('/users/list', authPswd1, usersController.list);
