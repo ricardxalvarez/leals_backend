@@ -7,11 +7,14 @@ async function cropAvatarImage(req, res, next) {
     jimp.read(buf, (err, image) => {
         if (err) throw err;
         else {
-            image.resize(200, 200)
+            image.resize(200, 200, jimp.AUTO)
                 .quality(100)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     console.log("rb is \n")
-                    console.log(src);
+                    if (err) res.send({ status: false, content: 'error uploading image' })
+                    req.body.avatar = src
+                    console.log(req.body.avatar)
+                    next()
                 })
         }
     })
