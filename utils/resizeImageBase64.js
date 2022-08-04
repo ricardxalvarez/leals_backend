@@ -2,10 +2,21 @@ import jimp from 'jimp'
 
 async function resizeImageBase64(width, height, quality, data) {
     if (!data) return null
+    let response
+
+    let image = new Image()
+    image.src = data
+    image.onload = function () {
+        //This should load the image so that you can actually check
+        //height and width.
+        if (image.height === 0 || image.width === 0) {
+            console.log('encoded image missing width or height');
+            return null;
+        }
+    }
     const base = 'base64'
     const base64str = data.slice(data.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
-    let response
     await jimp.read(buf, (err, image) => {
         if (!image) { response = null; return; }
         if (err) { response = null; return; }
