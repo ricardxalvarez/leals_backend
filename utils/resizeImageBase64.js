@@ -3,7 +3,7 @@ import jimp from 'jimp'
 async function resizeImageBase64(width, height, quality, data) {
     if (!data) return null
     const base = 'base64'
-    const base64str = data.slice(image.indexOf(base) + base.length + 1)
+    const base64str = data.slice(data.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
     let response
     await jimp.read(buf, (err, image) => {
