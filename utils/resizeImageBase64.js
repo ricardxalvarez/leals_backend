@@ -8,8 +8,8 @@ async function resizeImageBase64(width, height, quality, image) {
     jimp.read(buf, (err, image) => {
         if (err) return null;
         else {
-            image.resize(100, 100, jimp.AUTO)
-                .quality(100)
+            image.resize(width, height)
+                .quality(quality)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     if (err) return null
                     if (src)
