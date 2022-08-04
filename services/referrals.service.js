@@ -87,7 +87,7 @@ export async function searchReferral(text, iduser, id) {
   if (text) {
     let usersList = results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario).sort(function (x, y) {
       // true values first
-      return (x.user.nombre_usuario.match(text) === y.user.nombre_usuario.match(text)) ? 0 : x.user.nombre_usuario.match(text) ? -1 : 1;
+      return (x.user.nombre_usuario.match(text) === y.user.nombre_usuario.match(text)) ? 0 : x.user.nombre_usuario.match(text) ? 1 : -1;
       // false values first
       // return (x === y)? 0 : x? 1 : -1;
     })
