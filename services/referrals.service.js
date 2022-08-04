@@ -102,7 +102,7 @@ export async function referralChildren({ iduser, level, id }) {
     const user = tempUsers[i];
     console.log(user)
     const avatar = await resizeImageBase64(70, 70, 70, user.avatar)
-    const newObject = { ...user, avatar: avatar }
+    const newObject = await { ...user, avatar: avatar }
     users.push(newObject)
   }
   function Node(user) {
