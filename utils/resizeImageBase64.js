@@ -18,7 +18,7 @@ async function resizeImageBase64(width, height, quality, data) {
             response = null
             return null;
         } else response = true
-    }
+    }()
     console.log(response)
     if (response) {
         return null
