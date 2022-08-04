@@ -97,7 +97,10 @@ export async function searchReferral(text, iduser, id) {
 
 export async function referralChildren({ iduser, level, id }) {
   let users = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
-  users = await users.map(async object => { return { ...object, avatar: await resizeImageBase64(100, 100, 60, object.avatar) } })
+  users = await users.map(async object => {
+    const newAvatar = await resizeImageBase64(100, 100, 60, object.avatar)
+    return await { ...object, avatar: newAvatar }
+  })
   function Node(user) {
     this.user = user,
       this.children = [];
