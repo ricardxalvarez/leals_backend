@@ -16,12 +16,12 @@ async function resizeImageBase64(width, height, quality, data) {
             console.log('encoded image missing width or height');
             response = null
             return null;
-        }
+        } else response = true
     }
     const base = 'base64'
     const base64str = data.slice(data.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
-    await jimp.read(buf, (err, image) => {
+    response && await jimp.read(buf, (err, image) => {
         if (!image) { response = null; return; }
         if (err) { response = null; return; }
         else {
