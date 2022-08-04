@@ -13,7 +13,7 @@ function validateAvatarURL(req, res, next) {
     }
 
     let image = new Image()
-
+    consolelog(knownTypes[data[0]])
     if (!knownTypes[data[0]]) {
         console.log("encoded image didn't match known types");
         return res.send({ status: false, content: "encoded image didn't match known types" });
