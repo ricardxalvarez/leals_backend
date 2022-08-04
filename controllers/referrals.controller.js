@@ -17,7 +17,7 @@ export async function searchReferral(req, res, next) {
     const userid = req.user.id
     referralsService.searchReferral(req.body.text, id_progenitor, userid)
         .then(content => {
-            res.send({ status: true, content: content.results, last_level: content.last_level, childs_count: content.childs_count })
+            res.send({ status: content.results.children.length > 0, content: content.results, last_level: content.last_level, childs_count: content.childs_count })
         })
         .catch(error => console.log(error))
 }
