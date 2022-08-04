@@ -86,8 +86,9 @@ export async function searchReferral(text, iduser, id) {
   }
   if (text) {
     const matchingElement = results.find(object => object.user.nombre_usuario === text)
-    let usersList = results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario).filter(object => object.user.nombre_usuario !== text)
-    usersList.unshift(matchingElement)
+    let usersList = results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario)
+    matchingElement && usersList.filter(object => object.user.nombre_usuario !== text)
+    matchingElement && usersList.unshift(matchingElement)
     results = { user: results[0].user, children: usersList.length > 0 ? usersList : 'No user found' }
   } else results[0]
   return { results, last_level: lastLevel, childs_count: childsCount }
