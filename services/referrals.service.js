@@ -100,9 +100,10 @@ export async function referralChildren({ iduser, level, id }) {
   let users = []
   for (let i = 0; i < tempUsers.length; i++) {
     const user = tempUsers[i];
+    console.log(user)
     const avatar = await resizeImageBase64(70, 70, 70, user.avatar)
-    const newObject = await { ...user, avatar: avatar }
-    await users.push(newObject)
+    const newObject = { ...user, avatar: avatar }
+    users.push(newObject)
   }
   function Node(user) {
     this.user = user,
@@ -169,7 +170,6 @@ export async function referralChildren({ iduser, level, id }) {
   let isParent = false
   for (const object of users) {
     if (object.id === id) isParent = true
-    console.log(object)
     if (isParent) {
       if (object.id_sponsor) {
         if (object.id === id) {
