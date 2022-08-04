@@ -6,11 +6,12 @@ import countries from '../middlewares/countries.js';
 import validate from '../middlewares/validate.js';
 import { referralsValidation, userValidation } from '../validations/index.js'
 import { countriesController } from '../controllers/index.js';
+import validateAvatarURL from '../middlewares/validateAvatarURL.js';
 
 const router = express.Router();
 /* Rutas de Users. */
 router.post('/register', validate(userValidation.register), countries, usersController.postSignup);
-router.put('/registercompleted', validate(userValidation.registerCompleted), usersController.completeRegister);
+router.put('/registercompleted', validate(userValidation.registerCompleted), validateAvatarURL, usersController.completeRegister);
 router.post('/login', validate(userValidation.login), usersController.postSignin);
 router.post('/login/password2', validate(userValidation.loginPassword2), usersController.postSigninPsswd2)
 router.get('/users/list', authPswd1, usersController.list);
@@ -18,6 +19,7 @@ router.get('/users/search', authPswd1, usersController.search);
 // id user is not necessary, since we are already using bearer token
 router.put('/users/updatepass1', validate(userValidation.updatePass1), authPswd1, usersController.updatePassword1);
 router.put('/users/updatepass2', validate(userValidation.updatePass2), authPswd1, usersController.updatePassword2);
+router.put('/users/avatar', validate(userValidation.updateAvatar), validateAvatarURL, authPswd1, usersController.updateAvatar)
 // id user is not necessary, since we are already using bearer token
 router.put('/users/update', validate(userValidation.updateUser), countries, authPswd1, usersController.updateUser);
 router.put('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);

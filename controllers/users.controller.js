@@ -285,29 +285,18 @@ export function updatePassword1(req, res) {
 }
 
 export function updatePassword2(req, res) {
-  const { password } = req.body
+  const { password, oldPassword } = req.body
   const iduser = req.user.id
   let salt = bcrypt.genSaltSync(10);
   let pass2 = bcrypt.hashSync(password, salt);
   var values = {
     iduser,
-    pass2
+    pass2,
+    oldPassword
   };
   userService.updateUserPassword2(values)
-    .then(user => {
-      if (user.rowCount > 0) {
-        let result = {
-          status: true,
-          content: "Password successfully updated"
-        }
-        res.status(200).json(result)
-      } else {
-        let result = {
-          status: false,
-          content: "User does not exist"
-        }
-        res.status(400).json(result)
-      }
+    .then(response => {
+      res.send(response)
     })
     .catch(err => {
       console.log(err)
@@ -477,6 +466,17 @@ export async function addPaymentMethods(req, res, next) {
       } else res.send({ status: false })
     })
     .catch(error => console.log(error))
+}
+
+export async function updateAvatar(req, res, next) {
+  const userid = req.user.id
+  const avatar = req.body.avatar
+  userService.updateAvatar(userid, avatar)
+    .then(response => res.send(response))
+    .catch(error => {
+      console.log(error)
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ status: false, content: 'error uploading your new avatar' })
+    })
 }
 
 async function sendMailToClient(mailOptions) {

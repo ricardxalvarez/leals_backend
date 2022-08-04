@@ -86,15 +86,33 @@ export async function updateUser(data, newEmail, oldEmail) {
 }
 
 export async function updateUserPassword1(data) {
-  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE id=($2)",
+  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE id=($2) RETURNING *",
     [data.pass1, data.iduser])
   return user
 }
 
 export async function updateUserPassword2(data) {
-  let user = await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2)",
-    [data.pass2, data.iduser])
-  return user
+  let user = await (await conexion.query('SELECT password2 FROM usuarios WHERE id=($1)', [id])).rows[0]
+  if (!user) {
+    return { status: true, content: 'User does not exist' }
+  }
+  if (user.password2) {
+    const isPasswordMatch = bcrypt.compare(data.oldPassword, user.password2)
+    if (isPasswordMatch) {
+      await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2) RETURNING *",
+        [data.pass2, data.iduser])
+      return { status: true, content: 'Password updated successfully' }
+    } else return { status: false, content: 'incorrect password' }
+  } else {
+    await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2) RETURNING *",
+      [data.pass2, data.iduser])
+    return { status: true, content: 'Password updated successfully' }
+  }
+}
+
+export async function updateAvatar(userid, avatar) {
+  let user = await conexion.query('UPDATE usuarios SET avatar=($1) WHERE id=($2)', [avatar, userid])
+  return { status: true, content: 'profile pic successfully updated' }
 }
 
 export async function recoveryPasswordUser(email) {

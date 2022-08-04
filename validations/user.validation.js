@@ -16,7 +16,7 @@ export const registerCompleted = {
         skills: joi.string().required().max(50),
         phone: joi.string().required(),
         password2: joi.string().required(),
-        avatar: joi.any().meta({ swaggerType: 'file' }).optional().allow('').description('image file')
+        avatar: joi.string().optional()
     })
 }
 
@@ -72,5 +72,11 @@ export const paymentMethods = {
         usd_direction: joi.string().required(),
         leal_direction: joi.string().required(),
         payment_methods: joi.array().optional()
+    })
+}
+
+export const updateAvatar = {
+    body: joi.object().keys({
+        avatar: joi.string().required()
     })
 }
