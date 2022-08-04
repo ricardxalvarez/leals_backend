@@ -165,6 +165,7 @@ export async function referralChildren({ iduser, level, id }) {
     if (object.id === id) isParent = true
     if (isParent) {
       if (object.id_sponsor) {
+        console.log(object)
         if (object.id === id) {
           tree.add(object)
         } else tree.add(object, object.id_sponsor)
