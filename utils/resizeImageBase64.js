@@ -10,8 +10,10 @@ async function resizeImageBase64(width, height, quality, image) {
         else {
             image.resize(100, 100, jimp.AUTO, (err, value) => {
                 if (err) return null
-                if (value)
+                if (value) {
+                    console.log(value)
                     return value
+                }
                 else
                     return null
             })
