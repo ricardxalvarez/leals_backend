@@ -12,10 +12,7 @@ async function resizeImageBase64(width, height, quality, image) {
                 .quality(quality)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     if (err) return null
-                    if (src)
-                        return src
-                    else
-                        return null
+                    return src
                 })
         }
     })
