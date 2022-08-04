@@ -25,6 +25,7 @@ async function resizeImageBase64(width, height, quality, data) {
             } else response = null
         }
     }
+    console.log(response);
     if (response) {
         return null;
     }
@@ -32,13 +33,11 @@ async function resizeImageBase64(width, height, quality, data) {
     const base64str = data.slice(data.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
     await jimp.read(buf, (err, image) => {
-        console.log(image);
-        if (err || !image) { response = null; return; }
+        if (err || !image) response = null
         else {
             image.resize(width, height)
                 .quality(quality)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
-                    console.log(src)
                     if (err) { response = null; return; }
                     response = src;
                 })
