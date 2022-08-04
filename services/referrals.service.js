@@ -85,7 +85,7 @@ export async function searchReferral(text, iduser, id) {
     childsCount.push(element.length)
   }
   if (text) {
-    results = results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario)
+    results = { user: results[0].user, children: results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario).sort(a => a.user.nombre_usuario.match(text)) }
   } else results[0]
   return { results, last_level: lastLevel, childs_count: childsCount }
 }
@@ -175,8 +175,8 @@ export async function referralChildren({ iduser, level, id }) {
     const element = results.filter(object => object.user.level === i);
     childsCount.push(element.length)
   }
-  if (level) {
-    results = results.filter(object => object.user.level === level)
+  if (level > 0) {
+    results = { user: results[0].user, children: results.filter(object => object.user.level === level) }
   } else results = results[0]
   return { results, last_level: lastLevel, childs_count: childsCount }
 }
