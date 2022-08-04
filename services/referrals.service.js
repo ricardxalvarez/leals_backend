@@ -101,6 +101,9 @@ export async function referralChildren({ iduser, level, id }) {
     resizeImageBase64(100, 100, 60, object.avatar).then(value => {
       return { ...object, avatar: value }
     })
+      .catch(reason => {
+        return object
+      })
   })
   function Node(user) {
     this.user = user,
