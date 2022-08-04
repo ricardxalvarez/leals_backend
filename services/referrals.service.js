@@ -102,6 +102,7 @@ export async function referralChildren({ iduser, level, id }) {
       return { ...object, avatar: value }
     })
       .catch(reason => {
+        console.log(reason)
         return object
       })
   })
