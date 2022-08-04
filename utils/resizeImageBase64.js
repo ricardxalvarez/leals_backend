@@ -11,8 +11,10 @@ async function resizeImageBase64(width, height, quality, data) {
     image.onload = function () {
         //This should load the image so that you can actually check
         //height and width.
+        if (!image) { response = null; return null; }
         if (image.height === 0 || image.width === 0) {
             console.log('encoded image missing width or height');
+            response = null
             return null;
         }
     }
