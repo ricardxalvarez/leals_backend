@@ -8,7 +8,6 @@ async function resizeImageBase64(width, height, quality, image) {
     let response
     await jimp.read(buf, (err, image) => {
         if (err) response = null;
-        if (!image) response = null;
         else {
             image.resize(width, height)
                 .quality(quality)
