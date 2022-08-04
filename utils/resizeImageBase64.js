@@ -7,6 +7,7 @@ async function resizeImageBase64(width, height, quality, data) {
     const buf = Buffer.from(base64str, base);
     let response
     await jimp.read(buf, (err, image) => {
+        if (!image) { response = null; return; }
         if (err) { response = null; return; }
         else {
             image.resize(width, height)
@@ -18,7 +19,7 @@ async function resizeImageBase64(width, height, quality, data) {
                 })
         }
     })
-    return response
+    return response;
 }
 
-export default resizeImageBase64
+export default resizeImageBase64;
