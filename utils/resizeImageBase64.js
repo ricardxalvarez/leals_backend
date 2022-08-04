@@ -8,15 +8,24 @@ async function resizeImageBase64(width, height, quality, data) {
 
     let image = new Image()
     image.src = data
-    image.onload = () => {
-        //This should load the image so that you can actually check
-        //height and width.
+    if (image.complete) {
         console.log(image + 'w')
         if (!image) response = true
         if (image.height === 0 || image.width === 0) {
             console.log('encoded image missing width or height');
             response = true
         } else response = true
+    } else {
+        image.onload = () => {
+            //This should load the image so that you can actually check
+            //height and width.
+            console.log(image + 'w')
+            if (!image) response = true
+            if (image.height === 0 || image.width === 0) {
+                console.log('encoded image missing width or height');
+                response = true
+            } else response = true
+        }
     }
     console.log(response)
     if (response) {
