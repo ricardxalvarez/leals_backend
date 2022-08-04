@@ -85,7 +85,7 @@ export async function searchReferral(text, iduser, id) {
     childsCount.push(element.length)
   }
   if (text) {
-    results = { user: results[0].user, children: results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario).sort(a => a.user.nombre_usuario.match(text)) }
+    results = { user: results[0].user, children: results.filter(object => object.user.nombre_usuario.toLowerCase().includes(text.toLowerCase())).sort((a, b) => a.user.nombre_usuario - b.user.nombre_usuario).sort(a => a.user.nombre_usuario.match(text) ? 1 : -1) }
   } else results[0]
   return { results, last_level: lastLevel, childs_count: childsCount }
 }
