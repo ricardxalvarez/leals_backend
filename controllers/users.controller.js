@@ -491,6 +491,7 @@ async function sendMailToClient(mailOptions) {
 }
 
 async function sendMessageToClient(phone, code) {
+  phone = phone.replace(/\ /g, "").replace(/\-/g, "")
   client.messages.create({
     to: 'whatsapp:' + phone,
     from: 'whatsapp:' + config.twilio.phone_number,
