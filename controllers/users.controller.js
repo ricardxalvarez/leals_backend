@@ -466,16 +466,16 @@ export async function updateAvatar(req, res, next) {
     })
 }
 
-export function sendVerificationMessage(req, res, next) {
+export async function sendVerificationMessage(req, res, next) {
   const user = req.user
   userService.checkUserExists(user)
-    .then(response => {
+    .then(async response => {
       if (response.status === false) {
         return res.send(response)
       }
       if (!response.is_phone_verified) {
         await tokenService.deleteTokensPhoneVerification(user.id)
-        const code = await(await tokenService.createTokenPhoneVerification(user.id)).rows[0]
+        const code = await (await tokenService.createTokenPhoneVerification(user.id)).rows[0]
         const body = `You're about to verify your number phone!, use this code ${code.code}`
         sendMessageToClient(user.telefono, body)
       } else return res.send({ status: false, content: 'number phone already verified' })
