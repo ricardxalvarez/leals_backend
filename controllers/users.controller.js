@@ -229,7 +229,7 @@ export function search(req, res, next) {
       if (user.rows.length > 0) {
         let respuesta = {
           status: true,
-          content: user.rows[0]
+          content: { ...user.rows[0], password2: user.rows[0].password2 ? true : false }
         }
         res.send(respuesta);
       } else {
@@ -250,30 +250,16 @@ export function search(req, res, next) {
 }
 
 export function updatePassword1(req, res) {
-  const { password } = req.body
+  const { password, oldPassword } = req.body
   const iduser = req.user.id
-  let salt = bcrypt.genSaltSync(10);
-  let pass1 = bcrypt.hashSync(password, salt);
   var values = {
     iduser,
-    pass1
+    password,
+    oldPassword
   };
   userService.updateUserPassword1(values)
-    .then(user => {
-      if (user.rowCount > 0) {
-        let result = {
-          status: true,
-          content: "Password successfully updated"
-        }
-        res.status(200).json(result)
-      } else {
-        console.log("El Usuario no existe")
-        let result = {
-          status: false,
-          content: "User does not exist"
-        }
-        res.status(200).json(result)
-      }
+    .then(response => {
+      res.send(response)
     })
     .catch(err => {
       console.log(err)

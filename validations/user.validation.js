@@ -36,12 +36,14 @@ export const loginPassword2 = {
 
 export const updatePass1 = {
     body: joi.object().keys({
-        password: joi.string().trim().required()
+        password: joi.string().trim().required(),
+        oldPassword: joi.string().trim().required()
     })
 }
 export const updatePass2 = {
     body: joi.object().keys({
-        password: joi.string().trim().required()
+        password: joi.string().trim().required(),
+        oldPassword: joi.string().trim().optional()
     })
 }
 

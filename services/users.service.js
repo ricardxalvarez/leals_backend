@@ -68,7 +68,7 @@ export async function listUsers() {
 }
 
 export async function searchUser(iduser) {
-  var user = await conexion.query("SELECT id, email, telefono, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais, is_email_verified, is_phone_verified FROM usuarios WHERE id=($1)",
+  var user = await conexion.query("SELECT id, email, telefono, avatar, nombre_usuario, status_p2p, habilidades, full_nombre, codigo_pais, is_email_verified, is_phone_verified, password2 FROM usuarios WHERE id=($1)",
     [iduser]);
   return user;
 }
@@ -86,9 +86,18 @@ export async function updateUser(data, newEmail, oldEmail) {
 }
 
 export async function updateUserPassword1(data) {
-  let user = await conexion.query("UPDATE usuarios SET password1=($1) WHERE id=($2) RETURNING *",
-    [data.pass1, data.iduser])
-  return user
+  let user = await (await conexion.query('SELECT id, password1 FROM usuarios WHERE id=($1)', [data.iduser])).rows[0]
+  const isPasswordMatch = bcrypt.compare(data.oldPassword, user.password2)
+  if (!user) {
+    return { status: false, content: 'User does not exist' }
+  }
+  if (isPasswordMatch) {
+    let salt = bcrypt.genSaltSync(10);
+    const newPassword = bcrypt.hashSync(data.password, salt);
+    await conexion.query("UPDATE usuarios SET password1=($1) WHERE id=($2) RETURNING *",
+      [newPassword, data.iduser])
+    return { status: true, content: 'Password successfully updated' }
+  } else return { status: false, content: 'Password does not match' }
 }
 
 export async function updateUserPassword2(data) {
