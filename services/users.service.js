@@ -170,9 +170,21 @@ export async function verifyEmail(userid) {
   }
   if (!user.is_email_verified) {
     await (await conexion.query('UPDATE usuarios SET is_email_verified=($1) WHERE id=($2) RETURNING *', [true, userid])).rows[0]
-    await conexion.query('DELETE FROM tokens WHERE owner=($1)', [userid])
+    await conexion.query('DELETE FROM email_verification_tokens WHERE owner=($1)', [userid])
     return { status: true, content: "User's email verified succesfully" }
   } else return { status: false, content: "User's email already verified" }
+}
+
+export async function verifyPhone(userid) {
+  const user = (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [userid])).rows[0]
+  if (!user) {
+    return { status: false, content: 'User does not exists' }
+  }
+  if (!user.is_phone_verified) {
+    await (await conexion.query('UPDATE usuarios SET is_phone_verified=($1) WHERE id=($2) RETURNING *', [true, userid])).rows[0]
+    await conexion.query('DELETE FROM phone_verification_tokens WHERE owner=($1)', [userid])
+    return { status: true, content: "User's phone number verified succesfully" }
+  } else return { status: false, content: "User's phone number already verified" }
 }
 
 export async function addPaymentMethods(userid, data) {

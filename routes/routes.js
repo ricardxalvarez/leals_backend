@@ -30,6 +30,7 @@ router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, us
 router.put('/users/paymentmethod', validate(userValidation.paymentMethods), authPswd1, usersController.addPaymentMethods)
 
 router.post('/phone/sendVerification', authPswd1, usersController.sendVerificationMessage)
+router.post('/phone/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyPhone)
 // Countries
 
 router.get('/countries', countriesController.retrieveCountry)

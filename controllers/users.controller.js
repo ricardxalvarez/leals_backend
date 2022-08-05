@@ -465,7 +465,7 @@ export async function sendVerificationMessage(req, res, next) {
       if (!response.is_phone_verified) {
         await tokenService.deleteTokensPhoneVerification(user.id)
         const code = await (await tokenService.createTokenPhoneVerification(user.id)).rows[0]
-        const body = `Your verification code for Leals is: \n*${code.code}* \nDon't share this information with anyone, uur employees will never ask for it.`
+        const body = `Your verification code for Leals is: \n*${code.code}* \nDon't share this information with anyone, our employees will never ask for it.`
         let result = await sendMessageToClient(user.telefono, body)
         return res.send(result)
       } else return res.send({ status: false, content: 'number phone already verified' })
@@ -473,6 +473,30 @@ export async function sendVerificationMessage(req, res, next) {
     .catch(error => {
       console.log(error)
       res.send({ status: false, content: 'Error sending message' })
+    })
+}
+
+export async function verifyPhone(req, res, next) {
+  const code = req.body.code
+  const userid = req.user.id
+  tokenService.getTokenPhoneVerification(userid, code)
+    .then(response => {
+      if (response.status === false) {
+        res.send(response)
+      } else {
+        userService.verifyPhone(userid)
+          .then(response => {
+            res.send(response)
+          })
+          .catch(error => {
+            console.log(error);
+            res.send({ status: false, content: "error verifing phone number" })
+          })
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.send({ status: false, content: "error verifing phone number" })
     })
 }
 
