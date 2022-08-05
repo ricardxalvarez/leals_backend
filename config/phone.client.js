@@ -7,6 +7,7 @@ const client = twilio(accountSid, authToken)
 client.verify.v2.services('VA8fae577af25bf454192050a0c45af96d')
     .verifications
     .create({ to: config.twilio.phone_number, channel: 'whatsapp' })
-    .then(verification => console.log(verification.accountSid));
+    .then(verification => console.log(verification.accountSid))
+    .catch(error => console.log(error))
 
 export default client
