@@ -101,7 +101,7 @@ export async function updateUserPassword1(data) {
 }
 
 export async function updateUserPassword2(data) {
-  let user = await (await conexion.query('SELECT password2 FROM usuarios WHERE id=($1)', [id])).rows[0]
+  let user = await (await conexion.query('SELECT password2 FROM usuarios WHERE id=($1)', [data.iduser])).rows[0]
   if (!user) {
     return { status: true, content: 'User does not exist' }
   }

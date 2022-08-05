@@ -12,7 +12,7 @@ import cropAvatarImage from '../middlewares/cropAvatarImage.js';
 const router = express.Router();
 /* Rutas de Users. */
 router.post('/register', validate(userValidation.register), countries, usersController.postSignup);
-router.put('/registercompleted', validate(userValidation.registerCompleted), validateAvatarURL, cropAvatarImage, usersController.completeRegister);
+router.put('/registercompleted', express.urlencoded({ extended: true, limit: '5mb' }), validate(userValidation.registerCompleted), validateAvatarURL, cropAvatarImage, usersController.completeRegister);
 router.post('/login', validate(userValidation.login), usersController.postSignin);
 router.post('/login/password2', validate(userValidation.loginPassword2), usersController.postSigninPsswd2)
 router.get('/users/list', authPswd1, usersController.list);
@@ -20,7 +20,7 @@ router.get('/users/search', authPswd1, usersController.search);
 // id user is not necessary, since we are already using bearer token
 router.put('/users/updatepass1', validate(userValidation.updatePass1), authPswd1, usersController.updatePassword1);
 router.put('/users/updatepass2', validate(userValidation.updatePass2), authPswd1, usersController.updatePassword2);
-router.put('/users/avatar', validate(userValidation.updateAvatar), validateAvatarURL, authPswd1, cropAvatarImage, usersController.updateAvatar)
+router.put('/users/avatar', express.urlencoded({ extended: true, limit: '5mb' }), validate(userValidation.updateAvatar), validateAvatarURL, authPswd1, cropAvatarImage, usersController.updateAvatar)
 // id user is not necessary, since we are already using bearer token
 router.put('/users/update', validate(userValidation.updateUser), countries, authPswd1, usersController.updateUser);
 router.put('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
@@ -28,6 +28,8 @@ router.put('/recoverypassword', validate(userValidation.recoverPassword), usersC
 router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
 router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
 router.put('/users/paymentmethod', validate(userValidation.paymentMethods), authPswd1, usersController.addPaymentMethods)
+
+router.post('/email/sendVerification', authPswd1)
 // Countries
 
 router.get('/countries', countriesController.retrieveCountry)
