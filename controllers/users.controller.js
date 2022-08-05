@@ -477,6 +477,7 @@ export async function sendVerificationMessage(req, res, next) {
         await tokenService.deleteTokensPhoneVerification(user.id)
         const code = await (await tokenService.createTokenPhoneVerification(user.id)).rows[0]
         sendMessageToClient(user.telefono, code.code)
+        return res.send({ status: true, content: 'code sent to client' })
       } else return res.send({ status: false, content: 'number phone already verified' })
     })
     .catch(error => {
