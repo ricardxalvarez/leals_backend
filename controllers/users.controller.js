@@ -501,7 +501,7 @@ async function sendMailToClient(mailOptions) {
 }
 
 async function sendMessageToClient(phone, code) {
-  client.services('VA8fae577af25bf454192050a0c45af96d')
+  client.verify.v2.services('VA8fae577af25bf454192050a0c45af96d')
     .verifications
     .create({ to: phone, channel: 'whatsapp', customCode: code })
     .then(response => console.log(response))
