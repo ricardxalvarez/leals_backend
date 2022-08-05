@@ -87,7 +87,7 @@ export async function updateUser(data, newEmail, oldEmail) {
 
 export async function updateUserPassword1(data) {
   let user = await (await conexion.query('SELECT id, password1 FROM usuarios WHERE id=($1)', [data.iduser])).rows[0]
-  const isPasswordMatch = bcrypt.compare(data.oldPassword, user.password2)
+  const isPasswordMatch = bcrypt.compare(data.oldPassword, user.password1)
   if (!user) {
     return { status: false, content: 'User does not exist' }
   }
