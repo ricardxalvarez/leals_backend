@@ -492,8 +492,8 @@ async function sendMailToClient(mailOptions) {
 
 async function sendMessageToClient(phone, code) {
   client.messages.create({
-    to: phone,
-    from: config.twilio.phone_number,
+    to: 'whatsapp' + phone,
+    from: 'whatsapp' + config.twilio.phone_number,
     body: 'hello'
   })
     .then(response => console.log(response))
