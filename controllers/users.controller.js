@@ -298,6 +298,7 @@ export function updateUser(req, res) {
   const { fullname, email, skills, idcountry, phone } = req.body
   const iduser = req.user.id
   const emailUser = req.user.email
+  const phoneUser = req.user.telefono
   var values = {
     iduser,
     email,
@@ -309,21 +310,9 @@ export function updateUser(req, res) {
   userService.checkEmailExists(email, emailUser)
     .then(response => {
       if (response.status) {
-        userService.updateUser(values, email, emailUser)
+        userService.updateUser(values, email, emailUser, phone, phoneUser)
           .then(user => {
-            if (user.rowCount > 0) {
-              let result = {
-                status: true,
-                content: "User successfully updated"
-              }
-              res.status(200).send(result)
-            } else {
-              let result = {
-                status: false,
-                content: "User not found"
-              }
-              res.status(400).send(result)
-            }
+            res.send(user)
           })
           .catch(err => {
             console.log(err)

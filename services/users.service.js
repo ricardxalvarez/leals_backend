@@ -73,15 +73,38 @@ export async function searchUser(iduser) {
   return user;
 }
 
-export async function updateUser(data, newEmail, oldEmail) {
+export async function updateUser(data, newEmail, oldEmail, newPhone, oldPhone) {
+  const isNumberPhoneTaken = await (await conexion.query('SELECT id FROM usuarios WHERE telefono=($1)', [data.phone])).rows[0]
+  if (isNumberPhoneTaken) {
+    return {
+      status: false,
+      content: "Already exists a user with this phone number"
+    }
+  }
   if (newEmail === oldEmail) {
-    let user = await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5) WHERE id=($6)",
-      [data.fullname, data.email, data.skills, data.phone, data.idcountry, data.iduser])
-    return user
+    if (newPhone === oldPhone) {
+      await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5) WHERE id=($6)",
+        [data.fullname, data.email, data.skills, data.phone, data.idcountry, data.iduser])
+    } else {
+      await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5), is_phone_verified=($6) WHERE id=($7)",
+        [data.fullname, data.email, data.skills, data.phone, data.idcountry, false, data.iduser])
+    }
+    return {
+      status: true,
+      content: "User successfully updated"
+    }
   } else {
-    let user = await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5), is_email_verified=($6) WHERE id=($7)",
-      [data.fullname, data.email, data.skills, data.phone, data.idcountry, false, data.iduser])
-    return user
+    if (newPhone === oldPhone) {
+      await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5), is_email_verified=($6) WHERE id=($7)",
+        [data.fullname, data.email, data.skills, data.phone, data.idcountry, false, data.iduser])
+    } else {
+      await conexion.query("UPDATE usuarios SET full_nombre=($1),email=($2),habilidades=($3),telefono=($4),codigo_pais=($5), is_email_verified=($6), is_phone_verified=($7) WHERE id=($8)",
+        [data.fullname, data.email, data.skills, data.phone, data.idcountry, false, false, data.iduser])
+    }
+    return {
+      status: true,
+      content: "User successfully updated"
+    }
   }
 }
 
