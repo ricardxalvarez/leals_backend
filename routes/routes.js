@@ -29,7 +29,7 @@ router.post('/email/sendVerification', authPswd1, usersController.sendVerificati
 router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
 router.put('/users/paymentmethod', validate(userValidation.paymentMethods), authPswd1, usersController.addPaymentMethods)
 
-router.post('/email/sendVerification', authPswd1)
+router.post('/phone/sendVerification', authPswd1, usersController.sendVerificationMessage)
 // Countries
 
 router.get('/countries', countriesController.retrieveCountry)
