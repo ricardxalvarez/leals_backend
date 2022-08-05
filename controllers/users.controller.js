@@ -493,7 +493,7 @@ async function sendMailToClient(mailOptions) {
 async function sendMessageToClient(phone, code) {
   client.verify.v2.services('VA8fae577af25bf454192050a0c45af96d')
     .verifications
-    .create({ to: phone, channel: 'whatsapp', customFriendlyName: 'Leals team', customCode: code })
+    .create({ to: phone, channel: 'whatsapp', customFriendlyName: 'Leals team', customMessage: 'hola' })
     .then(response => console.log(response))
     .catch(error => console.log(error))
 }
