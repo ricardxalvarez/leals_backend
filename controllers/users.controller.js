@@ -6,6 +6,7 @@ import fs from 'fs'
 import config from '../config/config.js';
 import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
+import client from '../config/phone.client.js';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername } = req.body
@@ -465,6 +466,26 @@ export async function updateAvatar(req, res, next) {
     })
 }
 
+export function sendVerificationMessage(req, res, next) {
+  const user = req.user
+  userService.checkUserExists(user)
+    .then(response => {
+      if (response.status === false) {
+        return res.send(response)
+      }
+      if (!response.is_phone_verified) {
+        await tokenService.deleteTokensPhoneVerification(user.id)
+        const code = await(await tokenService.createTokenPhoneVerification(user.id)).rows[0]
+        const body = `You're about to verify your number phone!, use this code ${code.code}`
+        sendMessageToClient(user.telefono, body)
+      } else return res.send({ status: false, content: 'number phone already verified' })
+    })
+    .catch(error => {
+      console.log(error)
+      res.send({ status: false, content: 'Error sending message' })
+    })
+}
+
 async function sendMailToClient(mailOptions) {
   transporter.sendMail(mailOptions, function (error, info) {
     var resp = true;
@@ -478,4 +499,14 @@ async function sendMailToClient(mailOptions) {
       return resp
     }
   });
+}
+
+async function sendMessageToClient(phone, body) {
+  client.messages.create({
+    from: 'whatsapp' + config.twilio.phone_number,
+    body: body,
+    to: 'whatsapp' + phone
+  })
+    .then(response => console.log(response))
+    .catch(error => console.log(error))
 }

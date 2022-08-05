@@ -22,7 +22,10 @@ const env = joi.object().keys({
     AUTH_EMAIL: joi.string().required(),
     AUTH_EMAIL_PASS: joi.string().required(),
     AUTH_SECURE: joi.boolean().required(),
-    SESSION_SECRET: joi.string().required()
+    SESSION_SECRET: joi.string().required(),
+    TWILIO_ACCOUNT_SID: joi.string().required(),
+    TWILIO_AUTH_TOKEN: joi.string().required(),
+    TWILIO_PHONE_NUMBER: joi.string().required()
 })
     .unknown();
 
@@ -56,6 +59,11 @@ const vars = {
     },
     session: {
         secret: value.SESSION_SECRET
+    },
+    twilio: {
+        account_sid: value.TWILIO_ACCOUNT_SID,
+        auth_token: value.TWILIO_AUTH_TOKEN,
+        phone_number: value.TWILIO_PHONE_NUMBER
     }
 }
 
