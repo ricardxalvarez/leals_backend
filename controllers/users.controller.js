@@ -476,8 +476,7 @@ export async function sendVerificationMessage(req, res, next) {
       if (!response.is_phone_verified) {
         await tokenService.deleteTokensPhoneVerification(user.id)
         const code = await (await tokenService.createTokenPhoneVerification(user.id)).rows[0]
-        const body = `You're about to verify your number phone!, use this code ${code.code}`
-        sendMessageToClient(user.telefono, body)
+        sendMessageToClient(user.telefono, code.code)
       } else return res.send({ status: false, content: 'number phone already verified' })
     })
     .catch(error => {
@@ -501,12 +500,10 @@ async function sendMailToClient(mailOptions) {
   });
 }
 
-async function sendMessageToClient(phone, body) {
-  client.messages.create({
-    from: 'whatsapp' + config.twilio.phone_number,
-    body: body,
-    to: 'whatsapp' + phone
-  })
+async function sendMessageToClient(phone, code) {
+  client.services('VA8fae577af25bf454192050a0c45af96d')
+    .verifications
+    .create({ to: phone, channel: 'whatsapp', customCode: code })
     .then(response => console.log(response))
     .catch(error => console.log(error))
 }
