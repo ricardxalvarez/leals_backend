@@ -25,7 +25,6 @@ async function resizeImageBase64(width, height, quality, data) {
             } else error = null
         }
     }
-    console.log(error);
     if (error) {
         return null;
     }
@@ -38,12 +37,11 @@ async function resizeImageBase64(width, height, quality, data) {
             image.resize(width, height, jimp.AUTO)
                 .quality(quality)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
-                    if (err) return 'error uploading image'
+                    if (err) response = null
                     response = src
                 })
         })
         .catch(error => console.log(error))
-    console.log(response);
     return response;
 }
 
