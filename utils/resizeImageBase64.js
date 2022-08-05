@@ -29,6 +29,7 @@ async function resizeImageBase64(width, height, quality, data) {
     if (error) {
         return null;
     }
+    let response
     const base = 'base64'
     const base64str = data.slice(data.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
