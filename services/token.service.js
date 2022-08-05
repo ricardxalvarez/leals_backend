@@ -29,7 +29,7 @@ export async function createTokenPhoneVerification(userid) {
 export async function getTokenPhoneVerification(userid, code) {
     const token = await (await conexion.query('SELECT * FROM phone_verification_tokens WHERE owner=($1)', [userid])).rows[0]
     if (token) {
-        if (token.code === code) {
+        if (token.code == code) {
             return { status: true, content: "successfull verification" }
         } else return { status: false, content: "this code is not valid" }
     } else return { status: false, content: "this code is no longer available" }
