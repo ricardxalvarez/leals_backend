@@ -46,11 +46,11 @@ export const currencyControl = async (req, res, next) => {
             const sourceExchange = await rates[currency] || 0
             const sourceAmount = await sourceExchange * amount
             console.log(sourceAmount);
-            let response = await {
+            let response = {
                 status: true,
-                base: USD,
-                source: currency,
-                sourceExchange,
+                base: 'USD',
+                source: await currency,
+                sourceExchange: await sourceExchange,
                 baseAmount: amount,
                 sourceAmount
             }
