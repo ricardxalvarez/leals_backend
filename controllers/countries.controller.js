@@ -54,6 +54,7 @@ export const currencyControl = async (req, res, next) => {
                 baseAmount: amount,
                 sourceAmount
             }
+            console.log(response);
             if (!sourceExchange) {
                 response = await {
                     status: false,
