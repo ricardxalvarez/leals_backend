@@ -45,6 +45,7 @@ export const currencyControl = async (req, res, next) => {
             const rates = await (await result.json()).rates
             const sourceExchange = rates[currency] || 0
             const sourceAmount = sourceExchange * amount
+            console.log(sourceAmount)
             let response = {
                 status: true,
                 base: USD,
