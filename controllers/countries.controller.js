@@ -31,7 +31,7 @@ export const getCurrencyWithDial = (req, res, next) => {
 
 export const currencyControl = async (req, res, next) => {
     const currency = req.params.currency
-    const amount = req.query.amount || 1
+    const amount = parseInt(req.query.amount) || 1
     var myHeaders = new Headers();
     myHeaders.append("apikey", "nx4fRpHqyfycX58eydu8R1qjFQDMJKhK");
 
@@ -42,8 +42,18 @@ export const currencyControl = async (req, res, next) => {
 
     fetch(`https://api.apilayer.com/exchangerates_data/latest?base=USD`, requestOptions)
         .then(async result => {
-            const value = await result.json()
-            res.send(value)
+            const rates = await (await result.json()).rates
+            const sourceExchange = rates[currency] || 0
+            const sourceAmount = sourceExchange * amount
+            let response = {
+                status: true,
+                base: USD,
+                source: currency,
+                sourceExchange,
+                baseAmount: amount,
+                sourceAmount
+            }
+            res.send(response)
         })
         .catch(error => res.send(error));
 }
