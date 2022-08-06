@@ -43,20 +43,18 @@ export const currencyControl = async (req, res, next) => {
     fetch(`https://api.apilayer.com/exchangerates_data/latest?base=USD`, requestOptions)
         .then(async result => {
             const rates = await (await result.json()).rates
-            const sourceExchange = await rates[currency] || 0
-            const sourceAmount = await sourceExchange * amount
-            console.log(sourceAmount);
+            const sourceExchange = rates[currency] || 0
+            const sourceAmount = sourceExchange * amount
             let response = {
                 status: true,
                 base: 'USD',
-                source: await currency,
-                sourceExchange: await sourceExchange,
+                source: currency,
+                sourceExchange: sourceExchange,
                 baseAmount: amount,
                 sourceAmount
             }
-            console.log(response);
             if (!sourceExchange) {
-                response = await {
+                response = {
                     status: false,
                     content: 'Currrency not suported'
                 }
