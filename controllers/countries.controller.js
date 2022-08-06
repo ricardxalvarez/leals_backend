@@ -41,8 +41,9 @@ export const currencyControl = async (req, res, next) => {
     };
 
     fetch(`https://api.apilayer.com/exchangerates_data/latest?base=USD`, requestOptions)
-        .then(result => {
-            res.send(result)
+        .then(async result => {
+            const value = await result.json()
+            res.send(value)
         })
         .catch(error => res.send(error));
 }
