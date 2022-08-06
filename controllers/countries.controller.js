@@ -53,6 +53,12 @@ export const currencyControl = async (req, res, next) => {
                 baseAmount: amount,
                 sourceAmount
             }
+            if (!sourceExchange) {
+                response = {
+                    status: false,
+                    content: 'Currrency not suported'
+                }
+            }
             res.send(response)
         })
         .catch(error => res.send(error));
