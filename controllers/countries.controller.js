@@ -53,6 +53,7 @@ export const currencyControl = async (req, res, next) => {
                 baseAmount: amount,
                 sourceAmount
             }
+            console.log(response)
             res.send(response)
         })
         .catch(error => res.send(error));
