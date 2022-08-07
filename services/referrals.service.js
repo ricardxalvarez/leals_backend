@@ -175,7 +175,7 @@ export async function referralChildren({ iduser, level, id }) {
   let results = []
   let lastLevel
   for (const object of users) {
-    if (object.id === id) {
+    if (object.id == id) {
       console.log(id)
       console.log(object.id)
       tree.add(object)
