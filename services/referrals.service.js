@@ -17,26 +17,23 @@ export async function searchReferral(text, iduser, id) {
   class Tree {
     constructor() {
       this.root = null;
-      this.level = 0;
     }
     add(data, toNodeData) {
       const node = new Node(data);
       const parent = toNodeData ? this.findBFS(toNodeData) : null;
       if (parent) {
         if (parent.children[parent.children.length - 1]) {
-          if (parent.children[parent.children.length - 1].user.id_sponsor === node.user.id_sponsor) {
-            parent.children.push({ ...node, user: { ...node.user, level: this.level } })
+          if (results[results.length - 1]?.user.id === node.user.id_sponsor) {
+            parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
           } else {
-            this.level++;
-            parent.children.push({ ...node, user: { ...node.user, level: this.level } })
+            parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
           }
         } else {
-          this.level++;
-          parent.children.push({ ...node, user: { ...node.user, level: this.level } })
+          parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
         }
       } else {
         if (!this.root) {
-          this.root = { ...node, user: { ...node.user, level: this.level } };
+          this.root = { ...node, user: { ...node.user, level: 0 } };
         } else return 'Tried to store node at root when root already exists'
       }
     }
@@ -71,16 +68,12 @@ export async function searchReferral(text, iduser, id) {
   let tree = new Tree()
   let results = []
   let lastLevel
-  let isParent = false
+  let isChild = false
   for (const object of users) {
-    if (object.id === id) isParent = true
-    if (isParent) {
-      if (object.id_sponsor) {
-        if (object.id === id) {
-          tree.add(object)
-        } else tree.add(object, object.id_sponsor)
-      } else tree.add(object)
-    }
+    if (object.id_sponsor === id) isChild = true
+    if (object.id == id) {
+      tree.add(object)
+    } else if (object.id_sponsor && isChild) tree.add(object, object.id_sponsor)
   }
   tree.traverseBFS((node) => {
     results.push(node)
@@ -118,7 +111,6 @@ export async function referralChildren({ iduser, level, id }) {
   class Tree {
     constructor() {
       this.root = null;
-      this.level = 0;
     }
     add(data, toNodeData) {
       const node = new Node(data);
