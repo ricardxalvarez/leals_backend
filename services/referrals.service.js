@@ -125,9 +125,9 @@ export async function referralChildren({ iduser, level, id }) {
       if (parent) {
         if (parent.children[parent.children.length - 1]) {
           if (parent.children[parent.children.length - 1].user.id_sponsor === node.user.id_sponsor && node.user.id_sponsor) {
+            this.level++;
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
           } else {
-            this.level++;
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
           }
         } else {
