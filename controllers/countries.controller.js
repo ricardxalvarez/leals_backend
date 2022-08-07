@@ -25,7 +25,7 @@ export const retrieveCountry = (req, res, next) => {
 }
 
 export const getCurrencyWithDial = (req, res, next) => {
-    const countriesList = countries.filter(object => object.dialCode !== req.query.dialCode)
+    const countriesList = countries.filter(object => object.dialCode === req.query.dialCode)
     var myHeaders = new Headers();
     myHeaders.append("apikey", "nx4fRpHqyfycX58eydu8R1qjFQDMJKhK");
 
