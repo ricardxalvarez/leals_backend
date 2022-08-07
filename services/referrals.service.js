@@ -102,7 +102,7 @@ export async function searchReferral(text, iduser, id) {
 }
 
 export async function referralChildren({ iduser, level, id }) {
-  const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
+  const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id NULLS FIRST", [iduser])).rows
   const users = []
   for (let i = 0; i < tempUsers.length; i++) {
     const user = tempUsers[i];
