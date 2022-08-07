@@ -104,6 +104,7 @@ export async function searchReferral(text, iduser, id) {
 export async function referralChildren({ iduser, level, id }) {
   const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
   const users = []
+  let results = []
   for (let i = 0; i < tempUsers.length; i++) {
     const user = tempUsers[i];
     const avatar = await resizeImageBase64(60, 60, 70, user.avatar)
@@ -124,7 +125,7 @@ export async function referralChildren({ iduser, level, id }) {
       const parent = toNodeData ? this.findBFS(toNodeData) : null;
       if (parent) {
         if (parent.children[parent.children.length - 1]) {
-          if (parent.children[parent.children.length - 1].user.id_sponsor === node.user.id_sponsor && node.user.id_sponsor) {
+          if (results[results.length - 1].user.id === node.user.id_sponsor) {
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
           } else {
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
@@ -170,7 +171,6 @@ export async function referralChildren({ iduser, level, id }) {
   }
 
   let tree = new Tree()
-  let results = []
   let lastLevel
   let isChild = false
   for (const object of users) {
