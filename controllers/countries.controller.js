@@ -25,7 +25,6 @@ export const retrieveCountry = (req, res, next) => {
 }
 
 export const getCurrencyWithDial = (req, res, next) => {
-    console.log('+' + req.query.dialCode)
     const countriesList = countries.filter(object => object.dialCode === '+' + req.query.dialCode.replace(" ", ""))
     console.log(countriesList)
     var myHeaders = new Headers();
@@ -41,6 +40,7 @@ export const getCurrencyWithDial = (req, res, next) => {
             const rates = await (await result.json()).rates
             const dials = []
             for (let i = 0; i < countriesList.length; i++) {
+                console.log(rates[country.currencyCode])
                 const country = countriesList[i];
                 dials.push({ ...country, exchangeToUSD: rates[country.currencyCode] })
             }
