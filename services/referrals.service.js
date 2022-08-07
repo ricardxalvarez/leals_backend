@@ -124,8 +124,8 @@ export async function referralChildren({ iduser, level, id }) {
       const parent = toNodeData ? this.findBFS(toNodeData) : null;
       if (parent) {
         if (parent.children[parent.children.length - 1]) {
+          this.level++;
           if (parent.children[parent.children.length - 1].user.id_sponsor === node.user.id_sponsor) {
-            this.level++;
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
           } else {
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
@@ -176,8 +176,6 @@ export async function referralChildren({ iduser, level, id }) {
   for (const object of users) {
     if (object.id_sponsor === id) isChild = true
     if (object.id == id) {
-      console.log(id)
-      console.log(object.id)
       tree.add(object)
     } else if (object.id_sponsor && isChild) tree.add(object, object.id_sponsor)
   }
