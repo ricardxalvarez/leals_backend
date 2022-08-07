@@ -9,7 +9,7 @@ const generateToken = (user) => {
             password2: user.password2,
             nombre_usuario: user.nombre_usuario
         },
-        config.jwt.secret, { expiresIn: '8h' });
+        config.jwt.secret);
     return token;
 };
 

@@ -35,7 +35,7 @@ router.post('/phone/verify', validate(userValidation.emailVerify), authPswd1, us
 
 router.get('/countries', countriesController.retrieveCountry)
 router.get('/countries/:currency', countriesController.currencyControl)
-router.get('/contry/dial', countriesController.getCurrencyWithDial)
+router.get('/country/dial', countriesController.getCurrencyWithDial)
 
 // Referrals
 router.get('/referrals/children', validate(referralsValidation.getReferralChildren), authPswd1, referralsController.getReferralChildren)

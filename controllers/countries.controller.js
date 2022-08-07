@@ -25,7 +25,26 @@ export const retrieveCountry = (req, res, next) => {
 }
 
 export const getCurrencyWithDial = (req, res, next) => {
-    const country = countries.filter(object => object.dialCode !== req.query.dialCode)
+    const countriesList = countries.filter(object => object.dialCode !== req.query.dialCode)
+    var myHeaders = new Headers();
+    myHeaders.append("apikey", "nx4fRpHqyfycX58eydu8R1qjFQDMJKhK");
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders
+    };
+
+    fetch(`https://api.apilayer.com/exchangerates_data/latest?base=USD`, requestOptions)
+        .then(async result => {
+            const rates = await (await result.json()).rates
+            const dials = []
+            for (let i = 0; i < countriesList.length; i++) {
+                const country = countriesList[i];
+                dials.push({ ...country, exchangeToUSD: rates[country.currencyCode] })
+            }
+            res.send(dials)
+        })
+        .catch(error => res.send(error));
     res.send(country.dialCode);
 }
 
