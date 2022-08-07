@@ -131,7 +131,6 @@ export async function referralChildren({ iduser, level, id }) {
             parent.children.push({ ...node, user: { ...node.user, level: this.level } })
           }
         } else {
-          this.level++;
           parent.children.push({ ...node, user: { ...node.user, level: this.level } })
         }
       } else {
