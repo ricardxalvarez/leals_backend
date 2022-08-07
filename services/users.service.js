@@ -31,7 +31,7 @@ export async function checkEmailExists(email, emailUser) {
   let user = await (await conexion.query('SELECT * from usuarios WHERE email=($1)',
     [email])).rows[0];
   if (!user || user?.email === emailUser) {
-    return { status: true }
+    return { status: true, user }
   } else return { status: false, content: "Already exists a user with that email" }
 }
 export async function addCuenta(data) {

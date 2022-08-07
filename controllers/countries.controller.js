@@ -40,7 +40,6 @@ export const getCurrencyWithDial = (req, res, next) => {
             const dials = []
             for (let i = 0; i < countriesList.length; i++) {
                 const country = countriesList[i];
-                console.log(rates[country.currencyCode])
                 dials.push({ ...country, exchangeToUSD: rates[country.currencyCode] })
             }
             res.send(dials)
