@@ -172,7 +172,7 @@ export async function referralChildren({ iduser, level, id }) {
   let tree = new Tree()
   let results = []
   let lastLevel
-  for (const object of users.sort((a, b) => a.id_sponsor - b.id_sponsor)) {
+  for (const object of users) {
     if (object.id === id) {
       tree.add(object)
     } else tree.add(object, object.id_sponsor)
