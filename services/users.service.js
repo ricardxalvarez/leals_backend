@@ -188,8 +188,12 @@ export async function verifyPhone(userid) {
 }
 
 export async function addPaymentMethods(userid, data) {
-  const user = await (await conexion.query('UPDATE usuarios SET usd_direction=($2), leal_direction=($3), payment_methods=($4) WHERE id=($1) RETURNING *', [userid, data.usd_direction, data.leal_direction, data.payment_methods])).rows[0]
-  return user;
+  const user = await (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [userid])).rows[0]
+  const result = await (await conexion.query('UPDATE usuarios SET usd_direction=($2), leal_direction=($3), payment_methods=($4) WHERE id=($1) RETURNING *', [userid, data.usd_direction || user.usd_direction, data.leal_direction || user.leal_direction, data.payment_methods || user.payment_methods])).rows[0]
+  if (!user) return { status: false, content: "no user with such id" }
+  if (result) {
+    return { status: true, content: "payment info updated" }
+  } else return { status: false, content: "error updating payment methods" }
 }
 function getReferralCode() {//genera un codigo unico para los referidos
   let now = new Date().getTime();

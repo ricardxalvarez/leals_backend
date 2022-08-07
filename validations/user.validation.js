@@ -71,8 +71,8 @@ export const emailVerify = {
 
 export const paymentMethods = {
     body: joi.object().keys({
-        usd_direction: joi.string().required(),
-        leal_direction: joi.string().required(),
+        usd_direction: joi.string().optional(),
+        leal_direction: joi.string().optional(),
         payment_methods: joi.array().optional()
     })
 }

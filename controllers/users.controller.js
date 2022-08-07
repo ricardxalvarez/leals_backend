@@ -435,11 +435,7 @@ export async function addPaymentMethods(req, res, next) {
   const user = req.user
   const { payment_methods, usd_direction, leal_direction } = req.body
   userService.addPaymentMethods(user.id, { payment_methods, usd_direction, leal_direction })
-    .then(user => {
-      if (user) {
-        res.send({ status: true, content: "payment info updated" })
-      } else res.send({ status: false })
-    })
+    .then(response => res.send(response))
     .catch(error => console.log(error))
 }
 
