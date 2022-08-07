@@ -45,7 +45,6 @@ export const getCurrencyWithDial = (req, res, next) => {
             res.send(dials)
         })
         .catch(error => res.send(error));
-    res.send(country.dialCode);
 }
 
 export const currencyControl = async (req, res, next) => {
