@@ -124,21 +124,18 @@ export async function referralChildren({ iduser, level, id }) {
       const node = new Node(data);
       const parent = toNodeData ? this.findBFS(toNodeData) : null;
       if (parent) {
-        console.log(node);
-        console.log(parent);
         if (parent.children[parent.children.length - 1]) {
           if (results[results.length - 1]?.user.id === node.user.id_sponsor) {
-            parent.children.push({ ...node, user: { ...node.user, level: this.level } })
+            parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
           } else {
-            parent.children.push({ ...node, user: { ...node.user, level: this.level } })
+            parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
           }
         } else {
-          this.level++;
-          parent.children.push({ ...node, user: { ...node.user, level: this.level } })
+          parent.children.push({ ...node, user: { ...node.user, level: parent.user.level } })
         }
       } else {
         if (!this.root) {
-          this.root = { ...node, user: { ...node.user, level: this.level } };
+          this.root = { ...node, user: { ...node.user, level: 0 } };
         } else return 'Tried to store node at root when root already exists'
       }
     }
