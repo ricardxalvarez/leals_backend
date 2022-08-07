@@ -49,11 +49,11 @@ export const updatePass2 = {
 
 export const updateUser = {
     body: joi.object().keys({
-        email: joi.string().email().required(),
-        idcountry: joi.string().trim().max(5),
-        skills: joi.string().trim().max(50),
-        phone: joi.string().trim().required(),
-        fullname: joi.string().trim().required()
+        email: joi.string().email().optional(),
+        idcountry: joi.string().trim().max(5).optional(),
+        skills: joi.string().trim().max(50).optional(),
+        phone: joi.string().trim().optional(),
+        fullname: joi.string().trim().optional()
     })
 }
 

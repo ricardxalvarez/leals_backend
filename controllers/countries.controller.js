@@ -42,7 +42,7 @@ export const getCurrencyWithDial = (req, res, next) => {
                 const country = countriesList[i];
                 dials.push({ ...country, exchangeToUSD: rates[country.currencyCode] })
             }
-            res.send(dials)
+            res.send({ status: true, content: dials })
         })
         .catch(error => res.send(error));
 }
