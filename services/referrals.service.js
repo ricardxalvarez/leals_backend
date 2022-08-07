@@ -161,11 +161,10 @@ export async function referralChildren({ iduser, level, id }) {
           const node = queue.shift()
 
           cb(node)
-          if (node) {
-            for (const child of node.children) {
-              queue.push(child)
-            }
+          for (const child of node.children) {
+            queue.push(child)
           }
+
         }
       }
     }
