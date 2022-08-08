@@ -79,7 +79,7 @@ export async function searchReferral(text, iduser, id) {
   }
   if (text) {
     const matchingElement = results.find(object => object.user.nombre_usuario === text)
-    results = { user: results[0].user, children: [matchingElement] }
+    results = { user: results[0].user, children: [matchingElement].filter(e => e) }
   } else results[0]
   return { results, last_level: lastLevel, childs_count: childsCount }
 }
