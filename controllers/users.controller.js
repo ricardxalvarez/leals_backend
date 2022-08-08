@@ -9,7 +9,7 @@ import generateToken from '../utils/generateToken.js';
 import client from '../config/phone.client.js';
 
 export function postSignup(req, res, next) {
-  const { fullname, email, idcountry, username, password1, referralusername } = req.body
+  const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
   let salt = bcrypt.genSaltSync(10);
   let pass1 = bcrypt.hashSync(password1, salt);
   let values = {
@@ -18,7 +18,8 @@ export function postSignup(req, res, next) {
     idcountry,
     username,
     pass1,
-    referralusername
+    referralusername,
+    phone
   }
   userService
     .checkUser(values)
@@ -66,13 +67,12 @@ export function postSignup(req, res, next) {
 }
 
 export function completeRegister(req, res, next) {
-  const { iduser, skills, phone, password2, avatar } = req.body;
+  const { iduser, skills, password2, avatar } = req.body;
   let salt = bcrypt.genSaltSync(10);
   let pass2 = bcrypt.hashSync(password2, salt);
   var values = {
     iduser,
     skills,
-    phone,
     pass2,
     avatar
   };

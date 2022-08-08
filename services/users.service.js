@@ -38,9 +38,11 @@ export async function addCuenta(data) {
   let name = data.fullname.toUpperCase();
   const userExists = await (await conexion.query("SELECT id FROM usuarios WHERE nombre_usuario=($1) OR email=($2)",
     [data.username, data.email])).rows[0];
+  const phoneExists = await (await conexion.query('SELECT * FROM usuarios WHERE telefono=($1)', [data.phone])).rows[0]
+  if (phoneExists) return { status: false, content: 'This number phone already belongs to a user' }
   if (!userExists) {
-    let newUser = await (await conexion.query("INSERT INTO usuarios(full_nombre,email,codigo_pais,nombre_usuario,password1,id_sponsor, id_progenitor) VALUES ($1,$2,$3,$4,$5,$6, $7) RETURNING *",
-      [name, data.email, data.idcountry, data.username, data.pass1, data.referralid, data.id_progenitor])).rows[0];
+    let newUser = await (await conexion.query("INSERT INTO usuarios(full_nombre,email,codigo_pais,nombre_usuario,password1,id_sponsor, id_progenitor, telefono) VALUES ($1,$2,$3,$4,$5,$6, $7, $8) RETURNING *",
+      [name, data.email, data.idcountry, data.username, data.pass1, data.referralid, data.id_progenitor, data.phone])).rows[0];
     if (newUser) {
       return { status: true, content: "Account succesfully created" }
     }
@@ -49,8 +51,8 @@ export async function addCuenta(data) {
 export async function completeUserRegister(data) {
   let skills = data.skills.toUpperCase();
   let status_p2p = "Active";
-  let user = await (await conexion.query("UPDATE usuarios SET password2=($1),telefono=($2),habilidades=($3),status_p2p=($4),avatar=($5) WHERE id=($6) RETURNING *",
-    [data.pass2, data.phone, skills, status_p2p, data.avatar, data.iduser])).rows[0]
+  let user = await (await conexion.query("UPDATE usuarios SET password2=($1),habilidades=($2),status_p2p=($3),avatar=($4) WHERE id=($5) RETURNING *",
+    [data.pass2, skills, status_p2p, data.avatar, data.iduser])).rows[0]
   if (user) {
     return user
   } else return 0
