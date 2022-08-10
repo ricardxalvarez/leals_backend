@@ -7,6 +7,7 @@ import config from '../config/config.js';
 import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
 import client from '../config/phone.client.js';
+import { getCountryByISO } from './countries.controller.js';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
@@ -228,9 +229,10 @@ export function search(req, res, next) {
     .searchUser(id)
     .then(user => {
       if (user.rows.length > 0) {
+        const countryInfo = getCountryByISO(user.rows[0].codigo_pais)
         let respuesta = {
           status: true,
-          content: { ...user.rows[0], password2: user.rows[0].password2 ? true : false }
+          content: { ...user.rows[0], countryName: countryInfo?.countryName, currencyCode: countryInfo?.currencyCode, password2: user.rows[0].password2 ? true : false }
         }
         res.send(respuesta);
       } else {

@@ -24,6 +24,11 @@ export const retrieveCountry = (req, res, next) => {
     }
 }
 
+export const getCountryByISO = (iso) => {
+    const country = countries.find(object => object.countryCode === iso)
+    return country
+}
+
 export const getCurrencyWithDial = (req, res, next) => {
     const countriesList = countries.filter(object => object.dialCode === '+' + req.query.dialCode.replace(" ", ""))
     var myHeaders = new Headers();
