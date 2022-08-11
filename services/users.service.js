@@ -76,7 +76,7 @@ export async function searchUser(iduser) {
 }
 
 export async function updateUser(data, newEmail, oldEmail, newPhone, oldPhone) {
-  const isNumberPhoneTaken = await (await conexion.query('SELECT id FROM usuarios WHERE telefono=($1)', [data.phone])).rows[0]
+  const isNumberPhoneTaken = await (await conexion.query('SELECT id FROM usuarios WHERE telefono=($1) AND id<>($2)', [data.phone, data.iduser])).rows[0]
   if (isNumberPhoneTaken) {
     return {
       status: false,
