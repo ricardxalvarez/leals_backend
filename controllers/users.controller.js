@@ -232,7 +232,7 @@ export function search(req, res, next) {
         const countryInfo = getCountryByISO(user.rows[0].codigo_pais)
         let respuesta = {
           status: true,
-          content: { ...user.rows[0], countryName: countryInfo?.countryName, currencyCode: countryInfo?.currencyCode, password2: user.rows[0].password2 ? true : false }
+          content: { ...user.rows[0], payment_methods: user.rows[0].payment_methods || [], countryName: countryInfo?.countryName, currencyCode: countryInfo?.currencyCode, password2: user.rows[0].password2 ? true : false }
         }
         res.send(respuesta);
       } else {
