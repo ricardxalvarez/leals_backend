@@ -311,7 +311,7 @@ export function updateUser(req, res) {
   userService.checkEmailExists(email, emailUser)
     .then(response => {
       if (response.status) {
-        let newData = { ...response.myUser, ...values }
+        let newData = { ...response.myUser, fullname: response.myUser.full_nombre, skills: response.myUser.habilidades, ...values }
         userService.updateUser(newData, email, emailUser, phone, phoneUser)
           .then(user => {
             res.send(user)
