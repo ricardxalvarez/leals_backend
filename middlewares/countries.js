@@ -5,7 +5,7 @@ const countries = (req, res, next) => {
     const countries = require("../data/contries.json")
     if (!req.body.idcountry) next()
     if (countries.some(c => c.countryCode === req.body.idcountry)) next()
-    else throw res.status(StatusCodes.BAD_REQUEST).send("This is a not valid id country")
+    else return res.status(StatusCodes.BAD_REQUEST).send({ status: false, content: "This is a not valid id country" })
 }
 
 export default countries;
