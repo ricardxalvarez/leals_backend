@@ -318,6 +318,7 @@ export function updateUser(req, res) {
           .catch(err => {
             console.log(err)
             let result = {
+              status: false,
               content: "Error Updating User"
             }
             res.status(500).json(result)
