@@ -311,7 +311,10 @@ export function updateUser(req, res) {
   userService.checkEmailExists(email, emailUser)
     .then(response => {
       if (response.status) {
-        userService.updateUser({ ...response.user, fullname: response.user?.full_nombre, skills: response.user?.habilidades, ...values }, email, emailUser, phone, phoneUser)
+        const newData = { ...response.user, ...values }
+        response.user.full_nombre && newData.fullname === response.user.full_nombre
+        response.user.habilidades && newData.skills === response.user.habilidades
+        userService.updateUser(newData, email, emailUser, phone, phoneUser)
           .then(user => {
             res.send(user)
           })
