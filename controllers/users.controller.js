@@ -312,8 +312,8 @@ export function updateUser(req, res) {
     .then(response => {
       if (response.status) {
         const newData = { ...response.user, ...values }
-        response.user.full_nombre && newData.fullname === response.user.full_nombre
-        response.user.habilidades && newData.skills === response.user.habilidades
+        response.user?.full_nombre && newData.fullname === response.user.full_nombre
+        response.user?.habilidades && newData.skills === response.user.habilidades
         userService.updateUser(newData, email, emailUser, phone, phoneUser)
           .then(user => {
             res.send(user)
