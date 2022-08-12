@@ -123,7 +123,7 @@ export async function updateUserPassword1(data) {
     await conexion.query("UPDATE usuarios SET password1=($1) WHERE id=($2) RETURNING *",
       [newPassword, data.iduser])
     return { status: true, content: 'Password successfully updated' }
-  } else return { status: false, content: 'Password does not match' }
+  } else return { status: false, content: 'Current password is not correct' }
 }
 
 export async function updateUserPassword2(data) {
