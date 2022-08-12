@@ -135,7 +135,7 @@ export async function updateUserPassword2(data) {
     if (!data.oldPassword) {
       return { status: false, content: 'Old password is must' }
     }
-    const isPasswordMatch = bcrypt.compare(data.oldPassword, user.password2)
+    const isPasswordMatch = await bcrypt.compare(data.oldPassword, user.password2)
     if (isPasswordMatch) {
       await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2) RETURNING *",
         [data.pass2, data.iduser])
