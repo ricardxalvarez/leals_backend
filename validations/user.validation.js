@@ -14,7 +14,7 @@ export const register = {
 export const registerCompleted = {
     body: joi.object().keys({
         iduser: joi.string().id().required(),
-        skills: joi.string().required().max(50),
+        skills: joi.string().required().max(200),
         password2: joi.string().required(),
         avatar: joi.string().optional()
     })
@@ -51,7 +51,7 @@ export const updateUser = {
     body: joi.object().keys({
         email: joi.string().email().optional(),
         idcountry: joi.string().trim().max(5).optional(),
-        skills: joi.string().trim().max(50).optional(),
+        skills: joi.string().trim().max(200).optional(),
         phone: joi.string().trim().optional(),
         fullname: joi.string().trim().optional()
     })

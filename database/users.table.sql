@@ -4,7 +4,7 @@ CREATE TABLE usuarios (
     password1 VARCHAR(150) NOT NULL,
     password2 VARCHAR(150),
     telefono VARCHAR(25),
-    habilidades VARCHAR(50),
+    habilidades VARCHAR(200),
     status_p2p VARCHAR(35) DEFAULT('Incompleto'),
     nombre_usuario VARCHAR(25) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
