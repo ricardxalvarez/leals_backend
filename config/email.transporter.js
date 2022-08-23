@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer'
 import config from './config.js'
 
 const smptConfig = {
-    name: config.email.name,
     host: config.email.host,
     port: config.email.port,
     service: config.email.service,
