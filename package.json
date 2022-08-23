@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/equipoelite/Backend-leals#readme",
   "dependencies": {
+    "aws-sdk": "^2.1194.0",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "canvas": "^2.9.3",

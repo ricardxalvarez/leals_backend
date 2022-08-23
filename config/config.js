@@ -25,7 +25,10 @@ const env = joi.object().keys({
     SESSION_SECRET: joi.string().required(),
     TWILIO_ACCOUNT_SID: joi.string().required(),
     TWILIO_AUTH_TOKEN: joi.string().required(),
-    TWILIO_PHONE_NUMBER: joi.string().required()
+    TWILIO_PHONE_NUMBER: joi.string().required(),
+    // SES_ACCESS_KEY: joi.string().required(),
+    // SES_SECRET_KEY: joi.string().required(),
+    // SES_REGION: joi.string().required()
 })
     .unknown();
 
@@ -47,15 +50,18 @@ const vars = {
         db_databse: value.DB_DATABASE
     },
     email: {
-        name: value.AUTH_HOST,
-        host: value.AUTH_HOST,
-        port: Number(value.AUTH_PORT),
-        service: value.AUTH_SERVICE,
+        // name: value.AUTH_HOST,
+        // host: value.AUTH_HOST,
+        // port: Number(value.AUTH_PORT),
+        // service: value.AUTH_SERVICE,
         auth: {
             user: value.AUTH_EMAIL,
-            pass: value.AUTH_EMAIL_PASS
+            //     pass: value.AUTH_EMAIL_PASS
         },
-        secure: value.AUTH_SECURE
+        // secure: value.AUTH_SECURE
+        ses_access_key: value.SES_ACCESS_KEY,
+        ses_secret_key: value.SES_SECRET_KEY,
+        ses_region: value.SES_REGION
     },
     session: {
         secret: value.SESSION_SECRET
