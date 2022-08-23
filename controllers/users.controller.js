@@ -11,7 +11,7 @@ import { getCountryByISO } from './countries.controller.js';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
-  var re = /^ [a-z0-9]*$/
+  var re = /(?i)^[a-z0-9]+$/
   if (!re.test(username)) {
     console.log(re.test(username))
     return res.send({ status: false, content: 'Only lowercase characters and numbers are accepted as username' })
