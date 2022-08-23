@@ -7,7 +7,7 @@ export const register = {
         username: joi.string().required().regex(/^[a-z][a-z0-9]*$/),
         password1: joi.string().trim().required(),
         referralusername: joi.string().id().required(),
-        phone: joi.string().trim().required().regex(/^[\+]?[0-9]{3}[-][0-9]{3}[0-9]{4,6}$/im)
+        phone: joi.string().trim().required().regex(/^[\+][0-9]{3}[-][0-9]$/im)
     })
 }
 
