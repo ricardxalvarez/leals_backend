@@ -14,7 +14,7 @@ export function postSignup(req, res, next) {
   var re = /^[a-z][a-z0-9]*$/
   var phone_validation = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/
   if (!re.test(username)) return res.send({ status: false, content: 'Only lowercase characters and numbers are accepted as username' })
-  if (!phone_validation.test(phone)) return res.send({ status: false, content: 'Enter a valid phone number' })
+  if (!phone.match(phone_validation)) return res.send({ status: false, content: 'Enter a valid phone number' })
   let salt = bcrypt.genSaltSync(10);
   let pass1 = bcrypt.hashSync(password1, salt);
   let values = {
