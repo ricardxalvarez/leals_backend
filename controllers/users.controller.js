@@ -11,10 +11,6 @@ import { getCountryByISO } from './countries.controller.js';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
-  var re = /^[a-z][a-z0-9]*$/
-  var phone_validation = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
-  if (!re.test(username)) return res.send({ status: false, content: 'Only lowercase characters and numbers are accepted as username' })
-  if (!phone.match(phone_validation)) return res.send({ status: false, content: 'Enter a valid phone number' })
   let salt = bcrypt.genSaltSync(10);
   let pass1 = bcrypt.hashSync(password1, salt);
   let values = {

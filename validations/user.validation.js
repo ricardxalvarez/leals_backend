@@ -4,10 +4,10 @@ export const register = {
         fullname: joi.string().trim().required(),
         email: joi.string().email().required(),
         idcountry: joi.string().id().min(2).max(2).required(),
-        username: joi.string().required(),
+        username: joi.string().required().regex(/^[a-z][a-z0-9]*$/),
         password1: joi.string().trim().required(),
         referralusername: joi.string().id().required(),
-        phone: joi.string().trim().required()
+        phone: joi.string().trim().required().regex(/^[\+]?[0-9]{3}[-][0-9]{3}[0-9]{4,6}$/im)
     })
 }
 
@@ -52,7 +52,7 @@ export const updateUser = {
         email: joi.string().email().optional(),
         idcountry: joi.string().trim().max(5).optional(),
         skills: joi.string().trim().max(200).optional(),
-        phone: joi.string().trim().optional(),
+        phone: joi.string().trim().regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im).optional(),
         fullname: joi.string().trim().optional()
     })
 }
