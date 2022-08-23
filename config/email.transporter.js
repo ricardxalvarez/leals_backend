@@ -12,8 +12,6 @@ const smptConfig = {
     secure: config.email.secure
 };
 
-console.log(smptConfig)
-
 let transporter = nodemailer.createTransport(smptConfig);
 
 transporter.verify(function (error, success) {
