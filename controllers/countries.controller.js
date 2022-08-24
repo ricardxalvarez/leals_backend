@@ -31,25 +31,26 @@ export const getCountryByISO = (iso) => {
 
 export const getCurrencyWithDial = (req, res, next) => {
     const countriesList = countries.filter(object => object.dialCode === '+' + req.query.dialCode.replace(" ", ""))
-    var myHeaders = new Headers();
-    myHeaders.append("apikey", "nx4fRpHqyfycX58eydu8R1qjFQDMJKhK");
+    res.send({ status: countriesList.length > 0, content: countriesList })
+    // var myHeaders = new Headers();
+    // myHeaders.append("apikey", "nx4fRpHqyfycX58eydu8R1qjFQDMJKhK");
 
-    var requestOptions = {
-        method: 'GET',
-        headers: myHeaders
-    };
+    // var requestOptions = {
+    //     method: 'GET',
+    //     headers: myHeaders
+    // };
 
-    fetch(`https://api.apilayer.com/exchangerates_data/latest?base=USD`, requestOptions)
-        .then(async result => {
-            const rates = await (await result.json()).rates
-            const dials = []
-            for (let i = 0; i < countriesList.length; i++) {
-                const country = countriesList[i];
-                dials.push({ ...country, exchangeToUSD: rates[country.currencyCode] })
-            }
-            res.send({ status: true, content: dials })
-        })
-        .catch(error => res.send(error));
+    // fetch(`https://api.apilayer.com/exchangerates_data/latest?base=USD`, requestOptions)
+    //     .then(async result => {
+    //         const rates = await (await result.json()).rates
+    //         const dials = []
+    //         for (let i = 0; i < countriesList.length; i++) {
+    //             const country = countriesList[i];
+    //             dials.push({ ...country, exchangeToUSD: rates[country.currencyCode] })
+    //         }
+    //         res.send({ status: true, content: dials })
+    //     })
+    //     .catch(error => res.send(error));
 }
 
 export const currencyControl = async (req, res, next) => {
