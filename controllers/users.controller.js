@@ -231,7 +231,7 @@ export function search(req, res, next) {
       if (user.rows.length > 0) {
         const countryInfo = getCountryByISO(user.rows[0].codigo_pais)
         const full_telephono = user.rows[0].telefono
-        const telephono = full_telephono?.slice(full_telephono.indexOf('-'))
+        const telephono = full_telephono?.slice(full_telephono.indexOf('-') + 1)
         let respuesta = {
           status: true,
           content: { ...user.rows[0], payment_methods: user.rows[0].payment_methods || [], countryName: countryInfo?.countryName, currencyCode: countryInfo?.currencyCode, password2: user.rows[0].password2 ? true : false, telefono: undefined, full_telephono, telephono }
