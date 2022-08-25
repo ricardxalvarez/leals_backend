@@ -157,8 +157,8 @@ export async function recoveryPasswordUser(email) {
   let newPassSeek = getReferralCode();
   let salt = bcrypt.genSaltSync(10);
   let password = bcrypt.hashSync(newPassSeek, salt);
-  let user = await (await conexion.query("UPDATE usuarios SET password1=($1) WHERE email=($2)",
-    [password, email])).rowCount
+  let user = await (await conexion.query("UPDATE usuarios SET password1=($1) WHERE email=($2) RETURNING *",
+    [password, email])).rows[0]
   let resp = {
     status: user,
     password: newPassSeek

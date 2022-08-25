@@ -14,13 +14,22 @@
             <img src="cid:unique@kreata.ee" width="200px" />
             <div style="padding: 10px 10px;">
                 <h3 style="color: #07416b; text-align: center; margin-left: 20px">
-                    Bienvenido a LEALS {{email}}<br />
+                    Hello {{full_nombre}}<br />
                 </h3>
                 <h4 style="text-align:center;">
-                    Estás a un paso de verificar tu cuenta!
+                    Thank you for being part of our family.
                 </h4>
-                <p>Este es tu codigo de verificacion {{code}}</p>
+                <h5>To enjoy our services you must verify your email account associated with our services. This is your
+                    verification code.</h5>
+                <p>{{code}}</p>
                 <br>
+                <p style="color:#000000; text-align:justify; margin-right:20px; margin-left:20px; font-size:13px">please
+                    copy and paste into your application. To proceed enter. and we recommend that you change it
+                    immediately, to one
+                    that you remember, so that someone else does not know your password.</p>
+                <br>
+                <button
+                    style="background:transparent; border:none; text-decoration:underline; color:#888; text-align:center;">Unsubscribe</button>
             </div>
         </div>
         <div style="display:inline-block">

@@ -345,7 +345,8 @@ export function recoveryPassword(req, res) {
       if (user.status > 0) {
         let data = {
           email,
-          pass: user.password
+          pass: user.password,
+          name: user.full_nombre
         }
         var template = fs.readFileSync('./views/restartPassword.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
