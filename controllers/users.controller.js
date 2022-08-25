@@ -341,7 +341,7 @@ export function recoveryPassword(req, res) {
   const { email } = req.body
   userService
     .recoveryPasswordUser(email)
-    .then(user => {
+    .then(async user => {
       if (user.status > 0) {
         let data = {
           email,
