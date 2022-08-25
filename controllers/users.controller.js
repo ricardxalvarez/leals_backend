@@ -355,7 +355,7 @@ export function recoveryPassword(req, res) {
           subject: 'LEALS - Reinicio de Password',
           html: compiledTemplate.render(data)
         };
-        sendMailToClient(mailOptions)
+        await sendMailToClient(mailOptions)
         let result = {
           status: true,
           content: "Password successfully reset. Your new password has been sent to your email address."
@@ -397,15 +397,8 @@ export async function sendVerificationEmail(req, res, next) {
           subject: 'LEALS - Verificación de email',
           html: compiledTemplate.render({ ...user, code: code.code })
         };
-        await
-          sendMailToClient(mailOptions)
-            .then(response => {
-              res.send({ status: true, content: `Check your inbox at ${user.email}` })
-            })
-            .catch(error => {
-              console.log(error);
-              res.send({ status: false, content: 'error sending email' })
-            })
+        await sendMailToClient(mailOptions)
+        res.send({ status: true, content: `Check your inbox at ${user.email}` })
       } else res.send({ status: false, content: 'user already verified' })
     })
     .catch(error => console.log(error))
@@ -502,18 +495,17 @@ export async function verifyPhone(req, res, next) {
 }
 
 async function sendMailToClient(mailOptions) {
-  transporter.sendMail(mailOptions, function (error, info) {
-    var resp = true;
+  var resp = true;
+  await transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
-      var resp = false;
-      return resp
+      resp = false;
     } else {
       console.log('Email enviado: ' + info.response);
       console.log('Email enviado, body: ' + req.body);
-      return resp
     }
   });
+  return resp
 }
 
 async function sendMessageToClient(phone, body) {
