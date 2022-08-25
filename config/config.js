@@ -22,6 +22,7 @@ const env = joi.object().keys({
     AUTH_EMAIL: joi.string().required(),
     AUTH_EMAIL_PASS: joi.string().required(),
     AUTH_SECURE: joi.boolean().required(),
+    AUTH_REGION: joi.string().required(),
     SESSION_SECRET: joi.string().required(),
     TWILIO_ACCOUNT_SID: joi.string().required(),
     TWILIO_AUTH_TOKEN: joi.string().required(),
@@ -53,10 +54,10 @@ const vars = {
         name: value.AUTH_HOST,
         host: value.AUTH_HOST,
         port: Number(value.AUTH_PORT),
-        service: value.AUTH_SERVICE,
         auth: {
             user: value.AUTH_EMAIL,
-            pass: value.AUTH_EMAIL_PASS
+            pass: value.AUTH_EMAIL_PASS,
+            region: value.AUTH_REGION
         },
         secure: value.AUTH_SECURE
     },

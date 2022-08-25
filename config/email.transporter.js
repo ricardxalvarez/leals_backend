@@ -7,7 +7,8 @@ const smptConfig = {
     auth: {
         user: config.email.auth.user,
         pass: config.email.auth.pass
-    }
+    },
+    secure: config.email.secure
 };
 
 let transporter = nodemailer.createTransport(smptConfig);

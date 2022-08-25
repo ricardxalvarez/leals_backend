@@ -392,7 +392,7 @@ export async function sendVerificationEmail(req, res, next) {
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
-          from: config.email.auth.user,
+          from: 'support@leals.app',
           to: user.email,
           subject: 'LEALS - Verificación de email',
           html: compiledTemplate.render({ ...user, code: code.code })
