@@ -18,6 +18,7 @@ const env = joi.object().keys({
     DB_DATABASE: joi.string().required(),
     AUTH_HOST: joi.string().required(),
     AUTH_PORT: joi.number().required(),
+    AUTH_USER: joi.string().required(),
     AUTH_EMAIL: joi.string().required(),
     AUTH_EMAIL_PASS: joi.string().required(),
     AUTH_SECURE: joi.boolean().required(),
@@ -54,9 +55,10 @@ const vars = {
         host: value.AUTH_HOST,
         port: Number(value.AUTH_PORT),
         auth: {
-            user: value.AUTH_EMAIL,
+            user: value.AUTH_USER,
             pass: value.AUTH_EMAIL_PASS,
-            region: value.AUTH_REGION
+            region: value.AUTH_REGION,
+            email: value.AUTH_EMAIL
         },
         secure: value.AUTH_SECURE
     },

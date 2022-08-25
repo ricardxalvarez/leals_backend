@@ -350,7 +350,7 @@ export function recoveryPassword(req, res) {
         var template = fs.readFileSync('./views/restartPassword.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
-          from: config.email.auth.user,
+          from: config.email.auth.email,
           to: email,
           subject: 'LEALS - Reinicio de Password',
           html: compiledTemplate.render(data)
@@ -392,7 +392,7 @@ export async function sendVerificationEmail(req, res, next) {
         var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
-          from: 'support@leals.app',
+          from: config.email.auth.email,
           to: user.email,
           subject: 'LEALS - Verificación de email',
           html: compiledTemplate.render({ ...user, code: code.code })
