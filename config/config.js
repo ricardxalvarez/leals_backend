@@ -18,7 +18,6 @@ const env = joi.object().keys({
     DB_DATABASE: joi.string().required(),
     AUTH_HOST: joi.string().required(),
     AUTH_PORT: joi.number().required(),
-    AUTH_SERVICE: joi.string().required(),
     AUTH_EMAIL: joi.string().required(),
     AUTH_EMAIL_PASS: joi.string().required(),
     AUTH_SECURE: joi.boolean().required(),
