@@ -342,7 +342,7 @@ export function recoveryPassword(req, res) {
   userService
     .recoveryPasswordUser(email)
     .then(async user => {
-      if (user.status > 0) {
+      if (user) {
         let data = {
           email,
           pass: user.password,
@@ -353,7 +353,7 @@ export function recoveryPassword(req, res) {
         var mailOptions = {
           from: config.email.auth.email,
           to: email,
-          subject: 'LEALS - Reinicio de Password',
+          subject: 'LEALS - Password reset',
           html: compiledTemplate.render(data)
         };
         await sendMailToClient(mailOptions)
@@ -365,7 +365,7 @@ export function recoveryPassword(req, res) {
       } else {
         let result = {
           status: false,
-          content: "Unable to Reset Password"
+          content: "User nor registered"
         }
         res.status(400).send(result)
       }

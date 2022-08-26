@@ -160,7 +160,7 @@ export async function recoveryPasswordUser(email) {
   let user = await (await conexion.query("UPDATE usuarios SET password1=($1) WHERE email=($2) RETURNING *",
     [password, email])).rows[0]
   let resp = {
-    status: user,
+    user: user,
     password: newPassSeek
   }
   return resp
