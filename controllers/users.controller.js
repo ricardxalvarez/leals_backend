@@ -8,11 +8,6 @@ import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
 import client from '../config/phone.client.js';
 import { getCountryByISO } from './countries.controller.js';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
