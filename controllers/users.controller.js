@@ -8,7 +8,11 @@ import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
 import client from '../config/phone.client.js';
 import { getCountryByISO } from './countries.controller.js';
+import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
@@ -350,11 +354,10 @@ export function recoveryPassword(req, res) {
           name: data.user.full_nombre,
           attachments: [{   // stream as an attachment
             filename: 'Logo',
-            path: dirname() + '/images/logo.png',
+            path: __dirname + '/images/logo.png',
             cid: 'logo'
           }]
         }
-        console.log(dirname())
         var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
