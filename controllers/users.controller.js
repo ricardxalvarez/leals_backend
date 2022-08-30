@@ -10,7 +10,6 @@ import client from '../config/phone.client.js';
 import { getCountryByISO } from './countries.controller.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import logo from './../views/images'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
