@@ -341,12 +341,12 @@ export function recoveryPassword(req, res) {
   const { email } = req.body
   userService
     .recoveryPasswordUser(email)
-    .then(async user => {
-      if (user) {
-        let data = {
+    .then(async data => {
+      if (data.user) {
+        let user = {
           email,
-          pass: user.password,
-          name: user.full_nombre
+          pass: data.password,
+          name: data.user.full_nombre
         }
         console.log(data)
         console.log(user)
@@ -356,7 +356,7 @@ export function recoveryPassword(req, res) {
           from: config.email.auth.email,
           to: email,
           subject: 'LEALS - Password reset',
-          html: compiledTemplate.render(data)
+          html: compiledTemplate.render(user)
         };
         await sendMailToClient(mailOptions)
         let result = {
