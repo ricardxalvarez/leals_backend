@@ -349,7 +349,7 @@ export function recoveryPassword(req, res) {
           name: data.user.full_nombre,
           attachments: [{   // stream as an attachment
             filename: 'logo.png',
-            path: './../views/images/logo.png',
+            path: './views/images/logo.png',
             cid: 'logo'
           }]
         }
