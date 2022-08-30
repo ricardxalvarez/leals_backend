@@ -354,7 +354,7 @@ export function recoveryPassword(req, res) {
           pass: data.password,
           name: data.user.full_nombre,
           attachments: [{   // stream as an attachment
-            filename: 'Logo',
+            filename: 'logo.png',
             path: __dirname + '../views/images/logo.png',
             cid: 'logo'
           }]
