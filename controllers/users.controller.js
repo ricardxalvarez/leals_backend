@@ -346,12 +346,7 @@ export function recoveryPassword(req, res) {
         let user = {
           email,
           pass: data.password,
-          name: data.user.full_nombre,
-          attachments: [{   // stream as an attachment
-            filename: 'logo.png',
-            path: './views/images/logo.png',
-            cid: 'logo'
-          }]
+          name: data.user.full_nombre
         }
 
         var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
