@@ -354,8 +354,7 @@ export function recoveryPassword(req, res) {
             cid: 'logo'
           }]
         }
-        console.log(data)
-        console.log(user)
+        console.log(dirname())
         var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
