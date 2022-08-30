@@ -348,7 +348,7 @@ export function recoveryPassword(req, res) {
     .recoveryPasswordUser(email)
     .then(async data => {
       if (data.user) {
-        console.log(__dirname + '../views/images/logo.png')
+        console.log(__dirname + '/../views/images/logo.png')
         let user = {
           email,
           pass: data.password,
