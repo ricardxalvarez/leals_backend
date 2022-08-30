@@ -10,6 +10,7 @@ import client from '../config/phone.client.js';
 import { getCountryByISO } from './countries.controller.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import logo from './../views/images'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -348,14 +349,13 @@ export function recoveryPassword(req, res) {
     .recoveryPasswordUser(email)
     .then(async data => {
       if (data.user) {
-        console.log(__dirname + '/../views/images/logo.png')
         let user = {
           email,
           pass: data.password,
           name: data.user.full_nombre,
           attachments: [{   // stream as an attachment
             filename: 'logo.png',
-            path: __dirname + '/../views/images/logo.png',
+            path: './../views/images/logo.png',
             cid: 'logo'
           }]
         }
