@@ -348,6 +348,7 @@ export function recoveryPassword(req, res) {
     .recoveryPasswordUser(email)
     .then(async data => {
       if (data.user) {
+        console.log(__dirname + '/images/logo.png')
         let user = {
           email,
           pass: data.password,
@@ -358,6 +359,7 @@ export function recoveryPassword(req, res) {
             cid: 'logo'
           }]
         }
+
         var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
