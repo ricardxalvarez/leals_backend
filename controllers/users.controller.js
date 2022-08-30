@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import generateToken from '../utils/generateToken.js';
 import client from '../config/phone.client.js';
 import { getCountryByISO } from './countries.controller.js';
+import { dirname } from 'path';
 
 export function postSignup(req, res, next) {
   const { fullname, email, idcountry, username, password1, referralusername, phone } = req.body
@@ -346,7 +347,12 @@ export function recoveryPassword(req, res) {
         let user = {
           email,
           pass: data.password,
-          name: data.user.full_nombre
+          name: data.user.full_nombre,
+          attachments: [{   // stream as an attachment
+            filename: 'Logo',
+            path: dirname() + '/images/logo.png',
+            cid: 'logo'
+          }]
         }
         console.log(data)
         console.log(user)
