@@ -348,14 +348,14 @@ export function recoveryPassword(req, res) {
     .recoveryPasswordUser(email)
     .then(async data => {
       if (data.user) {
-        console.log(__dirname + '/images/logo.png')
+        console.log(__dirname + '../views/images/logo.png')
         let user = {
           email,
           pass: data.password,
           name: data.user.full_nombre,
           attachments: [{   // stream as an attachment
             filename: 'logo.png',
-            path: './views/images/logo.png',
+            path: __dirname + '../views/images/logo.png',
             cid: 'logo'
           }]
         }
