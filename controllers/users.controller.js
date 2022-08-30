@@ -348,7 +348,7 @@ export function recoveryPassword(req, res) {
           pass: user.password,
           name: user.full_nombre
         }
-        var template = fs.readFileSync('./views/restartPassword.hjs', 'utf-8')
+        var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
           from: config.email.auth.email,
@@ -390,7 +390,7 @@ export async function sendVerificationEmail(req, res, next) {
       if (!usuario.is_email_verified) {
         await tokenService.deleteTokensEmailVerification(user.id)
         const code = await (await tokenService.createTokenEmailVerification(user.id)).rows[0]
-        var template = fs.readFileSync('./views/verifyEmail.hjs', 'utf-8')
+        var template = fs.readFileSync('./views/mailverification.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
           from: config.email.auth.email,
