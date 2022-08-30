@@ -348,6 +348,8 @@ export function recoveryPassword(req, res) {
           pass: user.password,
           name: user.full_nombre
         }
+        console.log(data)
+        console.log(user)
         var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
         var compiledTemplate = Hogan.compile(template)
         var mailOptions = {
