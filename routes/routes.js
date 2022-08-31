@@ -23,7 +23,7 @@ router.put('/users/updatepass2', validate(userValidation.updatePass2), authPswd1
 router.put('/users/avatar', express.urlencoded({ extended: true, limit: '5mb' }), validate(userValidation.updateAvatar), validateAvatarURL, authPswd1, cropAvatarImage, usersController.updateAvatar)
 // id user is not necessary, since we are already using bearer token
 router.put('/users/update', validate(userValidation.updateUser), countries, authPswd1, usersController.updateUser);
-router.put('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
+router.post('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
 // new
 router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
 router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
