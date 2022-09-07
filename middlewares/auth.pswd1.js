@@ -9,7 +9,7 @@ const verifyCallback = (req, resolve, reject) => {
         new ApiError(StatusCodes.UNAUTHORIZED, "Please authenticate")
       );
     }
-    req.user = { id: user.id };
+    req.user = { id: user.id, email: user.email, telefono: user.telefono };
     resolve()
   };
 }

@@ -32,16 +32,24 @@ async function resizeImageBase64(width, height, quality, data) {
     const base = 'base64'
     const base64str = data.slice(data.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
-    await jimp.read(buf)
-        .then(image => {
-            image.resize(width, height, jimp.AUTO)
+    await jimp.read(buf, (err, image) => {
+        let scroll_x = 0
+        let scroll_y = 0
+        if (err) return
+        else {
+            image.resize(width, height, (err, src) => {
+                scroll_x = (src.bitmap.width / 2) - (150 / 2)
+                scroll_y = (src.bitmap.height / 2) - (150 / 2)
+            })
+                .crop(scroll_x >= 0 ? scroll_x : 0, scroll_y >= 0 ? scroll_y : 0, 150, 150)
                 .quality(quality)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     if (err) response = null
                     response = src
                 })
-        })
-        .catch(error => console.log(error))
+        }
+
+    })
     return response;
 }
 

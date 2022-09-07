@@ -1,29 +1,31 @@
-var conexion = require('../database/conexion');
+import conexion from '../database/conexion.js'
 
-module.exports = {
 
-	async addPackages(v) {
-		let name = v.packagename.toUpperCase()
-		let package = await conexion.query("INSERT INTO paquetes(nombre_paquete,leal,usdt,nro_usuarios,disponible) VALUES ($1,$2,$3,$4,$5)",
-			[name, v.lealsnums, v.price, v.usernum, v.available])
-		return package
-	},
+export async function addPackages(data) {
+	let packag = await conexion.query("INSERT INTO packages(leals_quantity) VALUES ($1)",
+		[data.leals_quantity])
+	return packag
+}
 
-	async listPackages() {
-		var list = await conexion.query("SELECT * FROM paquetes")
-		return list
-	},
-	async searchPackages(idpackage) {
-		var package = await conexion.query("SELECT * FROM paquetes WHERE id=($1)",
-			[idpackage])
-		return package
-	},
+export async function listPackages() {
+	var list = await (await conexion.query("SELECT * FROM packages")).rows
+	return list
+}
+export async function searchPackages(idpackage) {
+	var packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1)",
+		[idpackage])).rows[0]
+	return packag
+}
 
-	async updatePackages(v) {
-		let name = v.packagename.toUpperCase()
-		let package = await conexion.query("UPDATE paquetes SET nombre_paquete=($1),usdt=($2),leal=($3),nro_usuarios=($4),disponible=($5) WHERE id=($6)",
-			[name, v.price, v.lealsnums, v.usernum, v.available, v.idpackage])
-		return package
-	}
+export async function updatePackages(data, idpackage) {
+	// let oldPackage = await (await conexion.query('SELECT * FROM packages WHERE id=($1)', [idpackage])).rows[0]
+	// const newData = { ...oldPackage, ...data }
+	let packag = await (await conexion.query("UPDATE packages SET leals_quantity=($1) WHERE package_id=($2) RETURNING *",
+		[data.leals_quantity, idpackage])).rows
+	return packag
+}
 
-} // Fin module.exports
+export async function deletePackage(idpackage) {
+	let response = await conexion.query("DELETE FROM packages WHERE package_id=($1)", [idpackage])
+	return response
+}

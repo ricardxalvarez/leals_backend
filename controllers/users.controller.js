@@ -122,7 +122,6 @@ export function postSignin(req, res, next) {
           };
           res.status(200).send(result)
         } else {
-          console.log("Clave Incorrecta")
           let result = {
             status: false,
             content: 'Incorrect Password'
@@ -130,7 +129,6 @@ export function postSignin(req, res, next) {
           res.status(200).send(result)
         }
       } else {
-        console.log("Cuenta de usuario no afilida")
         let result = {
           status: false,
           content: 'User account unaffiliated'
@@ -498,7 +496,7 @@ export async function verifyPhone(req, res, next) {
 
 async function sendMailToClient(mailOptions) {
   var resp = true;
-  await transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
       resp = false;

@@ -24,4 +24,4 @@ CREATE INDEX email ON usuarios(email);
 CREATE INDEX phone ON usuarios(telefono);
 
 -- main user
-INSERT INTO usuarios(full_nombre, email, codigo_pais, nombre_usuario, password1) VALUES ("leal leals", "support@leals.app", "PE", "birthleals", "$2a$10$OL9mZiU7IITPuDvfVMw4ie.G.MHSvOmSkr.PkpNchq4tdmfV51LAa")
+INSERT INTO usuarios(full_nombre, email, codigo_pais, nombre_usuario, password1) VALUES ("leal leals", "support@leals.app", "PE", "birthleals", "$2a$10$OL9mZiU7IITPuDvfVMw4ie.G.MHSvOmSkr.PkpNchq4tdmfV51LAa");
