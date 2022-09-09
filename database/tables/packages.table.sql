@@ -1,4 +1,4 @@
 CREATE TABLE packages (
     package_id BIGSERIAL UNIQUE NOT NULL PRIMARY KEY,
-    leals_quantity BIGSERIAL UNIQUE NOT NULL
+    leals_quantity NUMERIC UNIQUE NOT NULL
 );

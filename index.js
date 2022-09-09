@@ -12,7 +12,7 @@ import helmet from 'helmet';
 import config from './config/config.js';
 const app = express();
 const server = http.createServer(app)
-const io = new WebSocketServer(server, { cors: '*' })
+export const io = new WebSocketServer(server, { cors: '*' })
 const PORT = process.env.PORT || 4200
 
 app.use(helmet());
@@ -31,7 +31,7 @@ app.use(sessionMiddleware)
 io.use(function (socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 })
-let users = []
+export let users = []
 const add_user = (user_id, socket_id) => {
   const user = users.find(object => object.user_id === user_id)
   if (user) {
@@ -48,16 +48,17 @@ io.on('connection', function (socket) {
   console.log(`socket.io connected: ${socket.id}`);
   socket.on("user_connection", user_id => {
     add_user(user_id, socket.id)
-    socket.request.session.users = users
-    socket.request.session.save()
+    // socket.request.session.users = users
+    // socket.request.session.save()
   })
+  // socket.request.session.io = io;
   socket.request.session.socketio = socket.id;
   socket.request.session.save();
 
   socket.on("disconnect", () => {
     remove_user(socket.id)
-    socket.request.session.users = users
-    socket.request.session.save()
+    // socket.request.session.users = users
+    // socket.request.session.save()
   })
   // save socket.io socket in the session
   // console.log("session at socket.io connection:\n", socket.request.session);

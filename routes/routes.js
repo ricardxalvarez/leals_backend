@@ -1,11 +1,11 @@
 import express from 'express'
-import { packagesController, referralsController, usersController, ticketsBuyController } from '../controllers/index.js';
+import { packagesController, referralsController, usersController, ticketsBuyController, ticketsSellController } from '../controllers/index.js';
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
 import authAdmin from '../middlewares/auth.admin.js';
 import countries from '../middlewares/countries.js';
 import validate from '../middlewares/validate.js';
-import { packagesValidation, referralsValidation, userValidation, ticketsBuyValidation } from '../validations/index.js'
+import { packagesValidation, referralsValidation, userValidation, ticketsBuyValidation, ticketsSellValidation } from '../validations/index.js'
 import { countriesController } from '../controllers/index.js';
 import validateAvatarURL from '../middlewares/validateAvatarURL.js';
 import cropAvatarImage from '../middlewares/cropAvatarImage.js';
@@ -55,9 +55,9 @@ router.post('/ticketsbuy/search', validate(ticketsBuyValidation.search), tickets
 
 
 //                     /* Tickets Sell Routes */
-// router.post('/ticketssell/create', controllers.ticketssellController.create);
-// router.get('/ticketssell/list', controllers.ticketssellController.list);
-// router.post('/ticketssell/search', controllers.ticketssellController.search);
+router.post('/ticketssell/create', validate(ticketsSellValidation.create), authPswd1, ticketsSellController.create);
+router.get('/ticketssell/list', ticketsSellController.list);
+router.post('/ticketssell/search', validate(ticketsSellValidation.search), authPswd1, ticketsSellController.search);
 // router.put('/ticketssell/updatstatus', controllers.ticketssellController.updateStatusTicket);
 
 // tickets routes
