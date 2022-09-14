@@ -1,14 +1,15 @@
 import express from 'express'
-import { packagesController, referralsController, usersController, ticketsBuyController, ticketsSellController } from '../controllers/index.js';
+import { packagesController, referralsController, usersController, ticketsBuyController, ticketsSellController, ticketsController, walletController, ordersController } from '../controllers/index.js';
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
 import authAdmin from '../middlewares/auth.admin.js';
 import countries from '../middlewares/countries.js';
 import validate from '../middlewares/validate.js';
-import { packagesValidation, referralsValidation, userValidation, ticketsBuyValidation, ticketsSellValidation } from '../validations/index.js'
+import { packagesValidation, referralsValidation, userValidation, ticketsValidation, ticketsBuyValidation, ticketsSellValidation, ordersValidation } from '../validations/index.js'
 import { countriesController } from '../controllers/index.js';
 import validateAvatarURL from '../middlewares/validateAvatarURL.js';
 import cropAvatarImage from '../middlewares/cropAvatarImage.js';
+import resizeOrderProof from '../middlewares/resizeOrderProof.js';
 
 const router = express.Router();
 /* User Routes. */
@@ -22,12 +23,14 @@ router.put('/users/updatepass1', validate(userValidation.updatePass1), authPswd1
 router.put('/users/updatepass2', validate(userValidation.updatePass2), authPswd1, usersController.updatePassword2);
 router.put('/users/avatar', express.urlencoded({ extended: true, limit: '5mb' }), validate(userValidation.updateAvatar), validateAvatarURL, authPswd1, cropAvatarImage, usersController.updateAvatar)
 router.put('/users/update', validate(userValidation.updateUser), countries, authPswd1, usersController.updateUser);
-router.post('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
-router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
-router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
 router.put('/users/paymentmethod', validate(userValidation.paymentMethods), authPswd1, usersController.addPaymentMethods)
+// verify messages and verification codes
 router.post('/phone/sendVerification', authPswd1, usersController.sendVerificationMessage)
 router.post('/phone/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyPhone)
+// sending emails
+router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
+router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
+router.post('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
 // Countries
 
 router.get('/countries', countriesController.retrieveCountry)
@@ -55,23 +58,29 @@ router.post('/ticketsbuy/search', validate(ticketsBuyValidation.search), tickets
 
 
 //                     /* Tickets Sell Routes */
-router.post('/ticketssell/create', validate(ticketsSellValidation.create), authPswd1, ticketsSellController.create);
+router.post('/ticketssell/create', validate(ticketsSellValidation.create), authPswd2, ticketsSellController.create);
 router.get('/ticketssell/list', ticketsSellController.list);
 router.post('/ticketssell/search', validate(ticketsSellValidation.search), authPswd1, ticketsSellController.search);
 // router.put('/ticketssell/updatstatus', controllers.ticketssellController.updateStatusTicket);
 
 // tickets routes
-// router.get('/tickets/list')
+router.get('/tickets/list', authPswd1, ticketsController.list)
+router.post('/tickets/cancel', validate(ticketsValidation.cancel), authPswd1, ticketsController.cancel)
+
+// wallet routes
+router.get('/wallet/info', authPswd1, walletController.get_info)
 
 // /* orders */
 // router.post('/order/create', auth, controllers.transactionsp2pController.create);
-// router.post('/order/listbuy', auth, controllers.transactionsp2pController.listBuy);
-// router.post('/order/listsell', auth, controllers.transactionsp2pController.listSell);
-// router.post('/order/pay')
-// router.post('/order/listopen', auth, controllers.transactionsp2pController.listOpen);
-// router.post('/order/search', auth, controllers.transactionsp2pController.search);
-// router.put('/order/updatstatus', auth, controllers.transactionsp2pController.updateStatusTicket);
+router.get('/orders/listbuy', authPswd1, ordersController.list_buy);
+router.get('/orders/listsell', authPswd1, ordersController.list_sell);
+router.get('/orders/list', authPswd1, ordersController.list)
+router.post('/orders/search', validate(ordersValidation.search), authPswd1, ordersController.search);
+router.post('/orders/sendproof', validate(ordersValidation.send_proof), authPswd1, resizeOrderProof, ordersController.send_proof)
+router.post('/orders/approve', validate(ordersValidation.approve), authPswd1, ordersController.approve_order)
 
+// router.post('/order/listopen', auth, controllers.transactionsp2pController.listOpen);
+// router.put('/order/updatstatus', auth, controllers.transactionsp2pController.updateStatusTicket);
 
 // history
 // router.get('/history/list/p2p')

@@ -1,37 +1,21 @@
 import { StatusCodes } from 'http-status-codes';
-import passport from 'passport';
-import ApiError from '../utils/ApiError.js';
-
-const verifyCallback = (req, resolve, reject) => {
-    async (err, user) => {
-        if (err || !user) {
-            return reject(
-                new ApiError(StatusCodes.UNAUTHORIZED, "Please authenticate")
-            );
-        }
-        req.user = { id: user.id };
-        resolve()
-    };
-}
+import conexion from '../database/conexion.js'
+import bcrypt from 'bcrypt'
 
 const auth = async (req, res, next) => {
-    console.log(req.session);
     if (req.session.tokenPsswd2) {
-        return new Promise((resolve, reject) => {
-            passport.authenticate(
-                "passportPswd2",
-                { session: false },
-                verifyCallback(req, resolve, reject)
-            )(req, res, next)
-            passport.serializeUser(function (user, done) {
-                done(null, user.id);
-            });
-        })
-            .then(() => next())
-            .catch(error => next(error))
+        const user_id = req.session.tokenPsswd2.iduser
+        const password = req.session.tokenPsswd2.password
+        const user = await (await conexion.query('SELECT id, email, full_nombre, telefono, nombre_usuario, password2, id_progenitor, id_sponsor FROM usuarios WHERE id=($1)', [user_id])).rows[0]
+        const isPasswordMatch = await bcrypt.compare(password, user.password2)
+        if (isPasswordMatch) {
+            req.user = { id: user.id, email: user.email, telefono: user.telefono }
+            next()
+        }
+        else res.status(StatusCodes.UNAUTHORIZED).send({ status: false, content: 'Incorrent password 2' })
     } else res.status(400).send({
-        status: 'unauthorized',
-        content: "enter your password"
+        status: false,
+        content: "enter your password 2"
     })
 }
 

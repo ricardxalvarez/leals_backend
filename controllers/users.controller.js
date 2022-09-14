@@ -154,6 +154,8 @@ export function postSigninPsswd2(req, res, next) {
         let user = account.rows[0]
         let fullname = user.full_nombre
         let idusuario = user.id
+        let username = user.nombre_usuario
+        if (!user.password2) return res.send({ status: false, content: 'You must declare a password 2' })
         //compara la clave del form con la de la BD
         if (bcrypt.compareSync(password, user.password2)) {
           // Se genera el token
@@ -164,10 +166,9 @@ export function postSigninPsswd2(req, res, next) {
             username: username,
             iduser: idusuario,
           };
-          req.session.tokenPsswd2 = { iduser: idusuario, password: password }
+          req.session.tokenPsswd2 = { iduser: idusuario, password: password, username }
           res.status(200).send(result)
         } else {
-          console.log("Clave Incorrecta")
           let result = {
             status: 'false',
             content: 'Incorrect Password'

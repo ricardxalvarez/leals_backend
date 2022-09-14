@@ -3,7 +3,6 @@ import cors from 'cors';
 import routes from './routes/routes.js';
 import passport from 'passport';
 import passportPswd1 from './config/passport.pswd1.js';
-import passportPswd2 from './config/passport.pswd2.js';
 import passportadmin from './config/passport.admin.js';
 import session from 'express-session';
 import { Server as WebSocketServer } from 'socket.io'
@@ -20,7 +19,6 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 passport.use("passportPswd1", passportPswd1);
-passport.use("passportPswd2", passportPswd2);
 passport.use("passportadmin", passportadmin);
 const sessionMiddleware = session({
   secret: config.session.secret,

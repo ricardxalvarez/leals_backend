@@ -1,8 +1,8 @@
 import conexion from '../database/conexion.js'
 import resizeImageBase64 from '../utils/resizeImageBase64.js';
 
-export async function searchReferral(text, iduser, id) {
-  const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
+export async function searchReferral(text, id_progenitor, id) {
+  const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
   const users = []
   for (let i = 0; i < tempUsers.length; i++) {
     const user = tempUsers[i];
@@ -84,8 +84,8 @@ export async function searchReferral(text, iduser, id) {
   return { results, last_level: lastLevel, childs_count: childsCount }
 }
 
-export async function referralChildren({ iduser, level, id }) {
-  const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [iduser])).rows
+export async function referralChildren({ id_progenitor, level, id }) {
+  const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
   const users = []
   let results = []
   for (let i = 0; i < tempUsers.length; i++) {
