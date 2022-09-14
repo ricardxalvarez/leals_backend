@@ -9,5 +9,5 @@ CREATE TABLE orders (
     deadline_seconds INT NOT NULL,
     status ORDER_STATUS DEFAULT('hashless'),
     proof VARCHAR(100000),
-    id_hah VARCHAR(100)
+    id_hash VARCHAR(100)
 );

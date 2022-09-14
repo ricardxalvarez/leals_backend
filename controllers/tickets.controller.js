@@ -8,6 +8,7 @@ export async function list(req, res, next) {
 
 export async function cancel(req, res, next) {
     const { ticket_id } = req.body
-    const response = await ticketsService.cancelTicket(ticket_id)
+    const { id } = req.body
+    const response = await ticketsService.cancelTicket(ticket_id, id)
     res.send(response)
 }

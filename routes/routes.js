@@ -45,7 +45,7 @@ router.post('/referrals/search', validate(referralsValidation.searchReferral), a
 // /* Packages Routes */
 router.post('/packages/create', validate(packagesValidation.create), authAdmin, packagesController.create);
 router.get('/packages/list', packagesController.list);
-router.post('/packages/search', validate(packagesValidation.search), packagesController.search);
+router.get('/packages/search', validate(packagesValidation.search), packagesController.search);
 router.put('/packages/update', validate(packagesValidation.update), authAdmin, packagesController.update);
 router.delete('/packages/delete', validate(packagesValidation.delete_package), authAdmin, packagesController.delete_package);
 
