@@ -21,7 +21,7 @@ export async function search(req, res, next) {
 export async function update(req, res, next) {
     const { idpackage } = req.query
     const response = await packagesService.updatePackages(req.body, idpackage)
-    return res.send({ status: true, content: response })
+    return res.send(response)
 }
 
 export async function delete_package(req, res, next) {

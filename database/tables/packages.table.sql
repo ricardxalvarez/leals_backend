@@ -1,4 +1,6 @@
 CREATE TABLE packages (
     package_id BIGSERIAL UNIQUE NOT NULL PRIMARY KEY,
-    leals_quantity DOUBLE PRECISION UNIQUE NOT NULL
+    name VARCHAR(100) UNIQUE NOT NULL,
+    leals_quantity DOUBLE PRECISION NOT NULL,
+    available_packages BIGINT DEFAULT(100) CHECK(available_packages >= 0)
 );

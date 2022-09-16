@@ -1,12 +1,11 @@
 import express from 'express'
-import { packagesController, referralsController, usersController, ticketsBuyController, ticketsSellController, ticketsController, walletController, ordersController } from '../controllers/index.js';
+import { packagesController, referralsController, usersController, ticketsBuyController, ticketsSellController, ticketsController, walletController, ordersController, countriesController } from '../controllers/index.js';
+import { packagesValidation, referralsValidation, userValidation, ticketsValidation, ticketsBuyValidation, ticketsSellValidation, ordersValidation } from '../validations/index.js'
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
 import authAdmin from '../middlewares/auth.admin.js';
 import countries from '../middlewares/countries.js';
 import validate from '../middlewares/validate.js';
-import { packagesValidation, referralsValidation, userValidation, ticketsValidation, ticketsBuyValidation, ticketsSellValidation, ordersValidation } from '../validations/index.js'
-import { countriesController } from '../controllers/index.js';
 import validateAvatarURL from '../middlewares/validateAvatarURL.js';
 import cropAvatarImage from '../middlewares/cropAvatarImage.js';
 import resizeOrderProof from '../middlewares/resizeOrderProof.js';
