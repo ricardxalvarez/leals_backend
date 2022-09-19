@@ -74,6 +74,7 @@ export async function search(order_id, userid) {
 export async function send_proof_order(order_id, userid, data) {
     // add id hash column to orders table
     const order = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE order_id=($1)', [order_id])).rows[0]
+    if (!order) return { status: false, content: 'This order does not exist' }
     if (order.owner !== userid) return { status: false, content: 'You are not the buyer of this order' }
     if (order.status === 'successfull' || order.status === 'cancelled') return { status: false, content: 'Order was already successfull or cancelled' }
     // update order status and
@@ -88,6 +89,7 @@ export async function send_proof_order(order_id, userid, data) {
 
 export async function approve_order(order_id, userid) {
     const order = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id WHERE order_id=($1)', [order_id])).rows[0]
+    if (!order) return { status: false, content: 'This order does not exist' }
     if (order.owner !== userid) return { status: false, content: 'You are not the seller of this order' }
     if (order.status === 'successfull' || order.status === 'cancelled') return { status: false, content: 'Order was already successfull or cancelled' }
     const new_order_info = await (await conexion.query('UPDATE orders SET status=($1) WHERE order_id=($2) RETURNING *', ['successfull', order_id])).rows[0]
@@ -243,11 +245,18 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         childsCount.push(element.length)
     }
     if (childsCount[level - 1] >= expected_children_qty) {
-        const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [id])).rows[0]
-        if (!wallet) await create_wallet(id)
+        let wallet
+        wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [id])).rows[0]
+        if (!wallet) {
+            await create_wallet(id)
+            wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [id])).rows[0]
+        }
         // update not_available balance of wallet id
         const new_not_available_balance = wallet.not_available ? wallet.not_available + commission : commission
         await conexion.query('UPDATE wallets SET not_available=($1) WHERE owner=($2)', [new_not_available_balance, id])
+        const old_split = await (await conexion.query('SELECT split FROM p2p_config')).rows[0]
+        const new_split = old_split.split - commission
+        await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
         return 'expecting commision to user ' + id + ' for ' + commission + ' leals'
     } else return 'not enough children for user ' + id
 }
