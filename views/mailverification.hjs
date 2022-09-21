@@ -183,7 +183,7 @@
       padding-top: 5px;
       color: #d00b9c;
       font-family: sans-serif;" class="subheader">
-              Alfredo Zevallos
+              {{full_nombre}}
             </td>
           </tr>
 
@@ -216,7 +216,7 @@
 
                       <h2 style="text-decoration: underline;
           color: #ffffff ; font-family: sans-serif; font-size: 30px; font-weight: 400; line-height: 130%;">
-                        667676
+                        {{code}}
                       </h2>
 
 
