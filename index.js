@@ -6,6 +6,7 @@ import passportPswd1 from './config/passport.pswd1.js';
 import passportadmin from './config/passport.admin.js';
 import session from 'express-session';
 import { Server as WebSocketServer } from 'socket.io'
+import workers from './workers/workers.js';
 import http from 'http'
 import helmet from 'helmet';
 import config from './config/config.js';
@@ -50,8 +51,8 @@ io.on('connection', function (socket) {
     // socket.request.session.save()
   })
   // socket.request.session.io = io;
-  socket.request.session.socketio = socket.id;
-  socket.request.session.save();
+  // socket.request.session.socketio = socket.id;
+  // socket.request.session.save();
 
   socket.on("disconnect", () => {
     remove_user(socket.id)
@@ -81,6 +82,8 @@ app.use((req, res, next) => {
     res.send();
   });
 });
+
+workers()
 
 server.listen(PORT, () => {
   console.log("Servidor iniciado y en espera en puerto " + PORT);

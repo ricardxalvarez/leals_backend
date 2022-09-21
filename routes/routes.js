@@ -1,6 +1,26 @@
 import express from 'express'
-import { packagesController, referralsController, usersController, ticketsBuyController, ticketsSellController, ticketsController, walletController, ordersController, countriesController } from '../controllers/index.js';
-import { packagesValidation, referralsValidation, userValidation, ticketsValidation, ticketsBuyValidation, ticketsSellValidation, ordersValidation } from '../validations/index.js'
+import {
+    packagesController,
+    referralsController,
+    usersController,
+    ticketsBuyController,
+    ticketsSellController,
+    ticketsController,
+    walletController,
+    ordersController,
+    countriesController,
+    notificationsController
+} from '../controllers/index.js';
+import {
+    packagesValidation,
+    referralsValidation,
+    userValidation,
+    ticketsValidation,
+    ticketsBuyValidation,
+    ticketsSellValidation,
+    ordersValidation,
+    notificationsValidation
+} from '../validations/index.js'
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
 import authAdmin from '../middlewares/auth.admin.js';
@@ -77,6 +97,13 @@ router.get('/orders/list', authPswd1, ordersController.list)
 router.post('/orders/search', validate(ordersValidation.search), authPswd1, ordersController.search);
 router.post('/orders/sendproof', validate(ordersValidation.send_proof), authPswd1, resizeOrderProof, ordersController.send_proof)
 router.post('/orders/approve', validate(ordersValidation.approve), authPswd1, ordersController.approve_order)
+
+// notifications
+router.get('/notifications/list', authPswd1, notificationsController.list)
+router.post('/notifications/read', validate(notificationsValidation.read), authPswd1, notificationsController.read)
+router.post('/notifications/read_all', authPswd1, notificationsController.read_all)
+router.delete('/notifications/delete', validate(notificationsValidation.delete_order), authPswd1, notificationsController.delete_order)
+router.delete('/notifications/delete_all', authPswd1, notificationsController.delete_all)
 
 // router.post('/order/listopen', auth, controllers.transactionsp2pController.listOpen);
 // router.put('/order/updatstatus', auth, controllers.transactionsp2pController.updateStatusTicket);
