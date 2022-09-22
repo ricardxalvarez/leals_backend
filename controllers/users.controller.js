@@ -155,7 +155,7 @@ export function postSigninPsswd2(req, res, next) {
         let fullname = user.full_nombre
         let idusuario = user.id
         let username = user.nombre_usuario
-        if (!user.password2) return res.send({ status: false, content: 'You must declare a password 2' })
+        if (!user.password2) return res.status(403).send({ status: false, content: 'You must declare a password 2' })
         //compara la clave del form con la de la BD
         if (bcrypt.compareSync(password, user.password2)) {
           // Se genera el token

@@ -9,7 +9,8 @@ import {
     walletController,
     ordersController,
     countriesController,
-    notificationsController
+    notificationsController,
+    historyController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -109,7 +110,7 @@ router.delete('/notifications/delete_all', authPswd1, notificationsController.de
 // router.put('/order/updatstatus', auth, controllers.transactionsp2pController.updateStatusTicket);
 
 // history
-// router.get('/history/list/p2p')
+router.get('/history/list/p2p', authPswd1, historyController.list_history_p2p)
 
 //split
 //router.get('/split/info')

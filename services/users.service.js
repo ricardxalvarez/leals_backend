@@ -132,17 +132,15 @@ export async function updateUserPassword2(data) {
     return { status: true, content: 'User does not exist' }
   }
   if (user.password2) {
-    if (!data.oldPassword) {
-      return { status: false, content: 'Old password is must' }
-    }
+    if (!data.oldPassword) return { status: false, content: 'Old password is must' }
     const isPasswordMatch = await bcrypt.compare(data.oldPassword, user.password2)
     if (isPasswordMatch) {
-      await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2) RETURNING *",
+      await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2)",
         [data.pass2, data.iduser])
       return { status: true, content: 'Password updated successfully' }
     } else return { status: false, content: 'incorrect password' }
   } else {
-    await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2) RETURNING *",
+    await conexion.query("UPDATE usuarios SET password2=($1) WHERE id=($2)",
       [data.pass2, data.iduser])
     return { status: true, content: 'Password updated successfully' }
   }
