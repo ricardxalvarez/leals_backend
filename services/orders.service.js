@@ -168,15 +168,15 @@ export async function approve_order(order_id, userid) {
             const rule = rules_commissions.find(object => object.level === i + 1)
             if (!rule) continue;
             const commission = rule.commission * buyer_ticket.amount / 100
-            const response = await submit_commissions(parent.id_progenitor || parent.id, parent.id, commission, rule.expected_children_qty, rule.level)
+            const response = await submit_commissions(parent.id_progenitor || parent.id, parent.id, commission, rule.expected_children_qty, rule.level, buyer_ticket.owner)
             console.log(response)
         }
     }
     return { status: true, content: new_order_info }
 }
 
-async function submit_commissions(id_progenitor, id, commission, expected_children_qty, level) {
-    const users = await (await conexion.query("SELECT id, id_sponsor FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
+async function submit_commissions(id_progenitor, id, commission, expected_children_qty, level, id_child) {
+    const users = await (await conexion.query("SELECT id, id_sponsor, nombre_usuario FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
     let results = []
     function Node(user) {
         this.user = user,
@@ -257,6 +257,11 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         const old_split = await (await conexion.query('SELECT split FROM p2p_config')).rows[0]
         const new_split = old_split.split - commission
         await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
+        // add this action to history
+        const child_provider = await results.find(object => object.user.id === id_child)
+        await (await conexion.query('INSERT INTO history (owner, amount, date, username_network_commision, user_level_network_commision) VALUES($1,$2,$3,$4,$5)', [id, commission, new Date(), child_provider.user.nombre_usuario, child_provider.user.level])).rows[0]
+        // send notification to user 
+        await (await conexion.query('INSERT INTO notifications (owner, message, date) VALUES ($1,$2, $3)', [id, `Congratulations, you just received a commission of amount: ${commission}, from user: ${child_provider.user.nombre_usuario}, level: ${child_provider.user.level}`, new Date()])).rows[0]
         return 'expecting commision to user ' + id + ' for ' + commission + ' leals'
     } else return 'not enough children for user ' + id
 }

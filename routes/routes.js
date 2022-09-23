@@ -10,7 +10,8 @@ import {
     ordersController,
     countriesController,
     notificationsController,
-    historyController
+    historyController,
+    splitController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -113,7 +114,7 @@ router.delete('/notifications/delete_all', authPswd1, notificationsController.de
 router.get('/history/list/p2p', authPswd1, historyController.list_history_p2p)
 
 //split
-//router.get('/split/info')
+router.get('/split/info', authPswd1, splitController.split_info)
 
 // /* ruta salir */
 // router.get('/logout', AuthMiddleware.verifyToken,controllers.loginController.getLogout);
