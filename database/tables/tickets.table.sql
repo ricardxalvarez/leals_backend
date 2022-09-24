@@ -9,5 +9,7 @@ CREATE TABLE tickets (
     remain DOUBLE PRECISION NOT NULL CHECK(remain <= amount),
     created_at timestamptz NOT NULL,
     status TICKET_STATUS DEFAULT('pending') NOT NULL,
-    type TICKET_TYPE NOT NULL
+    type TICKET_TYPE NOT NULL,
+    fee DOUBLE PRECISION,
+    id_hash_fee VARCHAR(70)
 );

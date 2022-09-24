@@ -16,6 +16,8 @@ export async function createTicket(data, userid) {
     if (old_ticket) return { status: false, content: `You already have an active buying ticket with id ${old_ticket.ticket_id}` }
     const packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1)", [data.package_id])).rows[0]
     if (!packag) return { status: false, content: 'You selected a non valid package' }
+    const greatest_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) ORDER BY amount DESC', [userid])).rows[0]
+    if (greatest_ticket?.amount < packag.leals_quantity) return { status: false, content: 'You have to select a package greater or equal than the previous ones you have chosen' }
     const ticket_returning = await (await conexion.query("INSERT INTO tickets (amount, remain, type, created_at, owner) VALUES ($1, $2, $3, $4, $5) RETURNING *", [packag.leals_quantity, packag.leals_quantity, 'buy', new Date(), userid])).rows[0]
     const tickets_to_pair = await (await conexion.query('SELECT * FROM tickets WHERE owner<>($1) AND type=($2) AND remain>0 ORDER BY created_at', [userid, 'sell'])).rows
     let new_orders = []
@@ -27,7 +29,6 @@ export async function createTicket(data, userid) {
             const ticket_to_pair = tickets_to_pair[i];
             const ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [ticket_returning.ticket_id])).rows[0]
             let new_ticket_seller_info
-
             // sets amount in leals
             ticket.remain <= ticket_to_pair.remain ? amount = ticket.remain : amount = ticket_to_pair.remain
             if (amount <= 0) break;

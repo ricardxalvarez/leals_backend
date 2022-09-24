@@ -2,7 +2,8 @@ import joi from 'joi'
 
 export const create = {
     body: joi.object().keys({
-        amount: joi.number().required()
+        amount: joi.number().required(),
+        id_hash_fee: joi.string().id().optional()
     })
 }
 

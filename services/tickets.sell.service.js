@@ -13,6 +13,8 @@ const find_user = (user_id) => {
 }
 
 export async function createTicket(data, userid) {
+    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+    if (p2p_config.p2p_sells_fee && !data.id_hash_fee) return { status: false, content: 'Please send a hash of the commission payment' }
     const old_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) AND status<>($3) AND status<>($4)', [userid, 'sell', 'finished', 'annulled'])).rows[0]
     if (old_ticket) return { status: false, content: `You already have an active selling ticket with id ${old_ticket.ticket_id}` }
     const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
@@ -21,7 +23,8 @@ export async function createTicket(data, userid) {
         return { status: false, content: "You don't have enough leals to continue" }
     }
     if (data.amount > wallet.balance) return { status: false, content: `You have not enough leals to continue, your available balance is ${wallet.balance}` }
-    const ticket_returning = await (await conexion.query("INSERT INTO tickets (amount, remain, type, created_at, owner) VALUES ($1, $2, $3, $4, $5) RETURNING *", [data.amount, data.amount, 'sell', new Date(), userid])).rows[0]
+    let fee = p2p_config.p2p_sells_fee ? p2p_config.p2p_sells_fee * data.amount / 1000 : 0
+    const ticket_returning = await (await conexion.query("INSERT INTO tickets (amount, remain, type, created_at, owner, fee, id_hash_fee) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *", [data.amount, data.amount, 'sell', new Date(), userid, fee, data.id_hash_fee])).rows[0]
     const tickets_to_pair = await (await conexion.query('SELECT * FROM tickets WHERE owner<>($1) AND type=($2) AND remain>0 ORDER BY created_at', [userid, 'buy'])).rows
     let amount
     let new_ticket_seller_info
