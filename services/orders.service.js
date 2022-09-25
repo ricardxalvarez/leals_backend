@@ -37,12 +37,14 @@ export async function list_sell(userid) {
 
 export async function list(userid) {
     const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
+    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     const results = []
     for (let i = 0; i < orders.length; i++) {
         const order = orders[i];
         let buyer
         let seller
         let type
+        const usd_quantity = order.amount / p2p_config.value_compared_usdt
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
         if (type === 'sell') {
@@ -53,7 +55,7 @@ export async function list(userid) {
             buyer = await (await conexion.query('SELECT full_nombre AS full_name, nombre_usuario AS username FROM usuarios WHERE id=($1)', [order.owner])).rows[0]
             seller = await (await conexion.query('SELECT usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username FROM tickets INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.ticket_id=($1)', [order.ticket_seller_id])).rows[0]
         }
-        results.push({ ...order, buyer, seller, type })
+        results.push({ ...order, buyer, seller, type, usd_quantity })
     }
     return results
 }
