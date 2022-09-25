@@ -11,7 +11,8 @@ import {
     countriesController,
     notificationsController,
     historyController,
-    splitController
+    splitController,
+    adminController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -115,6 +116,10 @@ router.get('/history/list/p2p', authPswd1, historyController.list_history_p2p)
 
 //split
 router.get('/split/info', authPswd1, splitController.split_info)
+
+// admin
+router.post('/admin/wallet/add_balance', authAdmin, adminController.add_balance)
+router.post('/admin/clean', authAdmin, adminController.clean)
 
 // /* ruta salir */
 // router.get('/logout', AuthMiddleware.verifyToken,controllers.loginController.getLogout);

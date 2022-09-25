@@ -1,0 +1,16 @@
+import conexion from '../database/conexion.js'
+import create_wallet from '../utils/create_wallet.js'
+export async function add_balance(userid, amount) {
+    const wallet = await (await conexion.query('SELECT * FRPM wallets WHERE owner=($1)', [userid])).rows[0]
+    if (!wallet) await create_wallet(userid)
+    const new_amount = wallet?.balance ? wallet.balance + amount : amount
+    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_amount, userid])
+    return { status: true, content: 'Balance updated' }
+}
+
+export async function clean() {
+    await conexion.query('DELETE FROM orders')
+    await conexion.query('DELETE FROM tickets')
+    await conexion.query('DELETE FROM wallets')
+    return { status: true, content: 'Cleaned' }
+}
