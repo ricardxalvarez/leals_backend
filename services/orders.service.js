@@ -45,6 +45,7 @@ export async function list(userid) {
         let seller
         let type
         const usd_quantity = order.amount / p2p_config.value_compared_usdt
+        const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
         if (type === 'sell') {
@@ -55,7 +56,7 @@ export async function list(userid) {
             buyer = await (await conexion.query('SELECT full_nombre AS full_name, nombre_usuario AS username FROM usuarios WHERE id=($1)', [order.owner])).rows[0]
             seller = await (await conexion.query('SELECT usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username FROM tickets INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.ticket_id=($1)', [order.ticket_seller_id])).rows[0]
         }
-        results.push({ ...order, buyer, seller, type, usd_quantity })
+        results.push({ ...order, buyer, seller, type, usd_quantity, deadline_seconds_remain })
     }
     return results
 }
