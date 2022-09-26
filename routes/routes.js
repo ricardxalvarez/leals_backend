@@ -96,7 +96,7 @@ router.get('/wallet/info', authPswd1, walletController.get_info)
 // router.post('/order/create', auth, controllers.transactionsp2pController.create);
 router.get('/orders/listbuy', authPswd1, ordersController.list_buy);
 router.get('/orders/listsell', authPswd1, ordersController.list_sell);
-router.get('/orders/list', authPswd1, ordersController.list)
+router.get('/orders/list', validate(ordersValidation.list), authPswd1, ordersController.list)
 router.post('/orders/search', validate(ordersValidation.search), authPswd1, ordersController.search);
 router.post('/orders/sendproof', validate(ordersValidation.send_proof), authPswd1, resizeOrderProof, ordersController.send_proof)
 router.post('/orders/approve', validate(ordersValidation.approve), authPswd1, ordersController.approve_order)

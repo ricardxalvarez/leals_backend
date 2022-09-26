@@ -2,19 +2,22 @@ import { ordersService } from "../services/index.js";
 
 export async function list_buy(req, res, next) {
     const { id } = req.user
+    const page = parseInt(req.query.page) || 0
     const response = await ordersService.list_buy(id)
     res.send({ status: true, content: response })
 }
 
 export async function list_sell(req, res, next) {
     const { id } = req.user
+    const page = parseInt(req.query.page) || 0
     const response = await ordersService.list_sell(id)
     res.send({ status: true, content: response })
 }
 
 export async function list(req, res, next) {
     const { id } = req.user
-    const response = await ordersService.list(id)
+    const page = parseInt(req.query.page) || 0
+    const response = await ordersService.list(id, page)
     res.send({ status: true, content: response })
 }
 

@@ -2,7 +2,10 @@ import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js';
 
 export async function list_buy(userid) {
-    const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
+    const orders_per_page = 20
+    const limit = orders_per_page
+    const offset = orders_per_page * page
+    const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC LIMIT ($2) OFFSET ($3)', [userid, limit, offset])).rows
     const results = []
     for (let i = 0; i < orders.length; i++) {
         const order = orders[i];
@@ -39,9 +42,15 @@ export async function list_sell(userid) {
     return results
 }
 
-export async function list(userid) {
-    const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
+export async function list(userid, page) {
+    const orders_per_page = 20
+    const limit = orders_per_page
+    const offset = orders_per_page * page
+    const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC LIMIT ($2) OFFSET ($3)', [userid, limit, offset])).rows
+    const orders_count = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1)', [userid])).rowCount
+    const pages_quantity = Math.ceil(orders_count / orders_per_page)
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+    const orders_in_page = orders.length
     const results = []
     for (let i = 0; i < orders.length; i++) {
         const order = orders[i];
@@ -62,7 +71,7 @@ export async function list(userid) {
         }
         results.push({ ...order, buyer, seller, type, usd_quantity, deadline_seconds_remain })
     }
-    return results
+    return { results, orders_count, pages_quantity, orders_in_page }
 }
 
 export async function search(order_id, userid) {

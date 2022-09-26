@@ -19,3 +19,9 @@ export const approve = {
         order_id: joi.string().id().required()
     })
 }
+
+export const list = {
+    query: joi.object().keys({
+        page: joi.number()
+    })
+}
