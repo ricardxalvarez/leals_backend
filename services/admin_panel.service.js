@@ -14,3 +14,8 @@ export async function clean() {
     await conexion.query('DELETE FROM wallets')
     return { status: true, content: 'Cleaned' }
 }
+
+export async function approve_advertise(advertise_id) {
+    await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2)', ['approved', advertise_id])
+    return { status: true, content: 'Advertise succesfully approved' }
+}

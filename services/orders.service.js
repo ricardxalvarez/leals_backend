@@ -2,10 +2,7 @@ import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js';
 
 export async function list_buy(userid) {
-    const orders_per_page = 20
-    const limit = orders_per_page
-    const offset = orders_per_page * page
-    const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC LIMIT ($2) OFFSET ($3)', [userid, limit, offset])).rows
+    const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
     const results = []
     for (let i = 0; i < orders.length; i++) {
         const order = orders[i];
@@ -43,7 +40,7 @@ export async function list_sell(userid) {
 }
 
 export async function list(userid, page) {
-    const orders_per_page = 20
+    const orders_per_page = 1
     const limit = orders_per_page
     const offset = orders_per_page * page
     const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC LIMIT ($2) OFFSET ($3)', [userid, limit, offset])).rows
@@ -120,7 +117,9 @@ export async function approve_order(order_id, userid) {
     await conexion.query('UPDATE wallets SET balance_to_sell=($1) WHERE owner=($2)', [wallet_seller.balance_to_sell - order.amount, userid])
     const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
     if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
-    await conexion.query('UPDATE wallets SET not_available=($1) WHERE owner=($2)', [wallet_buyer?.not_available ? wallet_buyer.not_available + order.amount : order.amount, buyer_ticket.owner])
+    const new_not_available_balance = wallet_buyer?.not_available ? wallet_buyer.not_available + order.amount : order.amount
+    const new_p2p_earnings = wallet_buyer?.p2p_earnings ? wallet_buyer.p2p_earnings + order.amount : order.amount
+    await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, buyer_ticket.owner])
     // get array of parents
     const parents = []
     while (parents.length < 10) {
@@ -268,10 +267,11 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
             wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [id])).rows[0]
         }
         // update not_available balance of wallet id
-        const new_not_available_balance = wallet.not_available ? wallet.not_available + commission : commission
-        await conexion.query('UPDATE wallets SET not_available=($1) WHERE owner=($2)', [new_not_available_balance, id])
+        const new_not_available_balance = wallet.not_available ? wallet.not_available + (commission * 3) : commission * 3
+        const new_p2p_earnings = wallet.p2p_earnings ? wallet.p2p_earnings + (commission * 3) : commission * 3
+        await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, id])
         const old_split = await (await conexion.query('SELECT split FROM p2p_config')).rows[0]
-        const new_split = old_split.split - commission
+        const new_split = old_split.split - (commission * 3)
         await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
         // add this action to history
         const child_provider = await results.find(object => object.user.id === id_child)

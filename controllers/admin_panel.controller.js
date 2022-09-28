@@ -10,3 +10,8 @@ export async function clean(req, res, next) {
     const response = await adminService.clean()
     res.send(response)
 }
+
+export async function approve_advertise(req, res, next) {
+    const response = await adminService.approve_advertise(req.body.advertise_id)
+    res.send(response)
+}

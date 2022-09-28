@@ -2,5 +2,14 @@ CREATE TABLE wallets (
     owner BIGINT REFERENCES usuarios(id) UNIQUE PRIMARY KEY,
     balance DOUBLE PRECISION NOT NULL DEFAULT(0),
     not_available DOUBLE PRECISION NOT NULL DEFAULT(0),
-    balance_to_sell DOUBLE PRECISION NOT NULL DEFAULT(0)
+    balance_to_sell DOUBLE PRECISION NOT NULL DEFAULT(0),
+    last_not_available_release TIMESTAMPTZ,
+    p2p_earnings DOUBLE PRECISION NOT NULL DEFAULT(0),
+    -- p2p_earnings_generated DOUBLE PRECISION NOT NULL DEFAULT(0)
 );
+
+ALTER TABLE wallets ADD COLUMN last_not_available_release TIMESTAMPTZ;
+
+ALTER TABLE wallets ADD COLUMN p2p_earnings DOUBLE PRECISION NOT NULL DEFAULT(0);
+
+-- ALTER TABLE wallets ADD COLUMN p2p_earnings_generated DOUBLE PRECISION NOT NULL DEFAULT(0);

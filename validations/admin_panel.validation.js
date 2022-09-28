@@ -6,3 +6,9 @@ export const add_balance = {
         amount: joi.number().required()
     })
 }
+
+export const approve_advertise = {
+    body: joi.object().keys({
+        advertise_id: joi.string().id().required()
+    })
+}

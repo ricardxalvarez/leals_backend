@@ -16,7 +16,7 @@ async function orders_date_limit() {
                 await conexion.query('UPDATE orders SET status=($1) WHERE order_id=($2)', ['cancelled', order.order_id])
                 await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['annulled', order.ticket_buyer_id])
                 const old_seller_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [order.ticket_seller_id])).rows[0]
-                const new_seller_remain = old_seller_ticket.remain + order.amount
+                const new_seller_remain = (old_seller_ticket.remain + order.amount) > old_seller_ticket.amount ? old_seller_ticket.amount : old_seller_ticket.remain + order.amount
                 await conexion.query('UPDATE tickets SET status=($1), remain=($2) WHERE ticket_id=($3)', ['pending', new_seller_remain, order.ticket_seller_id])
             }
         }
