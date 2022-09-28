@@ -73,15 +73,16 @@ export async function list(userid, page) {
 
 export async function search(order_id, userid) {
     // ORDER BY tickets.type will make buy order first, and sell, second
-    const order = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner, tickets.type, usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username, usuarios.codigo_pais AS country_code, usuarios.usd_direction AS usdt_direction FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE order_id=($1) AND tickets.owner<>($2)', [order_id, userid])).rows[0]
+    const order = await (await conexion.query('SELECT orders.*, tickets.type, usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username, usuarios.codigo_pais AS country_code, usuarios.usd_direction AS usdt_direction FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE order_id=($1) AND tickets.owner<>($2)', [order_id, userid])).rows[0]
     // all timezones must be GM-4
+    if (!order) return { status: false, content: 'You either are not a participant of this transaction or this order does not exists' }
     // if deadline_seconds_remain is less than 0, means that deadline time has expired
     const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
-
+    const type = order.type === 'sell' ? 'buy' : 'sell'
     const result = {
-        ...order, deadline_seconds_remain
+        ...order, deadline_seconds_remain, type
     }
-    return result
+    return { status: true, content: result }
 }
 
 export async function send_proof_order(order_id, userid, data) {

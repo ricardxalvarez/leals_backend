@@ -18,7 +18,7 @@ export async function list(req, res, next) {
     const { id } = req.user
     const page = parseInt(req.query.page) || 0
     const response = await ordersService.list(id, page)
-    res.send({ status: true, content: response })
+    res.send(response)
 }
 
 export async function search(req, res, next) {
