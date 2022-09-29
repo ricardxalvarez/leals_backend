@@ -6,7 +6,10 @@ async function resizeOrderProof(req, res, next) {
     const base64str = image.slice(image.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
     jimp.read(buf, (err, image) => {
-        if (err) throw err;
+        if (err || image.bitmap.width === 0 || image.bitmap.height === 0) {
+            res.send({ status: false, content: 'This format is not valid for proof' })
+            throw err;
+        }
         else {
             image.resize(jimp.AUTO, 200)
                 .quality(70)

@@ -9,7 +9,7 @@ export default async function wallet_free_not_available() {
         for (let i = 0; i < wallets.length; i++) {
             const wallet = wallets[i];
             if (!wallet.last_not_available_release) {
-                await conexion.query('UPDATE wallets SET last_not_available_release=($1) WHERE owner=($2) AND status=($3)', [new Date(), wallet.owner, 'approved'])
+                await conexion.query('UPDATE wallets SET last_not_available_release=($1) WHERE owner=($2)', [new Date(), wallet.owner])
                 continue;
             }
             const seconds_in_a_week = 60 /** 60 * 24 * 7 */
