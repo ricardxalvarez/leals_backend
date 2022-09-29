@@ -51,7 +51,6 @@ export default async function wallet_free_not_available() {
                 }
                 await conexion.query('UPDATE wallets SET balance=($1), not_available=($2), last_not_available_release=($3) WHERE owner=($4)', [new_balance, new_balance_not_available, new Date(), wallet.owner])
             }
-            console.log(seconds_remain)
         }
 
     }

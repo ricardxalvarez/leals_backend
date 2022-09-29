@@ -8,7 +8,6 @@ async function resizeOrderProof(req, res, next) {
     jimp.read(buf, (err, image) => {
         if (err || image.bitmap.width === 0 || image.bitmap.height === 0) {
             res.send({ status: false, content: 'This format is not valid for proof' })
-            throw err;
         }
         else {
             image.resize(jimp.AUTO, 200)
