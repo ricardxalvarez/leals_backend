@@ -1,5 +1,6 @@
 import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js';
+import get_countryname_by_id from '../utils/get_countryname_by_id.js';
 
 export async function list_buy(userid) {
     const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
@@ -78,9 +79,11 @@ export async function search(order_id, userid) {
     if (!order) return { status: false, content: 'You either are not a participant of this transaction or this order does not exists' }
     // if deadline_seconds_remain is less than 0, means that deadline time has expired
     const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
+
+    const country = get_countryname_by_id(order.country_code)
     const type = order.type === 'sell' ? 'buy' : 'sell'
     const result = {
-        ...order, deadline_seconds_remain, type
+        ...order, deadline_seconds_remain, type, country
     }
     return { status: true, content: result }
 }
