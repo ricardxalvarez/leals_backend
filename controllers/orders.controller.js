@@ -25,7 +25,7 @@ export async function search(req, res, next) {
     const { id } = req.user
     const { order_id } = req.body
     const response = await ordersService.search(order_id, id)
-    res.send({ status: true, content: response })
+    res.send(response)
 }
 
 export async function send_proof(req, res, next) {
