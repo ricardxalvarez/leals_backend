@@ -55,7 +55,7 @@ export async function list(userid, page) {
         let buyer
         let seller
         let type
-        const usd_quantity = order.amount / p2p_config.value_compared_usdt
+        const usd_quantity = order.amount * p2p_config.value_compared_usdt
         const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
