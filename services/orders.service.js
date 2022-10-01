@@ -85,7 +85,7 @@ export async function search(order_id, userid) {
     const type = order.type === 'sell' ? 'buy' : 'sell'
     const amount = order.amount * p2p_config.value_compared_usdt
     const result = {
-        ...order, deadline_seconds_remain, type, country
+        ...order, deadline_seconds_remain, type, country, amount
     }
     return { status: true, content: result }
 }
