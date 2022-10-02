@@ -59,7 +59,7 @@ export async function list(userid, page) {
         const usd_quantity = fix_number(order.amount * p2p_config.value_compared_usdt)
         order.amount = fix_number(order.amount)
         const deadline_seconds = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
-        const deadline_seconds_remain = (deadline_seconds < 0 || order.status === 'successfull' || order.status === 'cancelled') ? 0 : deadline_seconds
+        const deadline_seconds_remain = (deadline_seconds < 0 || order.status !== 'hashless') ? 0 : deadline_seconds
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
         if (type === 'sell') {
