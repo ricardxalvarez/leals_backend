@@ -6,5 +6,6 @@ export async function wallet_info(userid) {
     if (!wallet) return await (await conexion.query('INSERT INTO wallets (owner) VALUES ($1) RETURNING *', [userid])).rows[0]
     const usd_balance = fix_number(wallet.balance * p2p_config.value_compared_usdt)
     wallet.balance = fix_number(wallet.balance)
+    wallet.not_available = fix_number(wallet.not_available)
     return { ...wallet, usd_balance }
 }
