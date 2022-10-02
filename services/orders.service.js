@@ -58,7 +58,8 @@ export async function list(userid, page) {
         let type
         const usd_quantity = fix_number(order.amount * p2p_config.value_compared_usdt)
         order.amount = fix_number(order.amount)
-        const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
+        const deadline_seconds = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
+        const deadline_seconds_remain = (deadline_seconds < 0 || order.status === 'successfull' || order.status === 'cancelled') ? 0 : deadline_seconds
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
         if (type === 'sell') {
@@ -81,7 +82,8 @@ export async function search(order_id, userid) {
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     if (!order) return { status: false, content: 'You either are not a participant of this transaction or this order does not exists' }
     // if deadline_seconds_remain is less than 0, means that deadline time has expired
-    const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
+    const deadline_seconds = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
+    const deadline_seconds_remain = (deadline_seconds < 0 || order.status === 'successfull' || order.status === 'cancelled') ? 0 : deadline_seconds
 
     const country = get_countryname_by_id(order.country_code)
     const type = order.type === 'sell' ? 'buy' : 'sell'
