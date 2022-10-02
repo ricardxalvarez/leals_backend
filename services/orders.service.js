@@ -1,6 +1,7 @@
 import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js';
 import get_countryname_by_id from '../utils/get_countryname_by_id.js';
+import fix_number from '../utils/fix_number.js';
 
 export async function list_buy(userid) {
     const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
@@ -55,7 +56,8 @@ export async function list(userid, page) {
         let buyer
         let seller
         let type
-        const usd_quantity = order.amount * p2p_config.value_compared_usdt
+        const usd_quantity = fix_number(order.amount * p2p_config.value_compared_usdt)
+        order.amount = fix_number(order.amount)
         const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
@@ -83,7 +85,7 @@ export async function search(order_id, userid) {
 
     const country = get_countryname_by_id(order.country_code)
     const type = order.type === 'sell' ? 'buy' : 'sell'
-    const amount = order.amount * p2p_config.value_compared_usdt
+    const amount = fix_number(order.amount * p2p_config.value_compared_usdt)
     const result = {
         ...order, deadline_seconds_remain, type, country, amount
     }
