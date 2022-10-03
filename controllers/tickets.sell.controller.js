@@ -19,3 +19,9 @@ export async function search(req, res, next) {
     const response = await ticketsSellService.searchTicket(ticket_id)
     res.send({ status: true, content: response })
 }
+
+export async function calculateFee(req, res, next) {
+    const { amount } = req.body
+    const response = await ticketsSellService.calculateFee(amount)
+    res.send(response)
+}

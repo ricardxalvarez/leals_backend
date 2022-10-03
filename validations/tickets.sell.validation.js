@@ -12,3 +12,9 @@ export const search = {
         ticket_id: joi.number().required()
     })
 }
+
+export const calculate_fee = {
+    body: joi.object().keys({
+        amount: joi.number().required()
+    })
+}

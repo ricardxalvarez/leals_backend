@@ -86,6 +86,7 @@ router.post('/ticketsbuy/search', validate(ticketsBuyValidation.search), tickets
 router.post('/ticketssell/create', validate(ticketsSellValidation.create), authPswd2, ticketsSellController.create);
 router.get('/ticketssell/list', ticketsSellController.list);
 router.post('/ticketssell/search', validate(ticketsSellValidation.search), authPswd1, ticketsSellController.search);
+router.post('/ticketssell/calculate_fee', validate(ticketsSellValidation.calculate_fee), ticketsSellController.calculateFee)
 // router.put('/ticketssell/updatstatus', controllers.ticketssellController.updateStatusTicket);
 
 // tickets routes
