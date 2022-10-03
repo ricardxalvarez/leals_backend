@@ -87,8 +87,7 @@ export async function searchTicket(ticket_id) {
     return ticket
 }
 
-export async function calculateFee(amount) {
+export async function getFee() {
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
-    let fee = p2p_config.p2p_sells_fee ? p2p_config.p2p_sells_fee * amount / 1000 : 0
-    return { status: true, content: { fee } }
+    return { status: true, content: { fee_percentage: p2p_config.p2p_sells_fee || 0 } }
 }

@@ -20,8 +20,7 @@ export async function search(req, res, next) {
     res.send({ status: true, content: response })
 }
 
-export async function calculateFee(req, res, next) {
-    const { amount } = req.body
-    const response = await ticketsSellService.calculateFee(amount)
+export async function getFee(req, res, next) {
+    const response = await ticketsSellService.getFee()
     res.send(response)
 }
