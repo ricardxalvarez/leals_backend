@@ -7,7 +7,8 @@ export async function listTickets(userid) {
     for (let i = 0; i < tickets.length; i++) {
         const ticket = tickets[i];
         const usdt_amount = ticket.amount * p2p_config.value_compared_usdt
-        results.push({ ...ticket, usdt_amount })
+        const usdt_remain = ticket.remain * p2p_config.value_compared_usdt
+        results.push({ ...ticket, usdt_amount, usdt_remain })
     }
     return results
 }
