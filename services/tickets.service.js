@@ -9,7 +9,7 @@ export async function listTickets(userid) {
         const usdt_amount = ticket.amount * p2p_config.value_compared_usdt
         results.push({ ...ticket, usdt_amount })
     }
-    return tickets
+    return results
 }
 
 export async function cancelTicket(ticket_id, userid) {
