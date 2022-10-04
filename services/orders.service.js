@@ -285,7 +285,7 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
         // add this action to history
         const child_provider = await results.find(object => object.user.id === id_child)
-        await (await conexion.query('INSERT INTO history (owner, amount, date, username_network_commision, user_level_network_commision) VALUES($1,$2,$3,$4,$5)', [id, commission, new Date(), child_provider.user.nombre_usuario, child_provider.user.level])).rows[0]
+        await (await conexion.query('INSERT INTO history (owner, amount, date, username_network_commision, user_level_network_commision, history_type) VALUES($1,$2,$3,$4,$5,$6)', [id, commission, new Date(), child_provider.user.nombre_usuario, child_provider.user.level, 'commission'])).rows[0]
         // send notification to user 
         await (await conexion.query('INSERT INTO notifications (owner, message, date) VALUES ($1,$2, $3)', [id, `Congratulations, you just received a commission of amount: ${commission}, from user: ${child_provider.user.nombre_usuario}, level: ${child_provider.user.level}`, new Date()])).rows[0]
         return 'expecting commision to user ' + id + ' for ' + commission + ' leals'
