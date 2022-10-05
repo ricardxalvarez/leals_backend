@@ -2,8 +2,7 @@ import joi from "joi";
 
 export const create = {
     body: joi.object().keys({
-        leals_quantity: joi.number().required(),
-        name: joi.string().required(),
+        usdt_quantity: joi.number().required(),
         available_packages: joi.number().optional()
     })
 }
@@ -16,8 +15,7 @@ export const search = {
 
 export const update = {
     body: joi.object().keys({
-        leals_quantity: joi.string().optional(),
-        name: joi.string().optional(),
+        usdt_quantity: joi.string().optional(),
         available_packages: joi.number().optional()
     }),
     query: joi.object().keys({

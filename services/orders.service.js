@@ -11,13 +11,13 @@ export async function list_buy(userid) {
         let buyer
         let seller
         let type
-        const usd_quantity = order.amount / p2p_config.value_compared_usdt
+        const leals_quantity = order.amount / p2p_config.value_compared_usdt
         const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
         buyer = await (await conexion.query('SELECT full_nombre AS full_name, nombre_usuario AS username FROM usuarios WHERE id=($1)', [userid])).rows[0]
         seller = await (await conexion.query('SELECT usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username FROM tickets INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.ticket_id=($1)', [order.ticket_seller_id])).rows[0]
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
-        results.push({ ...order, buyer, seller, type, usd_quantity, deadline_seconds_remain })
+        results.push({ ...order, buyer, seller, type, leals_quantity, deadline_seconds_remain })
     }
     return results
 }
@@ -30,13 +30,13 @@ export async function list_sell(userid) {
         let buyer
         let seller
         let type
-        const usd_quantity = order.amount / p2p_config.value_compared_usdt
+        const leals_quantity = order.amount / p2p_config.value_compared_usdt
         const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
         seller = await (await conexion.query('SELECT full_nombre AS full_name, nombre_usuario AS username FROM usuarios WHERE id=($1)', [userid])).rows[0]
         buyer = await (await conexion.query('SELECT usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username FROM tickets INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.ticket_id=($1)', [order.ticket_buyer_id])).rows[0]
         if (order.ticket_id === order.ticket_buyer_id) type = 'buy'
         if (order.ticket_id === order.ticket_seller_id) type = 'sell'
-        results.push({ ...order, buyer, seller, type, usd_quantity, deadline_seconds_remain })
+        results.push({ ...order, buyer, seller, type, leals_quantity, deadline_seconds_remain })
     }
     return results
 }
@@ -56,7 +56,7 @@ export async function list(userid, page) {
         let buyer
         let seller
         let type
-        const usd_quantity = fix_number(order.amount * p2p_config.value_compared_usdt)
+        const leals_quantity = fix_number(order.amount / p2p_config.value_compared_usdt)
         order.amount = fix_number(order.amount)
         const deadline_seconds = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
         const deadline_seconds_remain = (deadline_seconds < 0 || order.status !== 'hashless') ? 0 : deadline_seconds
@@ -70,7 +70,7 @@ export async function list(userid, page) {
             buyer = await (await conexion.query('SELECT full_nombre AS full_name, nombre_usuario AS username FROM usuarios WHERE id=($1)', [order.owner])).rows[0]
             seller = await (await conexion.query('SELECT usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username FROM tickets INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.ticket_id=($1)', [order.ticket_seller_id])).rows[0]
         }
-        results.push({ ...order, buyer, seller, type, usd_quantity, deadline_seconds_remain })
+        results.push({ ...order, buyer, seller, type, leals_quantity, deadline_seconds_remain })
     }
     return { results, orders_count, pages_quantity, orders_in_page }
 }
@@ -79,7 +79,6 @@ export async function search(order_id, userid) {
     // ORDER BY tickets.type will make buy order first, and sell, second
     const order = await (await conexion.query('SELECT orders.*, tickets.type, usuarios.full_nombre AS full_name, usuarios.nombre_usuario AS username, usuarios.codigo_pais AS country_code, usuarios.usd_direction AS usdt_direction FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id INNER JOIN usuarios ON usuarios.id=tickets.owner WHERE order_id=($1) AND tickets.owner<>($2)', [order_id, userid])).rows[0]
     // all timezones must be GM-4
-    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     if (!order) return { status: false, content: 'You either are not a participant of this transaction or this order does not exists' }
     // if deadline_seconds_remain is less than 0, means that deadline time has expired
     const deadline_seconds = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
@@ -87,9 +86,9 @@ export async function search(order_id, userid) {
 
     const country = get_countryname_by_id(order.country_code)
     const type = order.type === 'sell' ? 'buy' : 'sell'
-    const amount = fix_number(order.amount * p2p_config.value_compared_usdt)
+    order.amount = order.amount.toFixed(2)
     const result = {
-        ...order, deadline_seconds_remain, type, country, amount
+        ...order, deadline_seconds_remain, type, country
     }
     return { status: true, content: result }
 }
@@ -288,6 +287,6 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         await (await conexion.query('INSERT INTO history (owner, amount, date, username_network_commision, user_level_network_commision, history_type) VALUES($1,$2,$3,$4,$5,$6)', [id, commission, new Date(), child_provider.user.nombre_usuario, child_provider.user.level, 'commission'])).rows[0]
         // send notification to user 
         await (await conexion.query('INSERT INTO notifications (owner, message, date) VALUES ($1,$2, $3)', [id, `Congratulations, you just received a commission of amount: ${commission}, from user: ${child_provider.user.nombre_usuario}, level: ${child_provider.user.level}`, new Date()])).rows[0]
-        return 'expecting commision to user ' + id + ' for ' + commission + ' leals'
+        return 'expecting commision to user ' + id + ' for ' + commission + ' usdt'
     } else return 'not enough children for user ' + id
 }

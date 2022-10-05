@@ -2,15 +2,7 @@ import conexion from '../database/conexion.js'
 
 export async function listTickets(userid) {
     const tickets = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) ORDER BY created_at DESC', [userid])).rows
-    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
-    const results = []
-    for (let i = 0; i < tickets.length; i++) {
-        const ticket = tickets[i];
-        const usdt_amount = ticket.amount * p2p_config.value_compared_usdt
-        const usdt_remain = ticket.remain * p2p_config.value_compared_usdt
-        results.push({ ...ticket, usdt_amount, usdt_remain })
-    }
-    return results
+    return tickets
 }
 
 export async function cancelTicket(ticket_id, userid) {
