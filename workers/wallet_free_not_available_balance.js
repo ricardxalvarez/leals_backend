@@ -46,6 +46,7 @@ export default async function wallet_free_not_available() {
                     new_balance = wallet.balance + wallet.not_available
                     new_balance_not_available = 0
                     await conexion.query('UPDATE wallets SET p2p_earnings=($1) WHERE owner=($2)', [0, wallet.owner])
+                    await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['inactive', wallet.owner])
                 } else {
                     new_balance = wallet.balance + new_balance_not_available_rest
                     new_balance_not_available = wallet.not_available - new_balance_not_available_rest

@@ -51,9 +51,8 @@ export async function addCuenta(data) {
 }
 export async function completeUserRegister(data) {
   let skills = data.skills.toUpperCase();
-  let status_p2p = "Active";
-  let user = await (await conexion.query("UPDATE usuarios SET password2=($1),habilidades=($2),status_p2p=($3),avatar=($4) WHERE id=($5) RETURNING *",
-    [data.pass2, skills, status_p2p, data.avatar, data.iduser])).rows[0]
+  let user = await (await conexion.query("UPDATE usuarios SET password2=($1),habilidades=($2),avatar=($3) WHERE id=($4) RETURNING *",
+    [data.pass2, skills, data.avatar, data.iduser])).rows[0]
   if (user) {
     return user
   } else return 0

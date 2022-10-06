@@ -5,7 +5,7 @@ CREATE TABLE usuarios (
     password2 VARCHAR(150),
     telefono VARCHAR(25),
     habilidades VARCHAR(200),
-    status_p2p VARCHAR(35) DEFAULT('Incompleto'),
+    status_p2p user_status_p2p NOT NULL DEFAULT('inactive'),
     nombre_usuario VARCHAR(25) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     codigo_pais VARCHAR(2),
@@ -25,3 +25,9 @@ CREATE INDEX phone ON usuarios(telefono);
 
 -- main user
 INSERT INTO usuarios(full_nombre, email, codigo_pais, nombre_usuario, password1) VALUES ("leal leals", "support@leals.app", "PE", "birthleals", "$2a$10$OL9mZiU7IITPuDvfVMw4ie.G.MHSvOmSkr.PkpNchq4tdmfV51LAa");
+
+CREATE TYPE user_status_p2p AS ENUM ('active', 'inactive');
+
+ALTER TABLE usuarios DROP TABLE status_p2p;
+
+ALTER TABLE usuarios ADD COLUMN status_p2p user_status_p2p NOT NULL DEFAULT('inactive');
