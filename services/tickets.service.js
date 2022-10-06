@@ -13,7 +13,7 @@ export async function cancelTicket(ticket_id, userid) {
     if (ticket.type === 'sell') {
         const user_wallet = await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [ticket.owner])
         const new_balance_to_sell = user_wallet.balance_to_sell - ticket.amount
-        const new_balance = user.balance + ticket.amount
+        const new_balance = user_wallet.balance + ticket.amount
         await conexion.query('UPDATE wallets SET balance_to_sell=($1), balance=($2) WHERE owner=($3)', [new_balance_to_sell, new_balance, ticket.owner])
     }
     if (ticket.type === 'buy') {
