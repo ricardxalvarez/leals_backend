@@ -16,6 +16,9 @@ export async function cancelTicket(ticket_id, userid) {
         const new_balance = user.balance + ticket.amount
         await conexion.query('UPDATE wallets SET balance_to_sell=($1), balance=($2) WHERE owner=($3)', [new_balance_to_sell, new_balance, ticket.owner])
     }
+    if (ticket.type === 'buy') {
+        await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['inactive', userid])
+    }
     await conexion.query('DELETE FROM tickets WHERE ticket_id=($1)', [ticket_id])
     return { status: true, content: 'Ticket successfully cancelled' }
 }
