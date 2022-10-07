@@ -127,7 +127,7 @@ export async function approve_order(order_id, userid) {
     await conexion.query('UPDATE wallets SET balance_to_sell=($1) WHERE owner=($2)', [wallet_seller.balance_to_sell - order.amount, userid])
     const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
     if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
-    const new_not_available_balance = wallet_buyer?.not_available ? wallet_buyer.not_available + order.amount : order.amount
+    const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + order.amount) * 3 : order.amount * 3
     const new_p2p_earnings = wallet_buyer?.p2p_earnings ? wallet_buyer.p2p_earnings + order.amount : order.amount
     await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, buyer_ticket.owner])
     // get array of parents
@@ -280,11 +280,11 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         if (!wallet.not_available) return 'commision not expected for user ' + id + ' since this user aint active'
         const new_not_available_balance = wallet.not_available - commission
         const new_available_balance = wallet.balance + commission
-        const new_p2p_earnings = wallet.p2p_earnings ? wallet.p2p_earnings + (commission * 3) : commission * 3
+        const new_p2p_earnings = wallet.p2p_earnings ? wallet.p2p_earnings + commission : commission
         if (new_not_available_balance <= 0) await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['inactive', id])
         await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2), balance=($3) WHERE owner=($4)', [new_not_available_balance > 0 ? new_not_available_balance : 0, new_p2p_earnings, new_available_balance, id])
         const old_split = await (await conexion.query('SELECT split FROM p2p_config')).rows[0]
-        const new_split = old_split.split - (commission * 3)
+        const new_split = old_split.split - commission
         await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
         // add this action to history
         const child_provider = await results.find(object => object.user.id === id_child)
