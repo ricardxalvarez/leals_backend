@@ -72,7 +72,7 @@ export async function list(userid, page) {
         }
         results.push({ ...order, buyer, seller, type, leals_quantity, deadline_seconds_remain })
     }
-    const cancelled_orders_count = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) AND orders.status=($2)', [userid, 'cancelled'])).rowCount
+    const cancelled_orders_count = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) AND orders.status=($2)', [userid, 'cancelled'])).rowCount
     return { results, orders_count, pages_quantity, orders_in_page, cancelled_orders_count }
 }
 
