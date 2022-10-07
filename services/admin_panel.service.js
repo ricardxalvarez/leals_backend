@@ -10,7 +10,9 @@ export async function add_balance(userid, amount) {
 
 export async function clean() {
     await conexion.query('DELETE FROM orders')
+    await conexion.query('ALTER SEQUENCE orders_order_id_seq RESTART WITH 1')
     await conexion.query('DELETE FROM tickets')
+    await conexion.query('ALTER SEQUENCE tickets_ticket_id_seq RESTART WITH 1')
     await conexion.query('DELETE FROM wallets')
     return { status: true, content: 'Cleaned' }
 }

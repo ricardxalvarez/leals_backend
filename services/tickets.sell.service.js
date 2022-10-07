@@ -2,7 +2,7 @@ import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js'
 import { users, io } from '../index.js'
 const create_order = async (seller_ticket_id, buyer_ticket_id, amount) => {
-    const two_days_seconds = 60
+    const two_days_seconds = 3600
     const new_order = await (await conexion.query("INSERT INTO orders(ticket_seller_id, ticket_buyer_id, amount, created_at, deadline_seconds) VALUES ($1, $2, $3, $4, $5) RETURNING *", [seller_ticket_id, buyer_ticket_id, amount, new Date(), two_days_seconds])).rows[0]
     return new_order
 }
