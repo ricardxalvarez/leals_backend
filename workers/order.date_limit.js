@@ -19,13 +19,12 @@ async function orders_date_limit() {
                 for (let i = 0; i < sell_tickets_involved.length; i++) {
                     const order_involved = sell_tickets_involved[i];
                     const old_seller_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [order_involved.ticket_seller_id])).rows[0]
-                    const new_seller_remain = (old_seller_ticket.remain + order_involved.amount) >= old_seller_ticket.amount ? old_seller_ticket.amount : old_seller_ticket.remain + order_involved.amount
-                    let new_seller_ticket_status
-                    new_seller_ticket_status = old_seller_ticket.status
-                    if (old_seller_ticket.status === 'prefinished') new_seller_ticket_status = 'prefinished'
+                    const new_seller_remain = old_seller_ticket.remain + order_involved.amount
+                    let new_seller_ticket_status = old_seller_ticket.status
+                    if (old_seller_ticket.status === 'prefinished' && new_seller_remain == old_seller_ticket.amount) new_seller_ticket_status = 'pending'
+                    if (old_seller_ticket.status === 'prefinished' && new_seller_remain != old_seller_ticket.amount) new_seller_ticket_status = 'precompleted'
                     if (old_seller_ticket.status === 'completed' && new_seller_remain == old_seller_ticket.amount) new_seller_ticket_status = 'pending'
-                    else new_seller_ticket_status = 'precompleted'
-
+                    if (old_seller_ticket.status === 'completed' && new_seller_remain != old_seller_ticket.amount) new_seller_ticket_status = 'precompleted'
                     if (old_seller_ticket.status === 'precompleted' && new_seller_remain == old_seller_ticket.amount) new_seller_ticket_status = 'pending'
                     await conexion.query('UPDATE tickets SET status=($1), remain=($2) WHERE ticket_id=($3)', [new_seller_ticket_status, new_seller_remain, order_involved.ticket_seller_id])
                 }
