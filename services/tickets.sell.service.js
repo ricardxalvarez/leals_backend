@@ -62,9 +62,9 @@ export async function createTicket(data, userid) {
                 else new_ticket_seller_info = await (await conexion.query('UPDATE tickets SET status=($1), remain=($2) WHERE ticket_id=($3) RETURNING *', ['precompleted', remain_seller, ticket.ticket_id])).rows[0]
             }
 
-            const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [ticket.owner])).rows[0]
-            const new_seller_balance = wallet.balance - amount
-            const new_seller_balance_to_sell = wallet.balance_to_sell + amount
+            const wallet_seller = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [ticket.owner])).rows[0]
+            const new_seller_balance = wallet_seller.balance - amount
+            const new_seller_balance_to_sell = wallet_seller.balance_to_sell + amount
             await conexion.query('UPDATE wallets SET balance=($1), balance_to_sell=($2) WHERE owner=($3)', [new_seller_balance, new_seller_balance_to_sell, ticket.owner])
             new_list_buyers_info.push(new_ticket_buyer_info)
             new_orders.push(new_order)

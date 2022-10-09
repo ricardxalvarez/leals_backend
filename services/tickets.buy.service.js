@@ -66,7 +66,6 @@ export async function createTicket(data, userid) {
             if (user) io.sockets.to(user.socket_id).emit("new_order", { new_order, new_ticket_buyer_info, new_list_sellers_info })
         }
     }
-    await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['active', userid])
     return { status: true, content: "Ticket created successfully", new_orders, new_ticket_buyer_info, new_list_sellers_info }
 }
 

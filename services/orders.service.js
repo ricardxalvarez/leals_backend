@@ -42,7 +42,7 @@ export async function list_sell(userid) {
 }
 
 export async function list(userid, page) {
-    const orders_per_page = 1
+    const orders_per_page = 20
     const limit = orders_per_page
     const offset = orders_per_page * page
     const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id OR tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC LIMIT ($2) OFFSET ($3)', [userid, limit, offset])).rows
@@ -113,6 +113,7 @@ export async function send_proof_order(order_id, userid, data) {
 export async function approve_order(order_id, userid) {
     const order = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id WHERE order_id=($1)', [order_id])).rows[0]
     if (!order) return { status: false, content: 'This order does not exist' }
+    if (!order.proof || !order.id_hash) return { status: false, content: 'Buyer have not sent the proof and/or id_hash of this order yet' }
     if (order.owner !== userid) return { status: false, content: 'You are not the seller of this order' }
     if (order.status === 'successfull' || order.status === 'cancelled') return { status: false, content: 'Order was already successfull or cancelled' }
     const new_order_info = await (await conexion.query('UPDATE orders SET status=($1) WHERE order_id=($2) RETURNING *', ['successfull', order_id])).rows[0]
@@ -188,6 +189,8 @@ export async function approve_order(order_id, userid) {
     if (seller_orders.every(object => object.status === 'successfull') && seller_ticket.remain == 0) await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['finished', order.ticket_seller_id])
     if (buyer_orders.every(object => object.status === 'successfull') && buyer_ticket.remain == 0) {
         await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['finished', order.ticket_buyer_id])
+        await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['active', buyer_ticket.owner])
+
         for (let i = 0; i < parents.length; i++) {
             const parent = parents[i];
             const rule = rules_commissions.find(object => object.level === i + 1)
