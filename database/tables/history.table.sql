@@ -2,7 +2,7 @@ CREATE TYPE history_type AS ENUM ('withdraw', 'transfer', 'commission', 'weekly 
 
 CREATE TYPE history_withdraw_condition AS ENUM ('received', 'not received');
 
-CREATE TYPE cash_flow_type AS ENUM ('income', 'outcome')
+CREATE TYPE cash_flow_type AS ENUM ('income', 'outcome');
 
 CREATE TABLE history (
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
@@ -24,4 +24,4 @@ ALTER TYPE history_type ADD VALUE 'penalty payment';
 
 ALTER TABLE history ADD COLUMN widthdraw_condition HISTORY_WITHDRAW_CONDITION;
 
-ALTER TABLE history ADD COLUMN cash_flow CASH_FLOW_TYPE NOT NULL
+ALTER TABLE history ADD COLUMN cash_flow CASH_FLOW_TYPE NOT NULL;
