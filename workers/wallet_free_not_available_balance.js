@@ -39,7 +39,7 @@ export default async function wallet_free_not_available() {
                 }
                 const user_percentage_by_ads = rule_ads.find(object => object.ads_quantity >= valid_advertises_count)?.percentage || rule_ads.find(object => object.ads_quantity === 0)?.percentage || 1
                 const new_balance_not_available_rest = user_percentage_by_ads * wallet.p2p_earnings / 100
-                await conexion.query('INSERT INTO history (history_type, amount, date, percentage, ads_number, owner) VALUES($1,$2,$3,$4,$5,$6)', ['weekly payment', new_balance_not_available_rest, new Date(), user_percentage_by_ads, valid_advertises_count, wallet.owner])
+                await conexion.query('INSERT INTO history (history_type, amount, date, percentage, ads_number, owner, currency, cash_flow) VALUES($1,$2,$3,$4,$5,$6,$7,$8)', ['weekly payment', new_balance_not_available_rest, new Date(), user_percentage_by_ads, valid_advertises_count, wallet.owner, 'usdt', 'income'])
                 let new_balance
                 let new_balance_not_available
                 if ((wallet.not_available - new_balance_not_available_rest) <= 0) {
