@@ -280,7 +280,8 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
             wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [id])).rows[0]
         }
         // update not_available balance of wallet id
-        if (!wallet.not_available) return 'commision not expected for user ' + id + ' since this user aint active'
+        const user_status_p2p = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)')).rows[0]?.status_p2p
+        if (user_status_p2p !== 'active') return 'commision not expected for user ' + id + ' since this user aint active'
         const new_not_available_balance = wallet.not_available - commission
         const new_available_balance = wallet.balance + commission
         const new_p2p_earnings = wallet.p2p_earnings ? wallet.p2p_earnings + commission : commission
