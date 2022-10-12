@@ -14,6 +14,7 @@ export async function clean() {
     await conexion.query('DELETE FROM tickets')
     await conexion.query('ALTER SEQUENCE tickets_ticket_id_seq RESTART WITH 1')
     await conexion.query('DELETE FROM wallets')
+    await conexion.query('DELETE FROM history')
     return { status: true, content: 'Cleaned' }
 }
 
