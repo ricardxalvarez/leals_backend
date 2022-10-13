@@ -279,9 +279,10 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
             await create_wallet(id)
             wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [id])).rows[0]
         }
-        // update not_available balance of wallet id
         const user_status_p2p = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [id])).rows[0]?.status_p2p
-        if (user_status_p2p !== 'active') return 'commision not expected for user ' + id + ' since this user aint active'
+        if (user_status_p2p != 'active' || !user_status_p2p) return 'commision not expected for user ' + id + ' since this user aint active'
+
+        // update not_available balance of wallet id
         const new_not_available_balance = wallet.not_available - commission
         const new_available_balance = wallet.balance + commission
         const new_p2p_earnings = wallet.p2p_earnings ? wallet.p2p_earnings + commission : commission
@@ -289,6 +290,7 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2), balance=($3) WHERE owner=($4)', [new_not_available_balance > 0 ? new_not_available_balance : 0, new_p2p_earnings, new_available_balance, id])
         const old_split = await (await conexion.query('SELECT split FROM p2p_config')).rows[0]
         const new_split = old_split.split - commission
+        // update global split
         await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
         // add this action to history
         const child_provider = await results.find(object => object.user.id === id_child)
