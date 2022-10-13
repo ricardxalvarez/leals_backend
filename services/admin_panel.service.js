@@ -15,6 +15,7 @@ export async function clean() {
     await conexion.query('ALTER SEQUENCE tickets_ticket_id_seq RESTART WITH 1')
     await conexion.query('DELETE FROM wallets')
     await conexion.query('DELETE FROM history')
+    await conexion.query('UPDATE usuarios SET status_p2p=($1)', ['inactive'])
     return { status: true, content: 'Cleaned' }
 }
 
