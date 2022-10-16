@@ -63,6 +63,12 @@ export const recoverPassword = {
     })
 }
 
+export const recoverPassword2 = {
+    body: joi.object().keys({
+        email: joi.string().email().required()
+    })
+}
+
 export const emailVerify = {
     body: joi.object().keys({
         code: joi.string().required(),

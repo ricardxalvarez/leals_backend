@@ -56,6 +56,7 @@ router.post('/phone/verify', validate(userValidation.emailVerify), authPswd1, us
 router.post('/email/verify', validate(userValidation.emailVerify), authPswd1, usersController.verifyEmail)
 router.post('/email/sendVerification', authPswd1, usersController.sendVerificationEmail)
 router.post('/recoverypassword', validate(userValidation.recoverPassword), usersController.recoveryPassword);
+router.post('/recoverypassword2', validate(userValidation.recoverPassword2), usersController.recoveryPassword2)
 // Countries
 
 router.get('/countries', countriesController.retrieveCountry)

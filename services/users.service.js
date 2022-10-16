@@ -163,6 +163,19 @@ export async function recoveryPasswordUser(email) {
   return resp
 }
 
+export async function recoveryPassword2User(email) {
+  let newPassSeek = getReferralCode();
+  let salt = bcrypt.genSaltSync(10);
+  let password = bcrypt.hashSync(newPassSeek, salt);
+  let user = await (await conexion.query("UPDATE usuarios SET password2=($1) WHERE email=($2) RETURNING *",
+    [password, email])).rows[0]
+  let resp = {
+    user: user,
+    password: newPassSeek
+  }
+  return resp
+}
+
 export async function verifyEmail(userid) {
   const user = (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [userid])).rows[0]
   if (!user) {

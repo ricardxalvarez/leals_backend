@@ -380,6 +380,50 @@ export function recoveryPassword(req, res) {
     });
 }
 
+export async function recoveryPassword2(req, res) {
+  const { email } = req.body
+  userService
+    .recoveryPassword2User(email)
+    .then(async data => {
+      if (data.user) {
+        let user = {
+          email,
+          pass: data.password,
+          name: data.user.full_nombre
+        }
+
+        var template = fs.readFileSync('./views/passwordreset.hjs', 'utf-8')
+        var compiledTemplate = Hogan.compile(template)
+        var mailOptions = {
+          from: config.email.auth.email,
+          to: email,
+          subject: 'LEALS - Password 2 reset',
+          html: compiledTemplate.render(user)
+        };
+        await sendMailToClient(mailOptions)
+        let result = {
+          status: true,
+          content: "Password successfully reset. Your new password has been sent to your email address."
+        }
+        res.status(200).send(result)
+      } else {
+        let result = {
+          status: false,
+          content: "User nor registered"
+        }
+        res.status(400).send(result)
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      let result = {
+        status: false,
+        content: "Error Updating User"
+      }
+      res.status(500).send(result)
+    });
+}
+
 export async function sendVerificationEmail(req, res, next) {
   const user = req.user
   userService.checkUserExists(user)
