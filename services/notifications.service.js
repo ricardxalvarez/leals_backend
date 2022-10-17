@@ -1,7 +1,7 @@
 import conexion from '../database/conexion.js'
 
 export async function list(userid) {
-    const notifications = await (await conexion.query('SELECT * FROM notifications WHERE owner=($1) ORDER BY date', [userid])).rows
+    const notifications = await (await conexion.query('SELECT * FROM notifications WHERE owner=($1) ORDER BY date DESC', [userid])).rows
     return notifications
 }
 

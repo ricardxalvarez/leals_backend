@@ -128,7 +128,7 @@ export async function approve_order(order_id, userid) {
     await conexion.query('UPDATE wallets SET balance_to_sell=($1) WHERE owner=($2)', [wallet_seller.balance_to_sell - order.amount, userid])
     const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
     if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
-    const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + order.amount) * 3 : order.amount * 3
+    const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + order.amount * 3) : order.amount * 3
     const new_p2p_earnings = wallet_buyer?.p2p_earnings ? wallet_buyer.p2p_earnings + order.amount : order.amount
     await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, buyer_ticket.owner])
     // get array of parents
