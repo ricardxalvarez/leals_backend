@@ -27,6 +27,10 @@ async function orders_date_limit() {
                     if (old_seller_ticket.status === 'completed' && new_seller_remain != old_seller_ticket.amount) new_seller_ticket_status = 'precompleted'
                     if (old_seller_ticket.status === 'precompleted' && new_seller_remain == old_seller_ticket.amount) new_seller_ticket_status = 'pending'
                     await conexion.query('UPDATE tickets SET status=($1), remain=($2) WHERE ticket_id=($3)', [new_seller_ticket_status, new_seller_remain, order_involved.ticket_seller_id])
+                    const seller_wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [old_seller_ticket.owner])).rows[0]
+                    const new_seller_balance_to_sell = seller_wallet.balance_to_sell - order_involved.amount
+                    const new_seller_balance = seller_wallet.balance + order_involved.amount
+                    await conexion.query('UPDATE wallets SET balance=($1), balance_to_sell=($2) WHERE owner=($3)', [new_seller_balance, new_seller_balance_to_sell, old_seller_ticket.owner])
                 }
             }
         }
