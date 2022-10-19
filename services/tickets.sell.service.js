@@ -25,7 +25,7 @@ export async function createTicket(data, userid) {
     if (data.amount > wallet.balance) return { status: false, content: `You have not enough leals to continue, your available balance is ${wallet.balance}` }
     let fee = p2p_config.p2p_sells_fee ? p2p_config.p2p_sells_fee * data.amount / 1000 : 0
     const ticket_returning = await (await conexion.query("INSERT INTO tickets (amount, remain, type, created_at, owner, fee, id_hash_fee) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *", [data.amount, data.amount, 'sell', new Date(), userid, fee, data.id_hash_fee])).rows[0]
-    const tickets_to_pair = await (await conexion.query('SELECT * FROM tickets WHERE owner<>($1) AND type=($2) AND remain>0 ORDER BY created_at', [userid, 'buy'])).rows
+    const tickets_to_pair = await (await conexion.query('SELECT * FROM tickets WHERE owner<>($1) AND type=($2) AND remain>0 AND status<>($3) ORDER BY created_at', [userid, 'buy', 'annulled'])).rows
     let amount
     let new_ticket_seller_info
     let new_list_buyers_info = []

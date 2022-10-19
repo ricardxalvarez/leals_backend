@@ -126,11 +126,7 @@ export async function approve_order(order_id, userid) {
     // update wallets
     const wallet_seller = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
     await conexion.query('UPDATE wallets SET balance_to_sell=($1) WHERE owner=($2)', [wallet_seller.balance_to_sell - order.amount, userid])
-    const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
-    if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
-    const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + order.amount * 3) : order.amount * 3
-    const new_p2p_earnings = wallet_buyer?.p2p_earnings ? wallet_buyer.p2p_earnings + order.amount : order.amount
-    await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, buyer_ticket.owner])
+    
     // get array of parents
     const parents = []
     while (parents.length < 10) {
@@ -190,6 +186,12 @@ export async function approve_order(order_id, userid) {
     if (buyer_orders.every(object => object.status === 'successfull') && buyer_ticket.remain == 0) {
         await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['finished', order.ticket_buyer_id])
         await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['active', buyer_ticket.owner])
+        
+        const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
+        if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
+        const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + buyer_ticket.amount * 3) : buyer_ticket.amount * 3
+        const new_p2p_earnings = wallet_buyer?.p2p_earnings ? wallet_buyer.p2p_earnings + buyer_ticket.amount : buyer_ticket.amount
+        await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, buyer_ticket.owner])
 
         for (let i = 0; i < parents.length; i++) {
             const parent = parents[i];
