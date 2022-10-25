@@ -7,6 +7,7 @@ CREATE TYPE cash_flow_type AS ENUM ('income', 'outcome');
 CREATE TABLE history (
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
     amount DOUBLE PRECISION,
+    leals_amount DOUBLE PRECISION,
     date TIMESTAMPTZ,
     currency VARCHAR(25),
     percentage VARCHAR(5),
@@ -25,3 +26,5 @@ ALTER TYPE history_type ADD VALUE 'penalty payment';
 ALTER TABLE history ADD COLUMN widthdraw_condition HISTORY_WITHDRAW_CONDITION;
 
 ALTER TABLE history ADD COLUMN cash_flow CASH_FLOW_TYPE NOT NULL;
+
+ALTER TABLE history ADD COLUMN leals_amount DOUBLE PRECISION,;

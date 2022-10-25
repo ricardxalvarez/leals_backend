@@ -13,7 +13,8 @@ import {
     historyController,
     splitController,
     adminController,
-    advertisesController
+    advertisesController,
+    transfersController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -25,7 +26,8 @@ import {
     ordersValidation,
     notificationsValidation,
     advertisesValidation,
-    adminValidation
+    adminValidation,
+    transfersValidation
 } from '../validations/index.js'
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
@@ -122,12 +124,17 @@ router.get('/history/list/p2p', authPswd1, historyController.list_history_p2p)
 //split
 router.get('/split/info', authPswd1, splitController.split_info)
 
+
+// transfers
+router.post('/transfers/create', validate(transfersValidation.create), authPswd1, transfersController.create_transfer)
 // admin
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)
 router.post('/admin/clean', authAdmin, adminController.clean)
 router.post('/admin/advertises/approve', validate(adminValidation.approve_advertise), authAdmin, adminController.approve_advertise)
 
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
+
+
 
 // /* ruta salir */
 // router.get('/logout', AuthMiddleware.verifyToken,controllers.loginController.getLogout);
