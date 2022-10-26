@@ -14,9 +14,9 @@ export async function create_transfer(userid, data) {
     const destinary_wallet = await (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [destinary.id])).rows[0]
     if (!destinary_wallet) await create_wallet(destinary.id)
     const destinary_wallet_new_amount = destinary_wallet ? destinary_wallet.balance + data.amount : data.amount
-    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [destinary_wallet_new_amount])
+    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [destinary_wallet_new_amount, destinary.id])
     const transferer_new_balance = transferer_wallet.balance - data.amount
-    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [transferer_new_balance])
+    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [transferer_new_balance, userid])
     await conexion.query('INSERT INTO history (owner, amount, leals_amount, date, currency, destinary_transfer, cash_flow) VALUES ($1,$2,$3,$4,$5,$6,$7)', [userid, data.amount, data.amount / p2p_config.value_compared_usdt, new Date(), 'usdt', data.destinary, 'outcome'])
     return { status: true, content: 'Transfer successfully created' }
 }
