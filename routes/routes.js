@@ -131,9 +131,10 @@ router.post('/transfers/create', validate(transfersValidation.create), authPswd1
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)
 router.post('/admin/clean', authAdmin, adminController.clean)
 router.post('/admin/advertises/approve', validate(adminValidation.approve_advertise), authAdmin, adminController.approve_advertise)
+router.post('/admin/advertises/deny', validate(adminValidation.approve_advertise), authAdmin, adminController.deny_advertise)
 
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
-
+router.get('/advertises/list', authPswd1, advertisesController.list_advertises)
 
 
 // /* ruta salir */
