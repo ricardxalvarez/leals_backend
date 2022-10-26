@@ -31,5 +31,5 @@ export async function approve_advertise(advertise_id) {
 export async function deny_advertise(advertise_id) {
     const ad = await (await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2) RETURNING *', ['denied', advertise_id])).rows[0]
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'We are very sorry your ad was not processed', new Date()])
-    return { status: true, content: 'Advertise succesfully approved' }
+    return { status: true, content: 'Advertise succesfully denied' }
 }
