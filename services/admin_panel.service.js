@@ -19,6 +19,7 @@ export async function clean() {
     await conexion.query('DELETE FROM history')
     await conexion.query('DELETE FROM notifications')
     await conexion.query('UPDATE usuarios SET status_p2p=($1)', ['inactive'])
+    await conexion.query('UPDATE p2p_config SET initial_split=($1), split=($1)', [100000])
     return { status: true, content: 'Cleaned' }
 }
 
