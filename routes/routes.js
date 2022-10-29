@@ -14,7 +14,8 @@ import {
     splitController,
     adminController,
     advertisesController,
-    transfersController
+    transfersController,
+    withdrawalsController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -27,7 +28,8 @@ import {
     notificationsValidation,
     advertisesValidation,
     adminValidation,
-    transfersValidation
+    transfersValidation,
+    withdrawalsValidation
 } from '../validations/index.js'
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
@@ -126,7 +128,10 @@ router.get('/split/info', authPswd1, splitController.split_info)
 
 
 // transfers
-router.post('/transfers/create', validate(transfersValidation.create), authPswd1, transfersController.create_transfer)
+router.post('/transfers/create', validate(transfersValidation.create), authPswd2, transfersController.create_transfer)
+
+// withdrawals
+router.post('/withdrawals/request', validate(withdrawalsValidation.request_withdrawal), authPswd2, withdrawalsController.request_wihtdrawal)
 // admin
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)
 router.post('/admin/clean', authAdmin, adminController.clean)

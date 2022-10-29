@@ -11,7 +11,7 @@ export async function split_info(user_id) {
     const my_sells = await (await conexion.query('SELECT orders.amount, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id WHERE orders.status=($1) AND tickets.owner=($2)', ['successfull', user_id])).rowCount
     const my_withdrawls = 0
     const pack = await (await conexion.query('SELECT amount FROM tickets WHERE owner=($1) AND type=($2) AND status=($3)', [user_id, 'buy', 'finished'])).rows[0]?.amount * p2p_config.value_compared_usdt || 0
-    const user_p2p_status = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [userid])).rows[0]?.status_p2p
+    const user_p2p_status = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [user_id])).rows[0]?.status_p2p
     const split_remain = p2p_config.initial_split - p2p_config.split
     const percentage_split_available = 100 * Math.abs((p2p_config.initial_split - split_remain) / ((p2p_config.initial_split - split_remain / 2)))
     const content = {

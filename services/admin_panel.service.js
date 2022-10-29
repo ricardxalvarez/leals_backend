@@ -34,3 +34,10 @@ export async function deny_advertise(advertise_id) {
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'We are very sorry your ad was not processed', new Date()])
     return { status: true, content: 'Advertise succesfully denied' }
 }
+
+export async function approve_withdrawal(withdrawal_id) {
+    const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
+    if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
+    await conexion.query('UPDATE withdrawals SET approved=($1) WHERE withdrawal_id=($2)', [true, withdrawal_id])
+    return { status: true, content: 'Withdrawal succesfully approved' }
+}
