@@ -1,4 +1,4 @@
-import joi from joi
+import joi from "joi"
 
 export const request_withdrawal = {
     body: joi.object().keys({
