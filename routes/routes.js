@@ -133,6 +133,7 @@ router.post('/transfers/create', validate(transfersValidation.create), authPswd2
 
 // withdrawals
 router.post('/withdrawals/request', validate(withdrawalsValidation.request_withdrawal), authPswd2, withdrawalsController.request_wihtdrawal)
+router.get('/admin/withdrawals/list', authAdmin, adminController.list_withdrawals)
 
 // penalty fees
 router.get('/penalty_fees/info', penaltyFeesController.get_info)

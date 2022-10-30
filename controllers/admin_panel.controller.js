@@ -32,3 +32,8 @@ export async function deny_withdrawal(req, res, next) {
     const response = await adminService.deny_withdrawal(withdrawal_id)
     res.send(response)
 }
+
+export async function list_withdrawals(req, res, next) {
+    const withdrawals = await adminService.list_withdrawals()
+    res.send({ status: true, content: withdrawals })
+}

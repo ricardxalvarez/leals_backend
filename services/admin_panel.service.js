@@ -53,3 +53,8 @@ export async function deny_withdrawal(withdrawal_id) {
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.id, `We are very sorry your withdrawal was not processed`])
     return { status: true, content: 'Withdrawal succesfully denied' }
 }
+
+export async function list_withdrawals() {
+    const withdrawals = await (await conexion.query('SELECT * FROM withdrawals')).rows
+    return withdrawals
+}
