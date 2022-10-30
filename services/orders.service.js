@@ -122,7 +122,6 @@ export async function approve_order(order_id, userid) {
     const seller_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [order.ticket_seller_id])).rows[0]
     const buyer_orders = await (await conexion.query('SELECT * FROM orders WHERE ticket_buyer_id=($1)', [order.ticket_buyer_id])).rows
     const seller_orders = await (await conexion.query('SELECT * FROM orders WHERE ticket_seller_id=($1) AND status<>($2)', [order.ticket_seller_id, 'cancelled'])).rows
-    // tick
     // update wallets
     const wallet_seller = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
     await conexion.query('UPDATE wallets SET balance_to_sell=($1) WHERE owner=($2)', [wallet_seller.balance_to_sell - order.amount, userid])

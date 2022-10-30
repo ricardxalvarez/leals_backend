@@ -1,4 +1,4 @@
-CREATE TYPE history_type AS ENUM ('withdrawal', 'transfer', 'commission', 'weekly payment', 'balance add', 'balance decreased');
+CREATE TYPE history_type AS ENUM ('withdrawal', 'transfer', 'commission', 'weekly payment', 'balance add', 'balance decreased', 'penalty payment');
 
 CREATE TYPE history_withdrawal_condition AS ENUM ('processing', 'denied', 'successful');
 
