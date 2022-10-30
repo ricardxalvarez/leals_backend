@@ -1,6 +1,6 @@
-CREATE TYPE history_type AS ENUM ('withdraw', 'transfer', 'commission', 'weekly payment', 'balance add', 'balance decreased');
+CREATE TYPE history_type AS ENUM ('withdrawal', 'transfer', 'commission', 'weekly payment', 'balance add', 'balance decreased');
 
-CREATE TYPE history_withdraw_condition AS ENUM ('received', 'not received');
+CREATE TYPE history_withdrawal_condition AS ENUM ('processing', 'denied', 'successful');
 
 CREATE TYPE cash_flow_type AS ENUM ('income', 'outcome');
 
@@ -17,7 +17,7 @@ CREATE TABLE history (
     username_network_commision VARCHAR(25) REFERENCES usuarios(nombre_usuario),
     user_level_network_commision VARCHAR(5),
     history_type HISTORY_TYPE NOT NULL,
-    widthdraw_condition HISTORY_WITHDRAW_CONDITION,
+    widthdrawal_condition HISTORY_WITHDRAWAL_CONDITION,
     cash_flow CASH_FLOW_TYPE NOT NULL
 );
 

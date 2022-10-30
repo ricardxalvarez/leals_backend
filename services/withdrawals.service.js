@@ -6,5 +6,6 @@ export async function request_wihtdrawal(userid, amount) {
     const new_balance = user_wallet.balance - amount
     await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_balance, userid])
     await conexion.query('INSERT INTO withdrawals (owner, amount, requested_at) VALUES($1,$2,$3)', [userid, amount, new Date()])
+    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, widthdrawal_condition,currency) VALUES($1,$2,$3,$4,$5,$6)', [userid, 'withdrawal', 'outcome', amount, 'processing', 'usdt'])
     return { status: true, content: 'Your withdrawal is being processed!' }
 }

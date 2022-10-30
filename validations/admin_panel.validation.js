@@ -12,3 +12,9 @@ export const approve_advertise = {
         advertise_id: joi.string().id().required()
     })
 }
+
+export const approve_withdrawal = {
+    body: joi.object().keys({
+        withdrawal_id: joi.string().required()
+    })
+}

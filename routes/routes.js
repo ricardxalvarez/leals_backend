@@ -15,7 +15,8 @@ import {
     adminController,
     advertisesController,
     transfersController,
-    withdrawalsController
+    withdrawalsController,
+    penaltyFeesController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -132,11 +133,17 @@ router.post('/transfers/create', validate(transfersValidation.create), authPswd2
 
 // withdrawals
 router.post('/withdrawals/request', validate(withdrawalsValidation.request_withdrawal), authPswd2, withdrawalsController.request_wihtdrawal)
+
+// penalty fees
+router.get('/penalty_fees/info', penaltyFeesController.get_info)
+
 // admin
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)
 router.post('/admin/clean', authAdmin, adminController.clean)
 router.post('/admin/advertises/approve', validate(adminValidation.approve_advertise), authAdmin, adminController.approve_advertise)
 router.post('/admin/advertises/deny', validate(adminValidation.approve_advertise), authAdmin, adminController.deny_advertise)
+router.post('/admin/withdrawals/approve', validate(adminValidation.approve_withdrawal), authAdmin, adminController.approve_withdrawal)
+router.post('/admin/withdrawals/deny', validate(adminValidation.approve_withdrawal), authAdmin, adminController.deny_withdrawal)
 
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
 router.get('/advertises/list', authPswd1, advertisesController.list_advertises)
