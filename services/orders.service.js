@@ -111,12 +111,16 @@ export async function send_proof_order(order_id, userid, data) {
 }
 
 export async function approve_order(order_id, userid) {
+    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     const order = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id WHERE order_id=($1)', [order_id])).rows[0]
     if (!order) return { status: false, content: 'This order does not exist' }
     if (!order.proof || !order.id_hash) return { status: false, content: 'Buyer have not sent the proof and/or id_hash of this order yet' }
     if (order.owner !== userid) return { status: false, content: 'You are not the seller of this order' }
     if (order.status === 'successfull' || order.status === 'cancelled') return { status: false, content: 'Order was already successfull or cancelled' }
     const new_order_info = await (await conexion.query('UPDATE orders SET status=($1) WHERE order_id=($2) RETURNING *', ['successfull', order_id])).rows[0]
+    // update split
+    const new_split = p2p_config.split - order.amount * 3
+    await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
     // update tickets
     const buyer_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [order.ticket_buyer_id])).rows[0]
     const seller_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [order.ticket_seller_id])).rows[0]
@@ -289,10 +293,6 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         const new_available_balance = wallet.balance + commission
         if (new_not_available_balance <= 0) await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['inactive', id])
         await conexion.query('UPDATE wallets SET not_available=($1), balance=($2) WHERE owner=($3)', [new_not_available_balance > 0 ? new_not_available_balance : 0, new_available_balance, id])
-        const old_split = await (await conexion.query('SELECT split FROM p2p_config')).rows[0]
-        const new_split = old_split.split - commission
-        // update global split
-        await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
         // add this action to history
         const child_provider = await results.find(object => object.user.id === id_child)
         const commision_leals = commission / p2p_config.value_compared_usdt
