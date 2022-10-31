@@ -6,10 +6,10 @@ export async function split_info(user_id) {
     const network_seller_array = await (await conexion.query('SELECT amount FROM tickets WHERE status=($1) AND type=($2)', ['finished', 'sell'])).rows
     const network_shopping = network_shopping_array.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * 3 / p2p_config.value_compared_usdt
     const network_seller = network_seller_array.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) / p2p_config.value_compared_usdt
-    const network_withdrawls = 0
+    const network_withdrawls = await (await conexion.query('SELECT amount FROM withdrawals WHERE status=($1)', ['successful'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) / p2p_config.value_compared_usdt
     const my_buys = await (await conexion.query('SELECT orders.amount, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE orders.status=($1) AND tickets.owner=($2)', ['successfull', user_id])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * 3 / p2p_config.value_compared_usdt
     const my_sells = await (await conexion.query('SELECT orders.amount, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_seller_id WHERE orders.status=($1) AND tickets.owner=($2)', ['successfull', user_id])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) / p2p_config.value_compared_usdt
-    const my_withdrawls = 0
+    const my_withdrawls = await (await conexion.query('SELECT amount FROM withdrawals WHERE owner=($1) AND status=($2)', [user_id, 'successful'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) / p2p_config.value_compared_usdt
     const pack = await (await conexion.query('SELECT amount FROM tickets WHERE owner=($1) AND type=($2) AND status=($3)', [user_id, 'buy', 'finished'])).rows[0]?.amount || 0
     const user_p2p_status = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [user_id])).rows[0]?.status_p2p
     const percentage_split_available = 100 * p2p_config.split / p2p_config.initial_split
