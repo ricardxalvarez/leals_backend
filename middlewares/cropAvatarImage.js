@@ -12,8 +12,8 @@ async function cropAvatarImage(req, res, next) {
         let scroll_y = 0
         if (err) throw err;
         else {
-            const width = image.bitmap.width <= image.bitmap.height ? 150 : jimp.AUTO
-            const height = image.bitmap.width <= image.bitmap.height ? jimp.AUTO : 150
+            const width = image.bitmap.width < image.bitmap.height ? 150 : jimp.AUTO
+            const height = image.bitmap.width < image.bitmap.height ? jimp.AUTO : 150
             image.resize(width, height, (err, src) => {
                 scroll_x = (src.bitmap.width / 2) - (150 / 2)
                 scroll_y = (src.bitmap.height / 2) - (150 / 2)

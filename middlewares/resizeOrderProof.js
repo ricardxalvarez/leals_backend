@@ -11,7 +11,7 @@ async function resizeOrderProof(req, res, next) {
         }
         else {
             image.resize(jimp.AUTO, 200)
-                .quality(70)
+                .quality(80)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     if (err) res.send({ status: false, content: 'error uploading image' })
                     req.body.proof = src
