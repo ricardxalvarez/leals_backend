@@ -37,26 +37,6 @@ export async function deny_advertise(advertise_id) {
     return { status: true, content: 'Advertise succesfully denied' }
 }
 
-export async function approve_withdrawal(withdrawal_id) {
-    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
-    const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
-    if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
-    await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['successful', withdrawal_id])
-    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency) VALUES($1,$2,$3,$4,$5,$6)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt'])
-    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `Your withdrawal has already been processed to the leals address you provided. Amount: ${withdrawal_request.amount / p2p_config.value_compared_usdt} leals`, new Date()])
-    return { status: true, content: 'Withdrawal succesfully approved' }
-}
-
-export async function deny_withdrawal(withdrawal_id) {
-    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
-    const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
-    if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
-    await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['successful', withdrawal_id])
-    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency) VALUES($1,$2,$3,$4,$5,$6,$7)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt'])
-    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `We are very sorry your withdrawal was not processed`], new Date())
-    return { status: true, content: 'Withdrawal succesfully denied' }
-}
-
 export async function list_withdrawals() {
     const withdrawals = await (await conexion.query('SELECT * FROM withdrawals')).rows
     return withdrawals
@@ -144,4 +124,41 @@ export async function update_penalty_fee(new_fee) {
 
 export async function update_wthdrawal_sell_minimun_amount(new_amount) {
     await conexion.query('UPDATE config SET wthdrawal_sell_minimun_amount=($1)', [new_amount])
+}
+
+// withdrawals
+
+export async function approve_withdrawal(withdrawal_id) {
+    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+    const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
+    if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
+    await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['successful', withdrawal_id])
+    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency) VALUES($1,$2,$3,$4,$5,$6)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt'])
+    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `Your withdrawal has already been processed to the leals address you provided. Amount: ${withdrawal_request.amount / p2p_config.value_compared_usdt} leals`, new Date()])
+    return { status: true, content: 'Withdrawal succesfully approved' }
+}
+
+export async function deny_withdrawal(withdrawal_id) {
+    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+    const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
+    if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
+    await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['successful', withdrawal_id])
+    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency) VALUES($1,$2,$3,$4,$5,$6,$7)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt'])
+    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `We are very sorry your withdrawal was not processed`], new Date())
+    return { status: true, content: 'Withdrawal succesfully denied' }
+}
+
+export async function list_by_status(status) {
+    const withdrawals = await (await conexion.query('SELECT * FROM withdrawals WHERE status=($1) ORDER BY requested_at DESC', [status])).rows
+    return withdrawals
+}
+
+export async function get_withdrawal_by_requester(username) {
+    const withdrawals = await (await conexion.query('SELECT * FROM withdrawals INNER JOIN usuarios ON usuarios.id = withdrawals.owner WHERE usuarios.nombre_usuario=($1) ORDER BY requested_at DESC', [username])).rows
+    return withdrawals
+}
+
+export async function get_withdrawal_info(withdrawal_id) {
+    const withdrawal = await (await conexion.query('SELECT * FROM withdrawals INNER JOIN usuarios ON usuarios.id = withdrawals.owner WHERE withdrawal_id=($1) ORDER BY requested_at DESC', [withdrawal_id])).rows[0]
+    return withdrawal
 }
