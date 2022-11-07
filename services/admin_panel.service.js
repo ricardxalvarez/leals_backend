@@ -25,18 +25,6 @@ export async function clean() {
     return { status: true, content: 'Cleaned' }
 }
 
-export async function approve_advertise(advertise_id) {
-    const ad = await (await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2) RETURNING *', ['approved', advertise_id])).rows[0]
-    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'Excellent work, your ad was registered successfully', new Date()])
-    return { status: true, content: 'Advertise succesfully approved' }
-}
-
-export async function deny_advertise(advertise_id) {
-    const ad = await (await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2) RETURNING *', ['denied', advertise_id])).rows[0]
-    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'We are very sorry your ad was not processed', new Date()])
-    return { status: true, content: 'Advertise succesfully denied' }
-}
-
 export async function list_withdrawals() {
     const withdrawals = await (await conexion.query('SELECT * FROM withdrawals')).rows
     return withdrawals
@@ -161,4 +149,33 @@ export async function get_withdrawal_by_requester(username) {
 export async function get_withdrawal_info(withdrawal_id) {
     const withdrawal = await (await conexion.query('SELECT * FROM withdrawals INNER JOIN usuarios ON usuarios.id = withdrawals.owner WHERE withdrawal_id=($1) ORDER BY requested_at DESC', [withdrawal_id])).rows[0]
     return withdrawal
+}
+
+// advertises
+
+export async function list_advertises(status) {
+    const advertises = await (await conexion.query('SELECT * FROM advertises WHERE status=($1) ORDER BY created_at DESC', [status])).rows
+    return advertises
+}
+
+export async function get_advertise_info(advertise_id) {
+    const advertise = await (await conexion.query('SELECT * FROM advertises INNER JOIN usuarios ON usuarios.id = advertises.owner WHERE advertise_id=($1)', [advertise_id])).rows[0]
+    return advertise
+}
+
+export async function get_advertises_by_username(username) {
+    const advertises = await (await conexion.query('SELECT * advertises INNER JOIN usuarios ON usuarios.id = advertises.owner WHERE usuarios.nombre_usuario=($1) ORDER BY created_at DESC', [username])).rows
+    return advertises
+}
+
+export async function approve_advertise(advertise_id) {
+    const ad = await (await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2) RETURNING *', ['approved', advertise_id])).rows[0]
+    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'Excellent work, your ad was registered successfully', new Date()])
+    return { status: true, content: 'Advertise succesfully approved' }
+}
+
+export async function deny_advertise(advertise_id) {
+    const ad = await (await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2) RETURNING *', ['denied', advertise_id])).rows[0]
+    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'We are very sorry your ad was not processed', new Date()])
+    return { status: true, content: 'Advertise succesfully denied' }
 }
