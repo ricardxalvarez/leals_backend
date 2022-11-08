@@ -9,7 +9,7 @@ const auth = async (req, res, next) => {
         const user = await (await conexion.query('SELECT id, email, full_nombre, telefono, nombre_usuario, password2, id_progenitor, id_sponsor FROM usuarios WHERE id=($1)', [user_id])).rows[0]
         const isPasswordMatch = await bcrypt.compare(password, user.password2)
         if (isPasswordMatch) {
-            req.user = { id: user.id, email: user.email, telefono: user.telefono }
+            req.user = { id: user.id, email: user.email, telefono: user.telefono, nombre_usuario: user.nombre_usuario }
             next()
         }
         else res.status(StatusCodes.UNAUTHORIZED).send({ status: false, content: 'Incorrent password 2' })

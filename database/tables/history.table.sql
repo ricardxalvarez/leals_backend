@@ -14,6 +14,7 @@ CREATE TABLE history (
     ads_number BIGINT,
     new_business BIGINT,
     destinary_transfer VARCHAR(25) REFERENCES usuarios(nombre_usuario),
+    sender_transfer VARCHAR(25) REFERENCES usuarios(nombre_usuario),
     username_network_commision VARCHAR(25) REFERENCES usuarios(nombre_usuario),
     user_level_network_commision VARCHAR(5),
     history_type HISTORY_TYPE NOT NULL,

@@ -133,6 +133,8 @@ export async function deny_withdrawal(withdrawal_id) {
     await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['successful', withdrawal_id])
     await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency) VALUES($1,$2,$3,$4,$5,$6,$7)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt'])
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `We are very sorry your withdrawal was not processed`], new Date())
+    const requester_wallet = await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [withdrawal_request.owner])
+    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [requester_wallet.balance + withdrawal_request.amount * p2p_config.value_compared_usdt])
     return { status: true, content: 'Withdrawal succesfully denied' }
 }
 
