@@ -4,6 +4,6 @@ CREATE TABLE advertises (
     advertise_id BIGSERIAL NOT NULL UNIQUE,
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
     status ADVERTISES_STATUS NOT NULL DEFAULT('in review'),
-    post_link VARCHAR(200),
+    post_link VARCHAR(200) NOT NULL UNIQUE,
     created_at TIMESTAMPTZ NOT NULL
 );
