@@ -16,7 +16,8 @@ import {
     advertisesController,
     transfersController,
     withdrawalsController,
-    penaltyFeesController
+    penaltyFeesController,
+    adsInfoController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -149,6 +150,8 @@ router.post('/admin/withdrawals/deny', validate(adminValidation.approve_withdraw
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
 router.get('/advertises/list', authPswd1, advertisesController.list_advertises)
 
+// ads info
+router.get('/ads/info', adsInfoController.get_ads_info)
 
 // /* ruta salir */
 // router.get('/logout', AuthMiddleware.verifyToken,controllers.loginController.getLogout);
