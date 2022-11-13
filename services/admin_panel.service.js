@@ -19,7 +19,7 @@ export async function clean() {
     await conexion.query('DELETE FROM history')
     await conexion.query('DELETE FROM notifications')
     await conexion.query('UPDATE usuarios SET status_p2p=($1)', ['inactive'])
-    await conexion.query('UPDATE p2p_config SET initial_split=($1), split=($1)', [100000])
+    await conexion.query('UPDATE p2p_config SET initial_split=($1)', [100000])
     await conexion.query('DELETE FROM withdrawals')
     await conexion.query('DELETE FROM transfers')
     return { status: true, content: 'Cleaned' }
@@ -87,7 +87,7 @@ export async function get_p2p_settings_page() {
 }
 
 export async function get_split_settings_page() {
-    const split_info = await (await conexion.query('SELECT initial_split, split, value_compared_usdt FROM p2p_config')).rows[0]
+    const split_info = await (await conexion.query('SELECT initial_split, value_compared_usdt FROM p2p_config')).rows[0]
     return split_info
 }
 
@@ -95,20 +95,12 @@ export async function update_earnings_stop(new_stop) {
     await conexion.query('UPDATE p2p_config SET not_available_earnings_stop=($1)', [new_stop])
 }
 
-export async function update_penalties_address(new_address) {
-    await conexion.query('UPDATE penalty_fees SET usdt_address_penalty=($1)', [new_address])
-}
-
-export async function update_fees_address(new_address) {
-    await conexion.query('UPDATE penalty_fees SET usdt_address_fees=($1)', [new_address])
+export async function update_penalty_data(data) {
+    await conexion.query('UPDATE penalty_fees SET usdt_address_penalty=($1), usdt_address_fees=($2), amount_penalty=($3)', [data.usdt_address_penalty, data.usdt_address_fees, data.amount_penalty])
 }
 
 export async function update_sending_time_hash(new_time) {
     await conexion.query('UPDATE p2p_config SET sending_time_hash_seconds=($1)', [new_time])
-}
-
-export async function update_penalty_fee(new_fee) {
-    await conexion.query('UPDATE penalty_fees SET amount_penalty=($1)', [new_fee])
 }
 
 export async function update_wthdrawal_sell_minimun_amount(new_amount) {
@@ -187,4 +179,236 @@ export async function deny_advertise(advertise_id) {
 
 export async function update_ads_config(data) {
     await conexion.query('UPDATE ads_config SET code=($1), hashtag=(2), time_between_ads=($3), facebook_url=($4), tiktok_url=($5), tutorial_url=($6)', [data.code, data.hashtag, data.time_between_ads, data.facebook_url, data.tiktok_url, data.tutorial_url])
+}
+
+export async function get_team({ id_progenitor, level, id }) {
+    const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
+    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
+    const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [id])).rowCount
+    const users = []
+    let results = []
+    for (let i = 0; i < tempUsers.length; i++) {
+        const user = tempUsers[i];
+        const avatar = await resizeImageBase64(60, 60, 70, user.avatar)
+        const newObject = { ...user, avatar: avatar || null }
+        users.push(newObject)
+    }
+    function Node(user) {
+        this.user = user,
+            this.children = [];
+    }
+    class Tree {
+        constructor() {
+            this.root = null;
+        }
+        add(data, toNodeData) {
+            const node = new Node(data);
+            const parent = toNodeData ? this.findBFS(toNodeData) : null;
+            if (parent) {
+                parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
+            } else {
+                if (!this.root) {
+                    this.root = { ...node, user: { ...node.user, level: 0 } };
+                } else return 'Tried to store node at root when root already exists'
+            }
+        }
+
+        findBFS(data) {
+            let _node = null
+            this.traverseBFS((node) => {
+                if (node) {
+                    if (node.user.id === data) {
+                        _node = node
+                    }
+                }
+            })
+
+            return _node
+        }
+
+        traverseBFS(cb) {
+            const queue = [this.root]
+            if (cb) {
+                while (queue.length) {
+                    const node = queue.shift()
+
+                    cb(node)
+                    for (const child of node.children) {
+                        queue.push(child)
+                    }
+
+                }
+            }
+        }
+    }
+
+    let tree = new Tree()
+    let lastLevel
+    let isChild = false
+    for (const object of users) {
+        if (object.id_sponsor === id) isChild = true
+        if (object.id == id) {
+            tree.add(object)
+        } else if (object.id_sponsor && isChild) tree.add(object, object.id_sponsor)
+    }
+    tree.traverseBFS((node) => {
+        results.push(node)
+    })
+    lastLevel = results[results.length - 1].user.level
+    let count = results[results.length - 1].user.level < 10 ? 10 : results[results.length - 1].user.level
+    const childsCount = [];
+    for (let i = 1; i <= count; i++) {
+        const element = results.filter(object => object.user.level === i);
+        childsCount.push(element.length)
+    }
+    if (level > 0) {
+        results = { user: results[0].user, children: results.filter(object => object.user.level === level) }
+    } else results = results[0]
+    return { results, last_level: lastLevel, childs_count: childsCount, direct_users, indirect_users }
+}
+
+export async function get_tree_by_username(text, id_progenitor, id) {
+    const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
+    const users = []
+    for (let i = 0; i < tempUsers.length; i++) {
+        const user = tempUsers[i];
+        const avatar = await resizeImageBase64(60, 60, 70, user.avatar)
+        const newObject = { ...user, avatar: avatar || null }
+        users.push(newObject)
+    }
+    function Node(user) {
+        this.user = user,
+            this.children = [];
+    }
+    class Tree {
+        constructor() {
+            this.root = null;
+        }
+        add(data, toNodeData) {
+            const node = new Node(data);
+            const parent = toNodeData ? this.findBFS(toNodeData) : null;
+            if (parent) {
+                parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
+            } else {
+                if (!this.root) {
+                    this.root = { ...node, user: { ...node.user, level: 0 } };
+                } else return 'Tried to store node at root when root already exists'
+            }
+        }
+
+        findBFS(data) {
+            let _node = null
+            this.traverseBFS((node) => {
+                if (node) {
+                    if (node.user.id === data) {
+                        _node = node
+                    }
+                }
+            })
+
+            return _node
+        }
+
+        traverseBFS(cb) {
+            const queue = [this.root]
+            if (cb) {
+                while (queue.length) {
+                    const node = queue.shift()
+
+                    cb(node)
+                    for (const child of node.children) {
+                        queue.push(child)
+                    }
+                }
+            }
+        }
+    }
+    let tree = new Tree()
+    let results = []
+    let lastLevel
+    let isChild = false
+    for (const object of users) {
+        if (object.id_sponsor === id) isChild = true
+        if (object.id == id) {
+            tree.add(object)
+        } else if (object.id_sponsor && isChild) tree.add(object, object.id_sponsor)
+    }
+    tree.traverseBFS((node) => {
+        results.push(node)
+    })
+    lastLevel = results[results.length - 1].user.level
+    let count = results[results.length - 1].user.level < 10 ? 10 : results[results.length - 1].user.level
+    const childsCount = [];
+    for (let i = 1; i <= count; i++) {
+        const element = results.filter(object => object.user.level === i);
+        childsCount.push(element.length)
+    }
+    if (text) {
+        const matchingElement = results.find(object => object.user.nombre_usuario === text)
+        results = { user: results[0].user, children: [matchingElement].filter(e => e) }
+    } else results[0]
+    return { results, last_level: lastLevel, childs_count: childsCount }
+}
+
+export async function list_users(condition) {
+    let users
+    switch (condition) {
+        case 'active':
+            users = await (await conexion.query('SELECT * FROM usuarios WHERE status_p2p=($1)', ['active'])).rows
+            break;
+        case 'inactive':
+            users = await (await conexion.query('SELECT * FROM usuarios WHERE status_p2p=($1)', ['inactive'])).rows
+            break;
+        case 'blocked':
+            users = await (await conexion.query('SELECT * FROM usuarios WHERE is_user_blocked_p2p=($1)', [true])).rows
+            break;
+        case 'deleted':
+            users = await (await conexion.query('SELECT * FROM usuarios WHERE is_user_deleted=($1)', [true])).rows
+            break;
+        case 'with buys':
+            users = await (await conexion.query('SELECT * FROM tickets INNER JOIN usuarios ON tickets.owner=usuarios.id GROUP BY tickets.onwer WHERE tickets.status=($1) AND tickets.type=($2)', ['finished', 'buy'])).rows
+            break;
+        case 'with sells':
+            users = await (await conexion.query('SELECT * FROM tickets INNER JOIN usuarios ON tickets.owner=usuarios.id GROUP BY tickets.onwer WHERE tickets.status=($1) AND tickets.type=($2)', ['finished', 'sell'])).rows
+            break;
+        case 'admins':
+            users = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id')).rows
+            break;
+    }
+    return users
+}
+
+export async function update_user_info(user_id, data) {
+    const user = await (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [user_id])).rows[0]
+    const new_info = {
+        ...user,
+        ...data
+    }
+    await conexion.query('UPDATE usuarios SET full_nombre=($1), nombre_usuario=($2), email=($3), usd_direction=($4), payment_methods=($5), codigo_pais=($6), telefono=($7), habilidades=($8)', [new_info.full_nombre, new_info.nombre_usuario, new_info.email, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.telefono, new_info.habilidades])
+}
+
+export async function get_user_info(user_id) {
+    const user = await (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [user_id])).rows[0]
+    const wallet = await (await conexion.query('SELECT balance, not_available FROM wallets WHERE owner=($1)', [user_id])).rows[0]
+    const buys = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'buy'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * 3
+    const sells = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'sell'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0)
+    const object = {
+        ...user,
+        ...wallet,
+        buys,
+        sells
+    }
+    return object
+}
+
+export async function block_user_buttons(user_id) {
+    await conexion.query('UPDATE usuarios SET is_user_blocked_p2p=($1) WHERE id=($2)', [true, user_id])
+}
+
+export async function unblock_user_buttons(user_id) {
+    await conexion.query('UPDATE usuarios SET is_user_blocked_p2p=($1) WHERE id=($2)', [false, user_id])
+}
+
+export async function make_admin(user_id) {
+    await conexion.query('INSERT INTO admins (iduser, role) VALUES ($1, $2)', [user_id, 'admin'])
 }

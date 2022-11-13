@@ -36,7 +36,8 @@ export async function deny_withdrawal(req, res, next) {
 }
 
 export async function list_withdrawals(req, res, next) {
-    const withdrawals = await adminService.list_withdrawals()
+    const { status } = req.body
+    const withdrawals = await adminService.list_withdrawals(status)
     res.send({ status: true, content: withdrawals })
 }
 
@@ -71,3 +72,4 @@ export async function get_split_settings_page(req, res, next) {
 }
 
 // export async function 
+

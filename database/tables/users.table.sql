@@ -16,7 +16,9 @@ CREATE TABLE usuarios (
     id_progenitor BIGINT,
     payment_methods JSON ARRAY,
     usd_direction VARCHAR(50),
-    leal_direction VARCHAR(50)
+    leal_direction VARCHAR(50),
+    is_user_blocked_p2p BOOLEAN DEFAULT(false) NOT NULL,
+    is_user_deleted BOOLEAN DEFAULT(false) NOT NULL
 );
 
 CREATE INDEX nombre_usuario ON usuarios(nombre_usuario);
@@ -31,3 +33,7 @@ CREATE TYPE user_status_p2p AS ENUM ('active', 'inactive');
 ALTER TABLE usuarios DROP TABLE status_p2p;
 
 ALTER TABLE usuarios ADD COLUMN status_p2p user_status_p2p NOT NULL DEFAULT('inactive');
+
+ALTER TABLE usuarios ADD COLUMN is_user_blocked_p2p BOOLEAN DEFAULT(false) NOT NULL;
+
+ALTER TABLE usuarios ADD COLUMN is_user_deleted BOOLEAN DEFAULT(false) NOT NULL;

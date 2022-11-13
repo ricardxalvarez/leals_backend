@@ -187,10 +187,6 @@ export async function approve_order(order_id, userid) {
         await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['finished', order.ticket_buyer_id])
         await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['active', buyer_ticket.owner])
 
-        // update split
-        const new_split = p2p_config.split - buyer_ticket.amount * 3
-        await conexion.query('UPDATE p2p_config SET split=($1)', [new_split])
-
         const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
         if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
         const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + buyer_ticket.amount * 3) : buyer_ticket.amount * 3
