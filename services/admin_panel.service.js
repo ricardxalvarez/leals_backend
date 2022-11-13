@@ -25,10 +25,6 @@ export async function clean() {
     return { status: true, content: 'Cleaned' }
 }
 
-export async function list_withdrawals() {
-    const withdrawals = await (await conexion.query('SELECT * FROM withdrawals')).rows
-    return withdrawals
-}
 
 export async function handle_switches(data) {
     const config = await (await conexion.query('SELECT * FROM config')).rows[0]
@@ -90,11 +86,16 @@ export async function get_p2p_settings_page() {
     }
 }
 
+export async function get_split_settings_page() {
+    const split_info = await (await conexion.query('SELECT initial_split, split, value_compared_usdt FROM p2p_config')).rows[0]
+    return split_info
+}
+
 export async function update_earnings_stop(new_stop) {
     await conexion.query('UPDATE p2p_config SET not_available_earnings_stop=($1)', [new_stop])
 }
 
-export async function update_pealties_address(new_address) {
+export async function update_penalties_address(new_address) {
     await conexion.query('UPDATE penalty_fees SET usdt_address_penalty=($1)', [new_address])
 }
 
@@ -138,7 +139,7 @@ export async function deny_withdrawal(withdrawal_id) {
     return { status: true, content: 'Withdrawal succesfully denied' }
 }
 
-export async function list_by_status(status) {
+export async function list_withdrawals(status) {
     const withdrawals = await (await conexion.query('SELECT * FROM withdrawals WHERE status=($1) ORDER BY requested_at DESC', [status])).rows
     return withdrawals
 }
@@ -180,4 +181,10 @@ export async function deny_advertise(advertise_id) {
     const ad = await (await conexion.query('UPDATE advertises SET status=($1) WHERE advertise_id=($2) RETURNING *', ['denied', advertise_id])).rows[0]
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [ad.owner, 'We are very sorry your ad was not processed', new Date()])
     return { status: true, content: 'Advertise succesfully denied' }
+}
+
+// ads settings 
+
+export async function update_ads_config(data) {
+    await conexion.query('UPDATE ads_config SET code=($1), hashtag=(2), time_between_ads=($3), facebook_url=($4), tiktok_url=($5), tutorial_url=($6)', [data.code, data.hashtag, data.time_between_ads, data.facebook_url, data.tiktok_url, data.tutorial_url])
 }
