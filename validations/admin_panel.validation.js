@@ -21,19 +21,36 @@ export const approve_withdrawal = {
 
 export const list_withdrawals = {
     body: joi.object().keys({
-        status: joi.string().required()
+        status: joi.string().valid('processing', 'denied', 'successful').required()
     })
 }
 
 export const handle_switches = {
     body: joi.object().keys({
-        query: joi.string().required()
+        query: joi.string().valid('sell', 'buy', 'register').required()
     })
 }
 
+const commission_rules_items = joi.object().keys({
+    level: joi.number().required(),
+    commission: joi.number().required(),
+    expected_children_qty: joi.number().required(),
+})
+
 export const commissions_rules = {
     body: joi.object().keys({
-        new_list: joi.array().required()
+        new_list: joi.array().required().items(commission_rules_items)
+    })
+}
+
+const ads_rules_items = joi.object().keys({
+    ads_quantity: joi.number().required(),
+    percentage: joi.number().required()
+})
+
+export const ads_rules = {
+    body: joi.object().keys({
+        new_list: joi.array().required().items(ads_rules_items)
     })
 }
 
@@ -51,7 +68,7 @@ export const get_withdrawal = {
 
 export const list_advertises = {
     body: joi.object().keys({
-        status: joi.string().required()
+        status: joi.string().valid('approved', 'denied', 'in review').required()
     })
 }
 

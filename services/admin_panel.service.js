@@ -169,7 +169,7 @@ export async function get_advertise_info(advertise_id) {
 }
 
 export async function get_advertises_by_username(username) {
-    const advertises = await (await conexion.query('SELECT * advertises INNER JOIN usuarios ON usuarios.id = advertises.owner WHERE usuarios.nombre_usuario=($1) ORDER BY created_at DESC', [username])).rows
+    const advertises = await (await conexion.query('SELECT * FROM advertises INNER JOIN usuarios ON usuarios.id = advertises.owner WHERE usuarios.nombre_usuario=($1) ORDER BY created_at DESC', [username])).rows
     return advertises
 }
 
