@@ -10,6 +10,16 @@ export async function add_balance(userid, amount) {
     return { status: true, content: 'Balance updated' }
 }
 
+export async function decrease_balance(userid, amount) {
+    const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
+    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+    if (!wallet) await create_wallet(userid)
+    const new_amount = wallet?.balance ? (wallet.balance - amount < 0 ? 0 : wallet.balance - amount) : 0
+    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_amount, userid])
+    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, currency, date) VALUES($1,$2,$3,$4,$5,$6,$7)', [userid, 'balance decreased', 'outcome', amount, amount / p2p_config.value_compared_usdt, 'usdt', new Date()])
+    return { status: true, content: 'Balance updated' }
+}
+
 export async function clean() {
     await conexion.query('DELETE FROM orders')
     await conexion.query('ALTER SEQUENCE orders_order_id_seq RESTART WITH 1')
