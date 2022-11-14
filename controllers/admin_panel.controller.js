@@ -41,13 +41,6 @@ export async function list_withdrawals(req, res, next) {
     res.send({ status: true, content: withdrawals })
 }
 
-
-export async function update_commissions_rules(req, res, next) {
-    const { commissions_rules } = req.body
-    await adminService.update_rules_ads(commissions_rules)
-    res.send({ status: true, content: 'Rules commssions successfully updated' })
-}
-
 export async function rules_ads(req, res, next) {
     const { rules_ads } = req.body
     await adminService.update_rules_ads(rules_ads)
