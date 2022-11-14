@@ -188,7 +188,7 @@ export async function deny_advertise(advertise_id) {
 // ads settings 
 
 export async function update_ads_config(data) {
-    await conexion.query('UPDATE ads_config SET code=($1), hashtag=(2), time_between_ads=($3), facebook_url=($4), tiktok_url=($5), tutorial_url=($6)', [data.code, data.hashtag, data.time_between_ads, data.facebook_url, data.tiktok_url, data.tutorial_url])
+    await conexion.query('UPDATE ads_config SET code=($1), hashtag=($2), time_between_ads=($3), facebook_url=($4), tiktok_url=($5), tutorial_url=($6)', [data.code, data.hashtag, data.time_between_ads, data.facebook_url, data.tiktok_url, data.tutorial_url])
 }
 
 export async function get_team({ id_progenitor, level, id }) {
