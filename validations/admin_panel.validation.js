@@ -118,7 +118,6 @@ export const user_update_info = {
         user_id: joi.string().required(),
         data: joi.object().keys({
             full_nombre: joi.string().optional(),
-            nombre_usuario: joi.string().optional(),
             email: joi.string().email().optional(),
             usd_direction: joi.string().optional(),
             payment_methods: joi.array().optional(),
