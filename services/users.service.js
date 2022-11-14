@@ -208,6 +208,11 @@ export async function addPaymentMethods(userid, data) {
     return { status: true, content: "payment info updated" }
   } else return { status: false, content: "error updating payment methods" }
 }
+
+export async function getAdmin(userid) {
+  const admin = await (await conexion.query('SELECT role FROM admins WHERE iduser=($1)', [userid])).rows[0]
+  return admin
+}
 function getReferralCode() {//genera un codigo unico para los referidos
   let now = new Date().getTime();
   let uuid = 'xxxx4xxxyxxxxxxx'.replace(/[xy]/g, function (c) {

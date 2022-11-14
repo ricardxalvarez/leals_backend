@@ -134,14 +134,39 @@ router.post('/transfers/create', validate(transfersValidation.create), authPswd2
 
 // withdrawals
 router.post('/withdrawals/request', validate(withdrawalsValidation.request_withdrawal), authPswd2, withdrawalsController.request_wihtdrawal)
-router.get('/admin/withdrawals/list', authAdmin, adminController.list_withdrawals)
+// router.get('/admin/withdrawals/list', authAdmin, adminController.list_withdrawals)
 
 // penalty fees
 router.get('/penalty_fees/info', penaltyFeesController.get_info)
 
 // admin
+router.post('/admin/login', validate(userValidation.login), usersController.postSigninAdmin)
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)
 router.post('/admin/clean', authAdmin, adminController.clean)
+router.post('/admin/withdrawals/list', validate(adminValidation.list_withdrawals), adminController.list_withdrawals)
+router.post('/admin/handle_switches', validate(adminValidation.handle_switches), adminController.handle_switches)
+router.post('/admin/update/commissions/rules', validate(adminValidation.commissions_rules), adminController.update_commissions_rules)
+router.post('/admin/update/rules/ads', validate(adminValidation.commissions_rules), adminController.update_rules_ads)
+router.post('/admin/withdrawals/by_requester', validate(adminValidation.withdrawals_by_requester), adminController.get_withdrawals_by_requester)
+router.post('/admin/withdrawal/info', validate(adminValidation.get_withdrawal), adminController.get_withdrawal_info)
+router.post('/admin/advertises/list', validate(adminValidation.list_advertises), adminController.list_advertises)
+router.post('/admin/advertise/info', validate(adminValidation.advertise_info), adminController.get_advertise_info)
+router.post('/admin/advertises/by_requester', validate(adminValidation.advertises_by_username), adminController.get_advertises_by_username)
+router.put('/admin/update/ads_config', validate(adminValidation.update_ads_config), adminController.update_ads_config)
+router.get('/admin/get_team', validate(adminValidation.get_team), adminController.get_team)
+router.post('/admin/get_team/by_username', validate(adminValidation.get_team_by_username), adminController.get_tree_by_username)
+router.post('/admin/users/list', validate(adminValidation.list_users), adminController.list_users)
+router.put('/admin/user/update_info', validate(adminValidation.user_update_info), adminController.update_user_info)
+router.post('/admin/get_user/info', validate(adminValidation.user_info), adminController.get_user_info)
+router.post('/admin/block/user', validate(adminValidation.block_unblock_buttons), adminController.block_user_buttons)
+router.post('/admin/unblock/user', validate(adminValidation.block_unblock_buttons), adminController.unblock_user_buttons)
+router.post('/admin/make_admin', validate(adminValidation.make_admin), adminController.make_admin)
+router.put('/admin/update/leal_value', validate(adminValidation.update_leal_value), adminController.update_leal_value)
+router.put('/admin/update/split', validate(adminValidation.update_split), adminController.update_initial_split)
+router.put('/admin/update/earnings_stop', validate(adminValidation.update_earnings_stop), adminController.update_earnings_stop)
+router.put('/admin/update/sending_time_hash', validate(adminValidation.update_sending_time_hash), adminController.update_sending_time_hash)
+router.put('/admin/update/sell_withdrawal_minimun_amount', validate(adminValidation.update_wthdrawal_sell_minimun_amount), adminController.update_wthdrawal_sell_minimun_amount)
+
 router.post('/admin/advertises/approve', validate(adminValidation.approve_advertise), authAdmin, adminController.approve_advertise)
 router.post('/admin/advertises/deny', validate(adminValidation.approve_advertise), authAdmin, adminController.deny_advertise)
 router.post('/admin/withdrawals/approve', validate(adminValidation.approve_withdrawal), authAdmin, adminController.approve_withdrawal)

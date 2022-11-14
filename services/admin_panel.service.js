@@ -26,16 +26,16 @@ export async function clean() {
 }
 
 
-export async function handle_switches(data) {
+export async function handle_switches(query) {
     const config = await (await conexion.query('SELECT * FROM config')).rows[0]
-    switch (data) {
-        case data.sell:
+    switch (query) {
+        case 'sell':
             await conexion.query('UPDATE config SET is_selling_active=($1)', [!config.is_selling_active])
             break;
-        case data.buy:
+        case 'buy':
             await conexion.query('UPDATE config SET is_buying_active=($1)', [!config.is_buy_active])
             break;
-        case data.register:
+        case 'register':
             await conexion.query('UPDATE config SET is_registering_active=($1)', [!config.is_registering_active])
             break;
     }
@@ -136,13 +136,13 @@ export async function list_withdrawals(status) {
     return withdrawals
 }
 
-export async function get_withdrawal_by_requester(username) {
+export async function get_withdrawals_by_requester(username) {
     const withdrawals = await (await conexion.query('SELECT * FROM withdrawals INNER JOIN usuarios ON usuarios.id = withdrawals.owner WHERE usuarios.nombre_usuario=($1) ORDER BY requested_at DESC', [username])).rows
     return withdrawals
 }
 
 export async function get_withdrawal_info(withdrawal_id) {
-    const withdrawal = await (await conexion.query('SELECT * FROM withdrawals INNER JOIN usuarios ON usuarios.id = withdrawals.owner WHERE withdrawal_id=($1) ORDER BY requested_at DESC', [withdrawal_id])).rows[0]
+    const withdrawal = await (await conexion.query('SELECT * FROM withdrawals INNER JOIN usuarios ON usuarios.id = withdrawals.owner WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
     return withdrawal
 }
 
@@ -411,4 +411,12 @@ export async function unblock_user_buttons(user_id) {
 
 export async function make_admin(user_id) {
     await conexion.query('INSERT INTO admins (iduser, role) VALUES ($1, $2)', [user_id, 'admin'])
+}
+
+export async function update_leal_value(new_value) {
+    await conexion.query('UPDATE p2p_config SET value_compared_usdt=($1)', [new_value])
+}
+
+export async function update_initial_split(new_value) {
+    await conexion.query('UPDATE p2p_config SET initial_split=($1)', [new_value])
 }

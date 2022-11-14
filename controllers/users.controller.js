@@ -146,6 +146,54 @@ export function postSignin(req, res, next) {
 
 }
 
+export function postSigninAdmin(req, res, next) {
+  const { username, password } = req.body
+  userService.getAccount(username)
+    .then(async account => {
+      if (account.rowCount > 0) {
+        let user = account.rows[0]
+        let fullname = user.full_nombre
+        let idusuario = user.id
+        const admin = await userService.getAdmin(idusuario)
+        if (!admin) return res.send({ status: false, content: 'You are not a admin of this app' })
+        //compara la clave del form con la de la BD
+        if (bcrypt.compareSync(password, user.password1)) {
+          // Se genera el token
+          const token = generateToken({ ...user, password1: password })
+          let result = {
+            status: true,
+            content: "Login successful",
+            fullname: fullname,
+            username: username,
+            iduser: idusuario,
+            token: token,
+            role: admin.role
+          };
+          res.status(200).send(result)
+        } else {
+          let result = {
+            status: false,
+            content: 'Incorrect Password'
+          }
+          res.status(200).send(result)
+        }
+      } else {
+        let result = {
+          status: false,
+          content: 'User account unaffiliated'
+        }
+        res.status(200).send(result)
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).send({
+        status: false,
+        content: 'There was an error logging to your account'
+      });
+    });
+}
+
 export function postSigninPsswd2(req, res, next) {
   const { username, password } = req.body
   userService.getAccount(username)

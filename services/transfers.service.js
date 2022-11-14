@@ -18,5 +18,6 @@ export async function create_transfer(userid, username, data) {
     const transferer_new_balance = transferer_wallet.balance - data.amount
     await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [transferer_new_balance, userid])
     await conexion.query('INSERT INTO history (owner, amount, leals_amount, date, currency, destinary_transfer, cash_flow, history_type, sender_transfer) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)', [userid, data.amount, data.amount / p2p_config.value_compared_usdt, new Date(), 'usdt', data.destinary, 'outcome', 'transfer', username])
+    await conexion.query('INSERT INTO notifications (owner, message, date) VALUES ($1,$2,$3)', [destinary.id, , `Wow!, you just received a transfer from ${username} of amount ${data.amount}`, new Date()])
     return { status: true, content: 'Transfer successfully created' }
 }
