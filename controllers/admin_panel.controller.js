@@ -71,12 +71,6 @@ export async function get_split_settings_page(req, res, next) {
     res.send({ status: true, content: response })
 }
 
-export async function list_withdrawals(req, res, next) {
-    const { status } = req.body
-    const response = await adminService.list_withdrawals(status)
-    res.send({ status: true, content: response })
-}
-
 export async function handle_switches(req, res, next) {
     const { query } = req.body
     await adminService.handle_switches(query)
