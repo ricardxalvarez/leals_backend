@@ -1,5 +1,6 @@
 import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js'
+import resizeImageBase64 from '../utils/resizeImageBase64.js'
 export async function add_balance(userid, amount) {
     const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
