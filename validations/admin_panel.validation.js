@@ -109,7 +109,7 @@ export const get_team_by_username = {
 
 export const list_users = {
     body: joi.object().keys({
-        condition: joi.string().required()
+        condition: joi.string().valid('active', 'inactive', 'blocked', 'deleted', 'with buys', 'with sells', 'admins').required()
     })
 }
 
