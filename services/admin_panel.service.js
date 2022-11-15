@@ -397,15 +397,15 @@ export async function update_user_info(user_id, data) {
     }
     if (new_info.email == user.email) {
         if (new_info.telefono == user.telefono) {
-            await conexion.query('UPDATE usuarios SET full_nombre=($1), usd_direction=($2), payment_methods=($3), codigo_pais=($4), habilidades=($5) WHERE id=($6)', [new_info.full_nombre, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.habilidades])
+            await conexion.query('UPDATE usuarios SET full_nombre=($1), usd_direction=($2), payment_methods=($3), codigo_pais=($4), habilidades=($5) WHERE id=($6)', [new_info.full_nombre, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.habilidades, user_id])
         } else {
-            await conexion.query('UPDATE usuarios SET full_nombre=($1), usd_direction=($2), payment_methods=($3), codigo_pais=($4), telefono=($5), habilidades=($6) WHERE id=($7)', [new_info.full_nombre, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.telefono, new_info.habilidades])
+            await conexion.query('UPDATE usuarios SET full_nombre=($1), usd_direction=($2), payment_methods=($3), codigo_pais=($4), telefono=($5), habilidades=($6) WHERE id=($7)', [new_info.full_nombre, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.telefono, new_info.habilidades, user_id])
         }
     } else {
         if (new_info.telefono == user.telefono) {
-            await conexion.query('UPDATE usuarios SET full_nombre=($1), email=($2), usd_direction=($3), payment_methods=($4), codigo_pais=($5), habilidades=($6) WHERE id=($7)', [new_info.full_nombre, new_info.email, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.habilidades])
+            await conexion.query('UPDATE usuarios SET full_nombre=($1), email=($2), usd_direction=($3), payment_methods=($4), codigo_pais=($5), habilidades=($6) WHERE id=($7)', [new_info.full_nombre, new_info.email, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.habilidades, user_id])
         } else {
-            await conexion.query('UPDATE usuarios SET full_nombre=($1), email=($2), usd_direction=($3), payment_methods=($4), codigo_pais=($5), telefono=($6), habilidades=($7) WHERE id=($8)', [new_info.full_nombre, new_info.email, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.telefono, new_info.habilidades])
+            await conexion.query('UPDATE usuarios SET full_nombre=($1), email=($2), usd_direction=($3), payment_methods=($4), codigo_pais=($5), telefono=($6), habilidades=($7) WHERE id=($8)', [new_info.full_nombre, new_info.email, new_info.usd_direction, new_info.payment_methods, new_info.codigo_pais, new_info.telefono, new_info.habilidades, user_id])
         }
     }
 }
