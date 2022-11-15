@@ -391,6 +391,8 @@ export async function list_users(condition) {
 
 export async function update_user_info(user_id, data) {
     const user = await (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [user_id])).rows[0]
+    const is_email_taken = data.email ? await (await conexion.query('SELECT id FROM usuarios WHERE email=($1) AND id<>($2)', [data.email, user_id])).rows[0] : false
+    if (is_email_taken) return
     const new_info = {
         ...user,
         ...data
