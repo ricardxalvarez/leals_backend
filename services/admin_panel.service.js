@@ -395,7 +395,7 @@ export async function update_user_info(user_id, data) {
         ...user,
         ...data
     }
-    console.log(new_data)
+    console.log(new_info)
     console.log(user)
     if (new_info.nombre_usuario == user.nombre_usuario) {
         if (new_info.email == user.email) {
