@@ -15,10 +15,10 @@ async function cropAvatarImage(req, res, next) {
             const width = image.bitmap.width < image.bitmap.height ? 150 : jimp.AUTO
             const height = image.bitmap.width < image.bitmap.height ? jimp.AUTO : 150
             image.resize(width, height, (err, src) => {
-                scroll_x = (src.bitmap.width / 2) - (150 / 2)
-                scroll_y = (src.bitmap.height / 2) - (150 / 2)
+                scroll_x = image.bitmap.width < image.bitmap.height ? 0 : (src.bitmap.width / 2) - (150 / 2)
+                scroll_y = image.bitmap.width < image.bitmap.height ? (src.bitmap.height / 2) - (150 / 2) : 0
             })
-                .crop(scroll_x >= 0 ? scroll_x : 0, scroll_y >= 0 ? scroll_y : 0, 150, 150)
+                .crop(scroll_x > 0 ? scroll_x : 0, scroll_y > 0 ? scroll_y : 0, 150, 150)
                 .quality(70)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     if (err) res.send({ status: false, content: 'error uploading image' })

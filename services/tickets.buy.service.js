@@ -1,8 +1,8 @@
 import conexion from '../database/conexion.js'
 import { io, users } from '../index.js'
 const create_order = async (seller_ticket_id, buyer_ticket_id, amount) => {
-    const two_days_seconds = 3600
-    const new_order = await (await conexion.query("INSERT INTO orders(ticket_seller_id, ticket_buyer_id, amount, created_at, deadline_seconds) VALUES ($1, $2, $3, $4, $5) RETURNING *", [seller_ticket_id, buyer_ticket_id, amount, new Date(), two_days_seconds])).rows[0]
+    const seconds = await (await conexion.query('SELECT sending_time_hash_seconds FROM p2p_config')).rows[0].sending_time_hash_seconds
+    const new_order = await (await conexion.query("INSERT INTO orders(ticket_seller_id, ticket_buyer_id, amount, created_at, deadline_seconds) VALUES ($1, $2, $3, $4, $5) RETURNING *", [seller_ticket_id, buyer_ticket_id, amount, new Date(), seconds])).rows[0]
     return new_order
 }
 
@@ -12,8 +12,9 @@ const find_user = (user_id) => {
 }
 
 export async function createTicket(data, userid) {
-    const user_status_p2p = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [userid])).rows[0]?.status_p2p
-    if (user_status_p2p == 'active' || !user_status_p2p) return { status: false, content: `You cannot create a new buy ticket since you are still an active user` }
+    const user_info = await (await conexion.query('SELECT status_p2p. is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
+    if (user_info?.status_p2p == 'active' || !user_info?.status_p2p) return { status: false, content: `You cannot create a new buy ticket since you are still an active user` }
+    if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You are not allowed to buy or sell` }
     const old_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) AND status<>($3) AND status<>($4)', [userid, 'buy', 'finished', 'annulled'])).rows[0]
     if (old_ticket) return { status: false, content: `You already have an active buying ticket with id ${old_ticket.ticket_id}` }
     const packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1)", [data.package_id])).rows[0]

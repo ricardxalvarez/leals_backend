@@ -16,21 +16,7 @@ export default async function wallet_free_not_available() {
             const seconds_in_a_week = 60 * 60 /** 24 * 7 */
             const seconds_remain = (((new Date().getTime() - new Date(wallet.last_not_available_release).getTime()) / 1000) - seconds_in_a_week) * -1
             if (seconds_remain <= 0) {
-                const rule_ads =
-                    [
-                        {
-                            ads_quantity: 0,
-                            percentage: 1
-                        },
-                        {
-                            ads_quantity: 1,
-                            percentage: 2
-                        },
-                        {
-                            ads_quantity: 2,
-                            percentage: 5
-                        }
-                    ]
+                const rule_ads = await (await conexion.query('SELECT rules_ads FROM p2p_config')).rows[0].rules_ads
 
                 const advertises = await (await conexion.query('SELECT * FROM advertises WHERE owner=($1)', [wallet.owner])).rows
                 let valid_advertises_count = 0

@@ -138,49 +138,7 @@ export async function approve_order(order_id, userid) {
         parents.push(parent)
     }
     //  handle comissions
-    const rules_commissions = [
-        {
-            level: 1,
-            commission: 20,
-            expected_children_qty: 1
-        }, {
-            level: 2,
-            commission: 12,
-            expected_children_qty: 0
-        }, {
-            level: 3,
-            commission: 8,
-            expected_children_qty: 1
-        }, {
-            level: 4,
-            commission: 6,
-            expected_children_qty: 1
-        }, {
-            level: 5,
-            commission: 4,
-            expected_children_qty: 1
-        }, {
-            level: 6,
-            commission: 2,
-            expected_children_qty: 1
-        }, {
-            level: 7,
-            commission: 2,
-            expected_children_qty: 1
-        }, {
-            level: 8,
-            commission: 2,
-            expected_children_qty: 1
-        }, {
-            level: 9,
-            commission: 2,
-            expected_children_qty: 1
-        }, {
-            level: 10,
-            commission: 2,
-            expected_children_qty: 1
-        },
-    ]
+    const rules_commissions = await (await conexion.query('SELECT rules_commissions FROM p2p_config')).rows[0].rules_commissions
     // use childs_count in referrals/child to get commissions percentage
     if (seller_orders.every(object => object.status === 'successfull') && seller_ticket.remain == 0) await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['finished', order.ticket_seller_id])
     if (buyer_orders.every(object => object.status === 'successfull') && buyer_ticket.remain == 0) {
@@ -189,7 +147,7 @@ export async function approve_order(order_id, userid) {
 
         const wallet_buyer = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [buyer_ticket.owner])).rows[0]
         if (!wallet_buyer) await create_wallet(buyer_ticket.owner)
-        const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + buyer_ticket.amount * 3) : buyer_ticket.amount * 3
+        const new_not_available_balance = wallet_buyer?.not_available ? (wallet_buyer.not_available + buyer_ticket.amount * p2p_config.not_available_earnings_stop) : buyer_ticket.amount * p2p_config.not_available_earnings_stop
         const new_p2p_earnings = wallet_buyer?.p2p_earnings ? wallet_buyer.p2p_earnings + buyer_ticket.amount : buyer_ticket.amount
         await conexion.query('UPDATE wallets SET not_available=($1), p2p_earnings=($2) WHERE owner=($3)', [new_not_available_balance, new_p2p_earnings, buyer_ticket.owner])
 
@@ -284,7 +242,6 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         }
         const user_status_p2p = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [id])).rows[0]?.status_p2p
         if (user_status_p2p != 'active' || !user_status_p2p) return 'commision not expected for user ' + id + ' since this user aint active'
-
         // update not_available balance of wallet id
         const new_not_available_balance = wallet.not_available - commission
         const new_available_balance = wallet.balance + commission

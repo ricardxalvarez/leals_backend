@@ -411,9 +411,10 @@ export async function update_user_info(user_id, data) {
 }
 
 export async function get_user_info(user_id) {
+    const p2p_config = await (await conexion.query('SELECT not_available_earnings_stop FROM p2p_config')).rows[0]
     const user = await (await conexion.query('SELECT * FROM usuarios WHERE id=($1)', [user_id])).rows[0]
     const wallet = await (await conexion.query('SELECT balance, not_available FROM wallets WHERE owner=($1)', [user_id])).rows[0]
-    const buys = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'buy'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * 3
+    const buys = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'buy'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * p2p_config.not_available_earnings_stop
     const sells = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'sell'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0)
     const object = {
         ...user,

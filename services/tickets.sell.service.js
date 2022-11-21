@@ -13,6 +13,8 @@ const find_user = (user_id) => {
 }
 
 export async function createTicket(data, userid) {
+    const user_info = await (await conexion.query('SELECT status_p2p. is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
+    if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You are not allowed to buy or sell` }
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     if (p2p_config.p2p_sells_fee && !data.id_hash_fee) return { status: false, content: 'Please send a hash of the commission payment' }
     const old_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) AND status<>($3) AND status<>($4)', [userid, 'sell', 'finished', 'annulled'])).rows[0]

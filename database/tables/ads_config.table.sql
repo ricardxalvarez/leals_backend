@@ -4,5 +4,6 @@ CREATE TABLE ads_config (
     time_between_ads BIGINT,
     facebook_url VARCHAR(100),
     tiktok_url VARCHAR(100),
-    tutorial_url VARCHAR(100)
+    tutorial_url VARCHAR(100),
+    active_url VARCHAR(100),
 );
