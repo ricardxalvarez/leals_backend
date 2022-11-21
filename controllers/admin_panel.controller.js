@@ -48,8 +48,8 @@ export async function list_withdrawals(req, res, next) {
 }
 
 export async function rules_ads(req, res, next) {
-    const { rules_ads } = req.body
-    await adminService.update_rules_ads(rules_ads)
+    const { new_list } = req.body
+    await adminService.update_rules_ads(new_list)
     res.send({ status: true, content: 'Rules ads successfully updated' })
 }
 
