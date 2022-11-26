@@ -1,5 +1,6 @@
 import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js'
+import get_countryname_by_id from '../utils/get_countryname_by_id.js'
 import get_currency_by_id from '../utils/get_currency_by_id.js'
 import resizeImageBase64 from '../utils/resizeImageBase64.js'
 export async function add_balance(userid, amount) {
@@ -418,12 +419,14 @@ export async function get_user_info(user_id) {
     const buys = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'buy'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * p2p_config.not_available_earnings_stop
     const sells = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'sell'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0)
     const currency = get_currency_by_id(user.codigo_pais)
+    const country_name = get_countryname_by_id(user.codigo_pais)
     const object = {
         ...user,
         ...wallet,
         buys,
         sells,
-        currency
+        currency,
+        country_name
     }
     return object
 }
