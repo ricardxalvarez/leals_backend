@@ -10,7 +10,8 @@ export async function split_info(user_id) {
     const my_buys = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'buy'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) * p2p_config.not_available_earnings_stop / p2p_config.value_compared_usdt
     const my_sells = await (await conexion.query('SELECT * FROM tickets WHERE tickets.status=($1) AND tickets.owner=($2) AND tickets.type=($3)', ['finished', user_id, 'sell'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) / p2p_config.value_compared_usdt
     const my_withdrawals = await (await conexion.query('SELECT amount FROM withdrawals WHERE owner=($1) AND status=($2)', [user_id, 'successful'])).rows.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0) / p2p_config.value_compared_usdt
-    const pack = await (await conexion.query('SELECT amount FROM tickets WHERE owner=($1) AND type=($2) AND status=($3)', [user_id, 'buy', 'finished'])).rows[0]?.amount || 0
+    const pack_1 = await (await conexion.query('SELECT amount FROM tickets WHERE owner=($1) AND type=($2) AND status=($3)', [user_id, 'buy', 'finished'])).rows[0]?.amount || 0
+    const pack_2 = await (await conexion.query('SELECT amount FROM tickets WHERE owner=($1) AND type=($2) AND status=($3)', [user_id, 'buy', 'finished'])).rows[1]?.amount || 0
     const user_p2p_status = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [user_id])).rows[0]?.status_p2p
     const available_split = (p2p_config.initial_split - network_shopping)
     const percentage_split_available = 100 * available_split / p2p_config.initial_split
@@ -22,7 +23,8 @@ export async function split_info(user_id) {
         my_sells,
         my_withdrawals,
         price: p2p_config.value_compared_usdt,
-        pack: user_p2p_status == 'active' ? pack : 'null',
+        pack_1: user_p2p_status == 'active' ? pack_1 : 'null',
+        pack_2: user_p2p_status == 'active' ? pack_2 : 'null',
         network_seller,
         percentage_split_available
     }

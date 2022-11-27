@@ -13,7 +13,6 @@ const find_user = (user_id) => {
 
 export async function createTicket(data, userid) {
     const user_info = await (await conexion.query('SELECT status_p2p, is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
-    if (user_info?.status_p2p == 'active' || !user_info?.status_p2p) return { status: false, content: `You cannot create a new buy ticket since you are still an active user` }
     if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You are not allowed to buy or sell` }
     const old_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) AND status<>($3) AND status<>($4)', [userid, 'buy', 'finished', 'annulled'])).rows[0]
     if (old_ticket) return { status: false, content: `You already have an active buying ticket with id ${old_ticket.ticket_id}` }

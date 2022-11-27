@@ -440,7 +440,10 @@ export async function unblock_user_buttons(user_id) {
 }
 
 export async function make_admin(user_id) {
+    const user = await (await conexion.query('SELECT * FROM admins WHERE iduser=($1)', [user_id])).rows[0]
+    if (user) return { status: true, content: 'This user is already an admin' }
     await conexion.query('INSERT INTO admins (iduser, role) VALUES ($1, $2)', [user_id, 'admin'])
+    return { status: true, content: 'User successfully added to admins' }
 }
 
 export async function update_leal_value(new_value) {

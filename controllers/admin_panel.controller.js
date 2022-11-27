@@ -178,8 +178,8 @@ export async function unblock_user_buttons(req, res, next) {
 
 export async function make_admin(req, res, next) {
     const { user_id } = req.body
-    await adminService.make_admin(user_id)
-    res.send({ status: true, content: 'User successfully added to admins' })
+    const response = await adminService.make_admin(user_id)
+    res.send(response)
 }
 
 export async function update_leal_value(req, res, next) {
