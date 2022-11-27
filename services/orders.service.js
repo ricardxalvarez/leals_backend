@@ -243,14 +243,16 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         const user_status_p2p = await (await conexion.query('SELECT status_p2p FROM usuarios WHERE id=($1)', [id])).rows[0]?.status_p2p
         if (user_status_p2p != 'active' || !user_status_p2p) return 'commision not expected for user ' + id + ' since this user aint active'
         // update not_available balance of wallet id
-        const new_not_available_balance = wallet.not_available - commission
-        const new_available_balance = wallet.balance + commission
+        const incoming_commission = commission > wallet.not_available ? wallet.not_available : commission
+        const new_not_available_balance = wallet.not_available - incoming_commission
+        const new_available_balance = wallet.balance + incoming_commission
         if (new_not_available_balance <= 0) await conexion.query('UPDATE usuarios SET status_p2p=($1) WHERE id=($2)', ['inactive', id])
         await conexion.query('UPDATE wallets SET not_available=($1), balance=($2) WHERE owner=($3)', [new_not_available_balance > 0 ? new_not_available_balance : 0, new_available_balance, id])
         // add this action to history
         const child_provider = await results.find(object => object.user.id === id_child)
         const commision_leals = commission / p2p_config.value_compared_usdt
-        await (await conexion.query('INSERT INTO history (owner, amount, date, username_network_commision, user_level_network_commision, history_type, currency, cash_flow, leals_amount) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)', [id, commission, new Date(), child_provider.user.nombre_usuario, child_provider.user.level, 'commission', 'usdt', 'income', commision_leals])).rows[0]
+        const surplus = commission - incoming_commission
+        await (await conexion.query('INSERT INTO history (owner, amount, surplus, date, username_network_commision, user_level_network_commision, history_type, currency, cash_flow, leals_amount) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)', [id, commission, surplus, new Date(), child_provider.user.nombre_usuario, child_provider.user.level, 'commission', 'usdt', 'income', commision_leals])).rows[0]
         // send notification to user 
         await (await conexion.query('INSERT INTO notifications (owner, message, date) VALUES ($1,$2, $3)', [id, `Congratulations, you just received a commission of amount: ${commission} usdt = ${commision_leals} leals, from user: ${child_provider.user.nombre_usuario}, level: ${child_provider.user.level}`, new Date()])).rows[0]
         return 'expecting commision to user ' + id + ' for ' + commission + ' usdt'

@@ -84,9 +84,7 @@ router.delete('/packages/delete', validate(packagesValidation.delete_package), a
 //                     /* Tickets Buy Routes */
 router.post('/ticketsbuy/create', validate(ticketsBuyValidation.create), authPswd1, ticketsBuyController.create);
 router.get('/ticketsbuy/list', ticketsBuyController.list);
-// router.get('/ticketsbuy/match', controllers.ticketsbuyController.match);
 router.post('/ticketsbuy/search', validate(ticketsBuyValidation.search), ticketsBuyController.search);
-// router.put('/ticketsbuy/updatstatus', controllers.ticketsbuyController.updateStatusTicket);
 
 
 //                     /* Tickets Sell Routes */
@@ -94,7 +92,6 @@ router.post('/ticketssell/create', validate(ticketsSellValidation.create), authP
 router.get('/ticketssell/list', ticketsSellController.list);
 router.post('/ticketssell/search', validate(ticketsSellValidation.search), authPswd1, ticketsSellController.search);
 router.get('/ticketssell/get_fee', ticketsSellController.getFee)
-// router.put('/ticketssell/updatstatus', controllers.ticketssellController.updateStatusTicket);
 
 // tickets routes
 router.get('/tickets/list', authPswd1, ticketsController.list)
@@ -104,7 +101,6 @@ router.post('/tickets/cancel', validate(ticketsValidation.cancel), authPswd1, ti
 router.get('/wallet/info', authPswd1, walletController.get_info)
 
 // /* orders */
-// router.post('/order/create', auth, controllers.transactionsp2pController.create);
 router.get('/orders/listbuy', authPswd1, ordersController.list_buy);
 router.get('/orders/listsell', authPswd1, ordersController.list_sell);
 router.get('/orders/list', validate(ordersValidation.list), authPswd1, ordersController.list)
@@ -119,9 +115,6 @@ router.post('/notifications/read_all', authPswd1, notificationsController.read_a
 router.delete('/notifications/delete', validate(notificationsValidation.delete_order), authPswd1, notificationsController.delete_order)
 router.delete('/notifications/delete_all', authPswd1, notificationsController.delete_all)
 
-// router.post('/order/listopen', auth, controllers.transactionsp2pController.listOpen);
-// router.put('/order/updatstatus', auth, controllers.transactionsp2pController.updateStatusTicket);
-
 // history
 router.get('/history/list/p2p', authPswd1, historyController.list_history_p2p)
 
@@ -134,7 +127,6 @@ router.post('/transfers/create', validate(transfersValidation.create), authPswd2
 
 // withdrawals
 router.post('/withdrawals/request', validate(withdrawalsValidation.request_withdrawal), authPswd2, withdrawalsController.request_wihtdrawal)
-// router.get('/admin/withdrawals/list', authAdmin, adminController.list_withdrawals)
 
 // penalty fees
 router.get('/penalty_fees/info', penaltyFeesController.get_info)

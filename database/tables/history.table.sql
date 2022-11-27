@@ -19,7 +19,8 @@ CREATE TABLE history (
     user_level_network_commision VARCHAR(5),
     history_type HISTORY_TYPE NOT NULL,
     widthdrawal_condition HISTORY_WITHDRAWAL_CONDITION,
-    cash_flow CASH_FLOW_TYPE NOT NULL
+    cash_flow CASH_FLOW_TYPE NOT NULL,
+    surplus DOUBLE PRECISION
 );
 
 ALTER TYPE history_type ADD VALUE 'penalty payment';
