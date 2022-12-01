@@ -441,7 +441,7 @@ export async function unblock_user_buttons(user_id) {
 
 export async function make_admin(user_id) {
     const user = await (await conexion.query('SELECT * FROM admins WHERE iduser=($1)', [user_id])).rows[0]
-    if (user) return { status: true, content: 'This user is already an admin' }
+    if (user) return { status: false, content: 'This user is already an admin' }
     await conexion.query('INSERT INTO admins (iduser, role) VALUES ($1, $2)', [user_id, 'admin'])
     return { status: true, content: 'User successfully added to admins' }
 }
@@ -453,3 +453,29 @@ export async function update_leal_value(new_value) {
 export async function update_initial_split(new_value) {
     await conexion.query('UPDATE p2p_config SET initial_split=($1)', [new_value])
 }
+
+// businesses
+
+export async function list_businesses(status) {
+    const list = await (await conexion.query('SELECT * FROM businesses WHERE business_status=($1)', [status])).rows
+    return list
+}
+
+export async function get_business_info(business_id) {
+    const business = await (await conexion.query('SELECT businesses.*, usuarios.nombre_usuario, usuarios.full_nombre LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE business_id=($1)', [business_id])).rows[0]
+    return business
+}
+
+export async function approve_business(business_id) {
+    await conexion.query('UPDATE businesses SET business_status=($1) WHERE business_id=($2)', ['approved', business_id])
+}
+
+export async function deny_business(business_id) {
+    await conexion.query('UPDATE businesses SET business_status=($1) WHERE business_id=($2)', ['denied', business_id])
+}
+
+export async function search_by_username(username) {
+    const businesses = await (await conexion.query('SELECT business.*, usuarios.nombre_usuario, usuarios.full_nombre LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE usuarips.nombre_usuario=($1)', [username])).rows
+    return businesses
+}
+

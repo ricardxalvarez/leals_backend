@@ -2,6 +2,8 @@ import conexion from '../database/conexion.js'
 
 export async function request_wihtdrawal(userid, amount) {
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+    const user_info = await (await conexion.query('SELECT status_p2p, is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
+    if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You are not allowed to withdraw` }
     const user_wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
     if ((user_wallet?.balance / p2p_config.value_compared_usdt) < amount) return { status: false, content: 'You cannot withdrawl more balance than you have' }
     const new_balance = user_wallet.balance - amount * p2p_config.value_compared_usdt

@@ -156,14 +156,14 @@ export async function approve_order(order_id, userid) {
             const rule = rules_commissions.find(object => object.level === i + 1)
             if (!rule) continue;
             const commission = rule.commission * buyer_ticket.amount / 100
-            const response = await submit_commissions(parent.id_progenitor || parent.id, parent.id, commission, rule.expected_children_qty, rule.level, buyer_ticket.owner)
+            const response = await submit_commissions(parent.id_progenitor || parent.id, parent.id, commission, rule.expected_children_qty, rule.level, buyer_ticket.owner, rule.level)
             console.log(response)
         }
     }
     return { status: true, content: new_order_info }
 }
 
-async function submit_commissions(id_progenitor, id, commission, expected_children_qty, level, id_child) {
+async function submit_commissions(id_progenitor, id, commission, expected_children_qty, level, id_child, percentage_commission) {
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     const users = await (await conexion.query("SELECT id, id_sponsor, nombre_usuario FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
     let results = []
@@ -252,7 +252,7 @@ async function submit_commissions(id_progenitor, id, commission, expected_childr
         const child_provider = await results.find(object => object.user.id === id_child)
         const commision_leals = commission / p2p_config.value_compared_usdt
         const surplus = commission - incoming_commission
-        await (await conexion.query('INSERT INTO history (owner, amount, surplus, date, username_network_commision, user_level_network_commision, history_type, currency, cash_flow, leals_amount) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)', [id, commission, surplus, new Date(), child_provider.user.nombre_usuario, child_provider.user.level, 'commission', 'usdt', 'income', commision_leals])).rows[0]
+        await (await conexion.query('INSERT INTO history (owner, amount, surplus, surplus_leals, percentage_commission, date, username_network_commision, user_level_network_commision, history_type, currency, cash_flow, leals_amount) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)', [id, commission, surplus, surplus / p2p_config.value_compared_usdt, percentage_commission, new Date(), child_provider.user.nombre_usuario, child_provider.user.level, 'commission', 'usdt', 'income', commision_leals])).rows[0]
         // send notification to user 
         await (await conexion.query('INSERT INTO notifications (owner, message, date) VALUES ($1,$2, $3)', [id, `Congratulations, you just received a commission of amount: ${commission} usdt = ${commision_leals} leals, from user: ${child_provider.user.nombre_usuario}, level: ${child_provider.user.level}`, new Date()])).rows[0]
         return 'expecting commision to user ' + id + ' for ' + commission + ' usdt'

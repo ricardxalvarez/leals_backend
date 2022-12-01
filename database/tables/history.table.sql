@@ -20,7 +20,9 @@ CREATE TABLE history (
     history_type HISTORY_TYPE NOT NULL,
     widthdrawal_condition HISTORY_WITHDRAWAL_CONDITION,
     cash_flow CASH_FLOW_TYPE NOT NULL,
-    surplus DOUBLE PRECISION
+    surplus DOUBLE PRECISION,
+    surplus_leals DOUBLE PRECISION,
+    percentage_commission DOUBLE PRECISION
 );
 
 ALTER TYPE history_type ADD VALUE 'penalty payment';
