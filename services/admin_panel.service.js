@@ -379,10 +379,10 @@ export async function list_users(condition) {
             users = await (await conexion.query('SELECT * FROM usuarios WHERE is_user_deleted=($1)', [true])).rows
             break;
         case 'with buys':
-            users = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) GROUP BY tickets.owner', ['finished', 'buy'])).rows
+            users = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2)', ['finished', 'buy'])).rows
             break;
         case 'with sells':
-            users = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) GROUP BY tickets.owner', ['finished', 'sell'])).rows
+            users = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2)', ['finished', 'sell'])).rows
             break;
         case 'admins':
             users = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id')).rows
