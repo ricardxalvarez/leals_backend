@@ -1,11 +1,9 @@
-CREATE TYPE businesses_types AS ENUM ('local', 'local professional', 'mobility', 'professional online', 'buy s/p')
-
-CREATE TYPE business_status_type AS ENUM ('in review', 'approved', 'denied')
+CREATE TYPE business_status_type AS ENUM ('in review', 'approved', 'denied');
 
 CREATE TABLE businesses (
     business_id BIGSERIAL PRIMARY KEY NOT NULL,
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
-    type businesses_types NOT NULL,
+    type VARCHAR(50) NOT NULL,
     category VARCHAR(50) NOT NULL,
     country VARCHAR(2) NOT NULL,
     lat VARCHAR(20),

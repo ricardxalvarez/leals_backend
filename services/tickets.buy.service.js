@@ -14,8 +14,9 @@ const find_user = (user_id) => {
 export async function createTicket(data, userid) {
     const user_info = await (await conexion.query('SELECT status_p2p, is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
     if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You are not allowed to buy or sell` }
-    const old_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) AND status<>($3) AND status<>($4)', [userid, 'buy', 'finished', 'annulled'])).rows[0]
-    if (old_ticket) return { status: false, content: `You already have an active buying ticket with id ${old_ticket.ticket_id}` }
+    const old_tickets = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) AND status<>($3) AND status<>($4)', [userid, 'buy', 'finished', 'annulled'])).rows
+    if (user_info.status_p2p == 'active' && old_tickets.length !== 1) return { status: false, content: 'You cannot create a new ticket when you are still active' }
+    if (old_tickets.length > 1) return { status: false, content: `You already have two active tickets` }
     const packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1)", [data.package_id])).rows[0]
     if (!packag) return { status: false, content: 'You selected a non valid package' }
     const greatest_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) ORDER BY amount DESC', [userid])).rows[0]

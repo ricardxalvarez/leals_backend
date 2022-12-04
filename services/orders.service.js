@@ -156,7 +156,7 @@ export async function approve_order(order_id, userid) {
             const rule = rules_commissions.find(object => object.level === i + 1)
             if (!rule) continue;
             const commission = rule.commission * buyer_ticket.amount / 100
-            const response = await submit_commissions(parent.id_progenitor || parent.id, parent.id, commission, rule.expected_children_qty, rule.level, buyer_ticket.owner, rule.level)
+            const response = await submit_commissions(parent.id_progenitor || parent.id, parent.id, commission, rule.expected_children_qty, rule.level, buyer_ticket.owner, rule.commission)
             console.log(response)
         }
     }

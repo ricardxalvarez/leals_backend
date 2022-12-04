@@ -384,6 +384,12 @@ export async function list_users(condition) {
         case 'with sells':
             users = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2)', ['finished', 'sell'])).rows
             break;
+        case "with businesses":
+            users = await (await conexion.query('SELECT DISTINCT ON (onwer), usuarios.* FROM businesses LEFT JOIN usuarios ON usuarios.id=businesses.owner')).rows
+            break;
+        case "no businesses":
+            users = await (await conexion.query('SELECT usuarios.* FROM usuarios INNER JOIN businesses ON businesses.owner=usuarios.id')).rows
+            break;
         case 'admins':
             users = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id')).rows
             break;
@@ -479,3 +485,17 @@ export async function search_by_username(username) {
     return businesses
 }
 
+export async function update_businesses_config(data) {
+    const old_data = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    const new_data = {
+        ...old_data,
+        ...data
+    }
+
+    await conexion.query('UPDATE businesses_config SET cashback_for_customer=($1), leals_cashback=($2), earnings_by_level=($3), commission_businesses_gift=($4), businesses_types_categories=($5), businesses_rating=($6)', [new_data.cashback_for_customer, new_data.leals_cashback, new_data.earnings_by_level, new_data.commission_businesses_gift, new_data.businesses_types_categories, new_data.businesses_rating])
+}
+
+export async function get_businesses_config() {
+    const data = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    return data
+}
