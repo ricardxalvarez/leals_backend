@@ -70,6 +70,11 @@ export async function get_split_settings_page(req, res, next) {
     res.send({ status: true, content: response })
 }
 
+export async function get_ads_config(req, res, next) {
+    const response = await adminService.get_ads_config()
+    res.send({ status: true, content: response })
+}
+
 export async function handle_switches(req, res, next) {
     const { query } = req.body
     await adminService.handle_switches(query)

@@ -164,6 +164,10 @@ router.post('/admin/advertises/approve', validate(adminValidation.approve_advert
 router.post('/admin/advertises/deny', validate(adminValidation.approve_advertise), authAdmin, adminController.deny_advertise)
 router.post('/admin/withdrawals/approve', validate(adminValidation.approve_withdrawal), authAdmin, adminController.approve_withdrawal)
 router.post('/admin/withdrawals/deny', validate(adminValidation.approve_withdrawal), authAdmin, adminController.deny_withdrawal)
+router.get('/admin/get_home_page', authAdmin, adminController.get_home_page)
+router.get('/admin/get_p2p_settings', authAdmin, adminController.get_p2p_settings_page)
+router.get('/admin/get_split_settings', authAdmin, adminController.get_split_settings_page)
+router.get('/admin/get_ads_settings', authAdmin, adminController.get_ads_config)
 
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
 router.get('/advertises/list', authPswd1, advertisesController.list_advertises)

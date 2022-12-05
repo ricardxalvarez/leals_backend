@@ -5,7 +5,8 @@ CREATE TABLE p2p_config (
     rules_commissions JSON ARRAY,
     rules_ads JSON ARRAY,
     not_available_earnings_stop DOUBLE PRECISION DEFAULT(300),
-    sending_time_hash_seconds BIGINT DEFAULT(86400)
+    sending_time_hash_seconds BIGINT DEFAULT(86400),
+    free_not_available_balance BIGINT DEFAULT(3600)
 );
 
 INSERT INTO p2p_config (initial_split, value_compared_usdt, p2p_sells_fee) VALUES (200000, 0.25, 2);

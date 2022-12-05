@@ -104,6 +104,11 @@ export async function get_split_settings_page() {
     return split_info
 }
 
+export async function get_ads_config() {
+    const ads_config = await (await conexion.query('SELECT * FROM ads_config')).rows[0]
+    return ads_config
+}
+
 export async function update_earnings_stop(new_stop) {
     await conexion.query('UPDATE p2p_config SET not_available_earnings_stop=($1)', [new_stop])
 }

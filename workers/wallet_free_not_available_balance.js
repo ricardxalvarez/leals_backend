@@ -13,7 +13,7 @@ export default async function wallet_free_not_available() {
                 await conexion.query('UPDATE wallets SET last_not_available_release=($1) WHERE owner=($2)', [new Date(), wallet.owner])
                 continue;
             }
-            const seconds_in_a_week = 60 * 60 /** 24 * 7 */
+            const seconds_in_a_week = p2p_config.free_not_available_balance
             const seconds_remain = (((new Date().getTime() - new Date(wallet.last_not_available_release).getTime()) / 1000) - seconds_in_a_week) * -1
             if (seconds_remain <= 0) {
                 const rule_ads = await (await conexion.query('SELECT rules_ads FROM p2p_config')).rows[0].rules_ads

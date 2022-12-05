@@ -19,8 +19,8 @@ export async function createTicket(data, userid) {
     if (old_tickets.length > 1) return { status: false, content: `You already have two active tickets` }
     const packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1)", [data.package_id])).rows[0]
     if (!packag) return { status: false, content: 'You selected a non valid package' }
-    const greatest_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) ORDER BY amount DESC', [userid])).rows[0]
-    if (greatest_ticket?.amount < packag.usdt_quantity) return { status: false, content: 'You have to select a package greater or equal than the previous ones you have chosen' }
+    // const greatest_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) ORDER BY amount DESC', [userid, 'buy'])).rows[0]
+    // if (greatest_ticket?.amount < packag.usdt_quantity) return { status: false, content: 'You have to select a package greater or equal than the previous ones you have chosen' }
     const ticket_returning = await (await conexion.query("INSERT INTO tickets (amount, remain, type, created_at, owner) VALUES ($1, $2, $3, $4, $5) RETURNING *", [packag.usdt_quantity, packag.usdt_quantity, 'buy', new Date(), userid])).rows[0]
     const tickets_to_pair = await (await conexion.query('SELECT * FROM tickets WHERE owner<>($1) AND type=($2) AND remain>0 ORDER BY created_at', [userid, 'sell'])).rows
     let new_orders = []
