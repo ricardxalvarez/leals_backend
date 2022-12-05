@@ -280,7 +280,7 @@ export async function get_team({ id_progenitor, level, id }) {
         childsCount.push(element.length)
     }
     if (level > 0) {
-        results = { user: results[0].user, children: results.filter(object => object.user.level === level) }
+        results = { user: results[0].user, children: results.filter(object => object.user.level === level), direct_users, indirect_users }
     } else results = results[0]
     return { results, last_level: lastLevel, childs_count: childsCount, direct_users, indirect_users }
 }
