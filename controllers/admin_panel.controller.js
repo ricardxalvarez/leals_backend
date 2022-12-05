@@ -134,7 +134,7 @@ export async function get_team(req, res, next) {
     const level = parseInt(req.query.level)
     adminService.get_team({ id_progenitor: iduser, level, id })
         .then(content => {
-            res.send({ status: true, content: content.results, last_level: content.last_level, childs_count: content.childs_count })
+            res.send({ status: true, content: content.results, last_level: content.last_level, childs_count: content.childs_count, direct_users: content.direct_users, indirect_users: content.indirect_users })
         })
         .catch(error => {
             console.log(error)

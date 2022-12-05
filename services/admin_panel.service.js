@@ -203,8 +203,6 @@ export async function get_team({ id_progenitor, level, id }) {
     const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
     const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
     const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [id])).rowCount
-    console.log(direct_users)
-    console.log(indirect_users)
     const users = []
     let results = []
     for (let i = 0; i < tempUsers.length; i++) {
@@ -282,7 +280,7 @@ export async function get_team({ id_progenitor, level, id }) {
         childsCount.push(element.length)
     }
     if (level > 0) {
-        results = { user: results[0].user, children: results.filter(object => object.user.level === level), direct_users, indirect_users }
+        results = { user: results[0].user, children: results.filter(object => object.user.level === level) }
     } else results = results[0]
     return { results, last_level: lastLevel, childs_count: childsCount, direct_users, indirect_users }
 }
