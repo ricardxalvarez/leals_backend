@@ -201,8 +201,10 @@ export async function update_ads_config(data) {
 
 export async function get_team({ id_progenitor, level, id }) {
     const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, avatar, id_sponsor, codigo_pais FROM usuarios WHERE id_progenitor=($1) OR id=($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
-    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id_progenitor])).rowCount
-    const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [id_progenitor])).rowCount
+    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
+    const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [id])).rowCount
+    console.log(direct_users)
+    console.log(indirect_users)
     const users = []
     let results = []
     for (let i = 0; i < tempUsers.length; i++) {
