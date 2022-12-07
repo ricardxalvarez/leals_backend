@@ -216,3 +216,43 @@ export async function update_wthdrawal_sell_minimun_amount(req, res, next) {
     await adminService.update_wthdrawal_sell_minimun_amount(new_amount)
     res.send({ status: true, content: 'New amount updated' })
 }
+
+export async function list_businesses(req, res, next) {
+    const { business_status } = req.body
+    const response = await adminService.list_businesses(business_status)
+    res.send({ status: true, content: response })
+}
+
+export async function get_business_info(req, res, next) {
+    const { business_id } = req.body
+    const response = await adminService.get_business_info(business_id)
+    res.send({ status: true, content: response })
+}
+
+export async function approve_business(req, res, next) {
+    const { business_id } = req.body
+    await adminService.approve_business(business_id)
+    res.send({ status: true, content: 'Business successfully approved' })
+}
+
+export async function deny_business(req, res, next) {
+    const { business_id } = req.body
+    await adminService.deny_business(business_id)
+    res.send({ status: true, content: 'Business successfully approved' })
+}
+
+export async function search_business_by_username(req, res, next) {
+    const { username } = req.body
+    const response = await adminService.search_business_by_username(username)
+    res.send({ status: true, content: response })
+}
+
+export async function update_businesses_config(req, res, next) {
+    await adminService.update_businesses_config(req.body)
+    res.send({ status: true, content: 'Config successfully updated' })
+}
+
+export async function get_businesses_config(req, res, next) {
+    const response = await adminService.get_businesses_config()
+    res.send({ status: true, content: response })
+}

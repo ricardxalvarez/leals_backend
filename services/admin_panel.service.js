@@ -35,6 +35,7 @@ export async function clean() {
     await conexion.query('UPDATE p2p_config SET initial_split=($1)', [100000])
     await conexion.query('DELETE FROM withdrawals')
     await conexion.query('DELETE FROM transfers')
+    await conexion.query('DELETE FROM advertises')
     return { status: true, content: 'Cleaned' }
 }
 
@@ -97,6 +98,11 @@ export async function get_p2p_settings_page() {
         ...penalty_fees,
         packages
     }
+}
+
+export async function get_businesses_config() {
+    const data = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    return data
 }
 
 export async function get_split_settings_page() {
@@ -485,7 +491,7 @@ export async function deny_business(business_id) {
     await conexion.query('UPDATE businesses SET business_status=($1) WHERE business_id=($2)', ['denied', business_id])
 }
 
-export async function search_by_username(username) {
+export async function search_business_by_username(username) {
     const businesses = await (await conexion.query('SELECT business.*, usuarios.nombre_usuario, usuarios.full_nombre LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE usuarips.nombre_usuario=($1)', [username])).rows
     return businesses
 }
@@ -498,9 +504,4 @@ export async function update_businesses_config(data) {
     }
 
     await conexion.query('UPDATE businesses_config SET cashback_for_customer=($1), leals_cashback=($2), earnings_by_level=($3), commission_businesses_gift=($4), businesses_types_categories=($5), businesses_rating=($6)', [new_data.cashback_for_customer, new_data.leals_cashback, new_data.earnings_by_level, new_data.commission_businesses_gift, new_data.businesses_types_categories, new_data.businesses_rating])
-}
-
-export async function get_businesses_config() {
-    const data = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
-    return data
 }

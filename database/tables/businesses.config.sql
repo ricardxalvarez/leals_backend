@@ -7,6 +7,12 @@ CREATE TABLE businesses_config (
     businesses_rating JSON ARRAY NOT NULL
 );
 
+-- earnings_by_level {
+    -- level: 1
+    -- percentage_earnings: 20
+-- }
+
+
 -- businesses_types_categories {
     -- type: "local"
     -- categories: ["peluqueria", "barberia"]

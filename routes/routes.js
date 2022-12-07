@@ -160,6 +160,14 @@ router.put('/admin/update/earnings_stop', validate(adminValidation.update_earnin
 router.put('/admin/update/sending_time_hash', validate(adminValidation.update_sending_time_hash), authAdmin, adminController.update_sending_time_hash)
 router.put('/admin/update/sell_withdrawal_minimun_amount', validate(adminValidation.update_wthdrawal_sell_minimun_amount), authAdmin, adminController.update_wthdrawal_sell_minimun_amount)
 
+router.post('/admin/business/list', validate(adminValidation.list_businesses), authAdmin, adminController.list_businesses)
+router.post('/admin/business/get_info', validate(adminValidation.get_business_info), authAdmin, adminController.get_business_info)
+router.put('/admin/business/approve', validate(adminValidation.approve_business), authAdmin, adminController.approve_business)
+router.put('/admin/business/deny', validate(adminValidation.deny_business), authAdmin, adminController.deny_business)
+router.post('/admin/business/search_by_user', validate(adminValidation.search_business_by_username), authAdmin, adminController.search_business_by_username)
+router.put('/admin/business/update/businesses_config', validate(adminValidation.update_businesses_config), authAdmin, adminController.update_businesses_config)
+router.get('/admin/business/get_businesses_config ', authAdmin, adminController.get_businesses_config)
+
 router.post('/admin/advertises/approve', validate(adminValidation.approve_advertise), authAdmin, adminController.approve_advertise)
 router.post('/admin/advertises/deny', validate(adminValidation.approve_advertise), authAdmin, adminController.deny_advertise)
 router.post('/admin/withdrawals/approve', validate(adminValidation.approve_withdrawal), authAdmin, adminController.approve_withdrawal)

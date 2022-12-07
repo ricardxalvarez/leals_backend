@@ -175,3 +175,60 @@ export const update_wthdrawal_sell_minimun_amount = {
         new_amount: joi.number().required()
     })
 }
+
+export const list_businesses = {
+    body: joi.object().keys({
+        business_status: joi.string().valid('in review', 'approved', 'denied').required()
+    })
+}
+
+export const get_business_info = {
+    body: joi.object().keys({
+        business_id: joi.string().required()
+    })
+}
+
+export const approve_business = {
+    body: joi.object().keys({
+        business_id: joi.string().required()
+    })
+}
+
+export const deny_business = {
+    body: joi.object().keys({
+        business_id: joi.string().required()
+    })
+}
+
+export const search_business_by_username = {
+    body: joi.object().keys({
+        username: joi.string().trim().required()
+    })
+}
+
+const earnings_by_level_keys = joi.object().keys({
+    level: joi.number().required(),
+    percentage_earnings: joi.number().required()
+})
+
+const businesses_types_categories_keys = joi.object().keys({
+    type: joi.string().trim().required(),
+    categories: joi.array().required().items(joi.number().required()),
+    max_businesses_per_user: joi.number().required()
+})
+
+const businesses_rating_keys = joi.object().keys({
+    name: joi.string().trim().required(),
+    users_quantity: joi.number().required()
+})
+
+export const update_businesses_config = {
+    body: joi.object().keys({
+        cashback_for_customer: joi.number().min(0).optional(),
+        leals_cashback: joi.number().min(0).optional(),
+        earnings_by_level: joi.array().optional().items(earnings_by_level_keys),
+        commission_businesses_gift: joi.array().optional().items(joi.number().required()),
+        businesses_types_categories: joi.array().optional().items(businesses_types_categories_keys),
+        businesses_rating: joi.array().optional().items(businesses_rating_keys)
+    })
+}
