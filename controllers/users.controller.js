@@ -281,7 +281,7 @@ export function search(req, res, next) {
         const telephono = full_telephono?.slice(full_telephono.indexOf('-') + 1)
         let respuesta = {
           status: true,
-          content: { ...user.rows[0], payment_methods: user.rows[0].payment_methods || [], countryName: countryInfo?.countryName, currencyCode: countryInfo?.currencyCode, password2: user.rows[0].password2 ? true : false, telefono: undefined, full_telephono, telephono }
+          content: { ...user.rows[0], payment_methods: user.rows[0].payment_methods || [], countryName: countryInfo?.countryName, currencyCode: countryInfo?.currencyCode, password2: user.rows[0].password2 ? true : false, telefono: undefined, full_telephono, telephono, is_user_blocked_p2p: user.rows[0].is_user_blocked_p2p }
         }
         res.send(respuesta);
       } else {
