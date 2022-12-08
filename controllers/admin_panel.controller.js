@@ -169,6 +169,12 @@ export async function get_user_info(req, res, next) {
     res.send({ status: true, content: response })
 }
 
+export async function search_by_username(req, res, next) {
+    const { username } = req.body
+    const response = await adminService.search_by_username(username)
+    res.send({ status: true, content: response })
+}
+
 export async function block_user_buttons(req, res, next) {
     const { user_id } = req.body
     await adminService.block_user_buttons(user_id)
@@ -255,4 +261,10 @@ export async function update_businesses_config(req, res, next) {
 export async function get_businesses_config(req, res, next) {
     const response = await adminService.get_businesses_config()
     res.send({ status: true, content: response })
+}
+
+export async function edit_business_type_name(req, res, next) {
+    const { old_name, new_name } = req.body
+    const response = await adminService.edit_business_type_name(old_name, new_name)
+    res.send(response)
 }

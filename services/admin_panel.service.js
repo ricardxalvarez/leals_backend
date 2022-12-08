@@ -505,3 +505,17 @@ export async function update_businesses_config(data) {
 
     await conexion.query('UPDATE businesses_config SET cashback_for_customer=($1), leals_cashback=($2), earnings_by_level=($3), commission_businesses_gift=($4), businesses_types_categories=($5), businesses_rating=($6)', [new_data.cashback_for_customer, new_data.leals_cashback, new_data.earnings_by_level, new_data.commission_businesses_gift, new_data.businesses_types_categories, new_data.businesses_rating])
 }
+
+export async function edit_business_type_name(old_name, new_name) {
+    const old_list = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]?.businesses_types_categories
+    const old_data = old_list.find(object => object.type == old_name)
+    if (!old_data) return { status: false, content: 'This old type name does not exist' }
+    const new_list = [...old_list.filter(object => object.type !== old_name), { ...old_data, type: new_name }]
+
+    return { status: true, content: 'Type name successfully updated' }
+}
+
+export async function search_by_username(username) {
+    const user = await (await conexion.query('SELECT * FROM usuarios WHERE nombre_usuario=($1)', [username])).rows[0]
+    return user
+}

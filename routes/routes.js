@@ -149,6 +149,7 @@ router.put('/admin/update/ads_config', validate(adminValidation.update_ads_confi
 router.get('/admin/get_team', validate(adminValidation.get_team), authAdmin, adminController.get_team)
 router.post('/admin/get_team/by_username', validate(adminValidation.get_team_by_username), authAdmin, adminController.get_tree_by_username)
 router.post('/admin/users/list', validate(adminValidation.list_users), authAdmin, adminController.list_users)
+router.post('/admin/users/search_by_username', validate(adminValidation.search_by_username), authAdmin, adminController.search_by_username)
 router.put('/admin/user/update_info', validate(adminValidation.user_update_info), authAdmin, adminController.update_user_info)
 router.post('/admin/get_user/info', validate(adminValidation.user_info), authAdmin, adminController.get_user_info)
 router.post('/admin/block/user', validate(adminValidation.block_unblock_buttons), authAdmin, adminController.block_user_buttons)

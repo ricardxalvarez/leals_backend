@@ -113,6 +113,12 @@ export const list_users = {
     })
 }
 
+export const search_by_username = {
+    body: joi.object().keys({
+        username: joi.string().trim().required()
+    })
+}
+
 export const user_update_info = {
     body: joi.object().keys({
         user_id: joi.string().required(),
