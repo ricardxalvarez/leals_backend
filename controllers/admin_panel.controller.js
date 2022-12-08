@@ -1,14 +1,14 @@
 import { adminService } from "../services/index.js";
 
 export async function add_balance(req, res, next) {
-    const { userid, amount } = req.body
-    const response = await adminService.add_balance(userid, amount)
+    const { user_ids, amount } = req.body
+    const response = await adminService.add_balance(user_ids, amount)
     res.send(response)
 }
 
 export async function decrease_balance(req, res, next) {
-    const { userid, amount } = req.body
-    const response = await adminService.decrease_balance(userid, amount)
+    const { user_ids, amount } = req.body
+    const response = await adminService.decrease_balance(user_ids, amount)
     res.send(response)
 }
 

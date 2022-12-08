@@ -3,23 +3,29 @@ import create_wallet from '../utils/create_wallet.js'
 import get_countryname_by_id from '../utils/get_countryname_by_id.js'
 import get_currency_by_id from '../utils/get_currency_by_id.js'
 import resizeImageBase64 from '../utils/resizeImageBase64.js'
-export async function add_balance(userid, amount) {
-    const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
-    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
-    if (!wallet) await create_wallet(userid)
-    const new_amount = wallet?.balance ? wallet.balance + amount : amount
-    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_amount, userid])
-    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, currency, date) VALUES($1,$2,$3,$4,$5,$6,$7)', [userid, 'balance add', 'income', amount, amount / p2p_config.value_compared_usdt, 'usdt', new Date()])
+export async function add_balance(list, amount) {
+    for (let i = 0; i < list.length; i++) {
+        const userid = list[i];
+        const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
+        const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+        if (!wallet) await create_wallet(userid)
+        const new_amount = wallet?.balance ? wallet.balance + amount : amount
+        await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_amount, userid])
+        await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, currency, date) VALUES($1,$2,$3,$4,$5,$6,$7)', [userid, 'balance add', 'income', amount, amount / p2p_config.value_compared_usdt, 'usdt', new Date()])
+    }
     return { status: true, content: 'Balance updated' }
 }
 
-export async function decrease_balance(userid, amount) {
-    const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
-    const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
-    if (!wallet) await create_wallet(userid)
-    const new_amount = wallet?.balance ? (wallet.balance - amount < 0 ? 0 : wallet.balance - amount) : 0
-    await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_amount, userid])
-    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, currency, date) VALUES($1,$2,$3,$4,$5,$6,$7)', [userid, 'balance decreased', 'outcome', amount, amount / p2p_config.value_compared_usdt, 'usdt', new Date()])
+export async function decrease_balance(list, amount) {
+    for (let i = 0; i < list.length; i++) {
+        const userid = list[i];
+        const wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
+        const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
+        if (!wallet) await create_wallet(userid)
+        const new_amount = wallet?.balance ? (wallet.balance - amount < 0 ? 0 : wallet.balance - amount) : 0
+        await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [new_amount, userid])
+        await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, currency, date) VALUES($1,$2,$3,$4,$5,$6,$7)', [userid, 'balance decreased', 'outcome', amount, amount / p2p_config.value_compared_usdt, 'usdt', new Date()])
+    }
     return { status: true, content: 'Balance updated' }
 }
 
@@ -511,7 +517,8 @@ export async function edit_business_type_name(old_name, new_name) {
     const old_data = old_list.find(object => object.type == old_name)
     if (!old_data) return { status: false, content: 'This old type name does not exist' }
     const new_list = [...old_list.filter(object => object.type !== old_name), { ...old_data, type: new_name }]
-
+    await conexion.query('UPDATE businesses_config SET businesses_types_categories=($1)', [new_list])
+    await conexion.query('UPDATE businesses SET type=($1) WHERE type=($2)', [new_name, old_name])
     return { status: true, content: 'Type name successfully updated' }
 }
 
