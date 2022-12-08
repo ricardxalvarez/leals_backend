@@ -5,6 +5,7 @@ export async function create_transfer(userid, username, data) {
     const transferer_wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [userid])).rows[0]
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     const user_info = await (await conexion.query('SELECT status_p2p, is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
+    console.log(user_info)
     if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You are not allowed to make a transaction` }
     if (!transferer_wallet) {
         await create_wallet(userid)
