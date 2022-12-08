@@ -13,7 +13,7 @@ async function orders_date_limit() {
             const deadline_seconds_remain = (((new Date().getTime() - new Date(order.created_at).getTime()) / 1000) - order.deadline_seconds) * -1
 
             if (deadline_seconds_remain <= 0) {
-                const buyer_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($)', [order.ticket_buyer_id])).rows[0]
+                const buyer_ticket = await (await conexion.query('SELECT * FROM tickets WHERE ticket_id=($1)', [order.ticket_buyer_id])).rows[0]
                 await conexion.query('UPDATE usuarios SET is_user_blocked_p2p=($1) WHERE id=($2)', [true, buyer_ticket.owner])
                 await conexion.query('UPDATE orders SET status=($1) WHERE order_id=($2)', ['cancelled', order.order_id])
                 await conexion.query('UPDATE tickets SET status=($1) WHERE ticket_id=($2)', ['annulled', order.ticket_buyer_id])
