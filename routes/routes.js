@@ -75,11 +75,12 @@ router.post('/referrals/search', validate(referralsValidation.searchReferral), a
 
 
 // /* Packages Routes */
-router.post('/packages/create', validate(packagesValidation.create), authAdmin, packagesController.create);
+router.post('/admin/packages/create', validate(packagesValidation.create), authAdmin, packagesController.create);
 router.get('/packages/list', packagesController.list);
+router.get('/admin/packages/list', authAdmin, packagesController.admin_list)
 router.get('/packages/search', validate(packagesValidation.search), packagesController.search);
-router.put('/packages/update', validate(packagesValidation.update), authAdmin, packagesController.update);
-router.delete('/packages/delete', validate(packagesValidation.delete_package), authAdmin, packagesController.delete_package);
+router.put('/admin/packages/update', validate(packagesValidation.update), authAdmin, packagesController.update);
+router.delete('/admin/packages/delete', validate(packagesValidation.delete_package), authAdmin, packagesController.delete_package);
 
 //                     /* Tickets Buy Routes */
 router.post('/ticketsbuy/create', validate(ticketsBuyValidation.create), authPswd1, ticketsBuyController.create);

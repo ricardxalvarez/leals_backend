@@ -18,7 +18,8 @@ export async function createTicket(data, userid) {
     if (old_tickets.length && old_tickets[0]?.status !== 'finished') return { status: false, content: 'Finish your last ticket before creating a new one' }
     if (user_info.status_p2p == 'active' && old_tickets.length !== 1) return { status: false, content: 'You cannot create a new ticket when you are still active' }
     if (old_tickets.length > 1) return { status: false, content: `You already have two active tickets` }
-    const packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1)", [data.package_id])).rows[0]
+    const users_qnty = await (await conexion.query('SELECT FROM usuarios')).rowCount
+    const packag = await (await conexion.query("SELECT * FROM packages WHERE package_id=($1) AND users_to_free_package<=($2)", [data.package_id, users_qnty])).rows[0]
     if (!packag) return { status: false, content: 'You selected a non valid package' }
     // const greatest_ticket = await (await conexion.query('SELECT * FROM tickets WHERE owner=($1) AND type=($2) ORDER BY amount DESC', [userid, 'buy'])).rows[0]
     // if (greatest_ticket?.amount < packag.usdt_quantity) return { status: false, content: 'You have to select a package greater or equal than the previous ones you have chosen' }

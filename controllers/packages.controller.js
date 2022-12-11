@@ -12,6 +12,10 @@ export async function list(req, res, next) {
     return res.send({ status: true, content: response })
 }
 
+export async function admin_list(req, res, next) {
+    const response = await packagesService.listPackagesAdmin()
+    return res.send({ status: true, content: response })
+}
 export async function search(req, res, next) {
     const { idpackage } = req.query
     const response = await packagesService.searchPackages(idpackage)
@@ -19,8 +23,8 @@ export async function search(req, res, next) {
 }
 
 export async function update(req, res, next) {
-    const { idpackage } = req.query
-    const response = await packagesService.updatePackages(req.body, idpackage)
+    const { id_package } = req.body
+    const response = await packagesService.updatePackages(req.body, id_package)
     return res.send(response)
 }
 
