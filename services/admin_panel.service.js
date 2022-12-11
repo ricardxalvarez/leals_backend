@@ -162,7 +162,7 @@ export async function deny_withdrawal(withdrawal_id) {
 }
 
 export async function list_withdrawals(status) {
-    const withdrawals = await (await conexion.query('SELECT * FROM withdrawals WHERE status=($1) ORDER BY requested_at DESC', [status])).rows
+    const withdrawals = await (await conexion.query('SELECT withdrawals.*, usuarios.nombre_usuario FROM withdrawals LEFT JOIN usuarios ON usuarios.id=withdrawals.owner WHERE status=($1) ORDER BY requested_at DESC', [status])).rows
     return withdrawals
 }
 
