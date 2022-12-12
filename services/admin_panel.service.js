@@ -506,7 +506,7 @@ export async function deny_business(business_id) {
 }
 
 export async function search_business_by_username(username) {
-    const businesses = await (await conexion.query('SELECT business.*, usuarios.nombre_usuario, usuarios.full_nombre LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE usuarips.nombre_usuario=($1)', [username])).rows
+    const businesses = await (await conexion.query('SELECT business.*, usuarios.nombre_usuario, usuarios.full_nombre FROM businesses LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE usuarips.nombre_usuario=($1)', [username])).rows
     return businesses
 }
 
