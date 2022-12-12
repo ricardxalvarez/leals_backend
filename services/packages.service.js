@@ -44,7 +44,7 @@ export async function searchPackages(idpackage) {
 }
 
 export async function updatePackages(data, idpackage) {
-	let oldPackage = await (await conexion.query('SELECT * FROM packages WHERE id=($1)', [idpackage])).rows[0]
+	let oldPackage = await (await conexion.query('SELECT * FROM packages WHERE package_id=($1)', [idpackage])).rows[0]
 	if (!oldPackage) return { status: false, content: 'This package does not exist' }
 	const newData = { ...oldPackage, ...data }
 	let packag = await (await conexion.query("UPDATE packages SET usdt_quantity=($1), available_packages=($2), users_to_free_package=($3) WHERE package_id=($4) RETURNING *",
