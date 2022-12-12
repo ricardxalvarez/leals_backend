@@ -5,14 +5,14 @@ export async function addPackages(data) {
 	let packag
 	if (data.available_packages) {
 		if (data.users_to_free_package) {
-			packag = await conexion.query("INSERT INTO packages(usdt, available_packages, users_to_free_package) VALUES ($1, $2, $3)",
+			packag = await conexion.query("INSERT INTO packages(usdt_quantity, available_packages, users_to_free_package) VALUES ($1, $2, $3)",
 				[data.usdt_quantity, data.available_packages, data.users_to_free_package])
-		} else packag = await conexion.query("INSERT INTO packages(usdt, available_packages) VALUES ($1, $2)",
+		} else packag = await conexion.query("INSERT INTO packages(usdt_quantity, available_packages) VALUES ($1, $2)",
 			[data.usdt_quantity, data.available_packages])
 	}
 	else
 		if (data.users_to_free_package) {
-			packag = await conexion.query("INSERT INTO packages(usdt, users_to_free_package) VALUES ($1, $2)",
+			packag = await conexion.query("INSERT INTO packages(usdt_quantity, users_to_free_package) VALUES ($1, $2)",
 				[data.usdt_quantity, data.users_to_free_package])
 		} else packag = await conexion.query("INSERT INTO packages(usdt_quantity) VALUES ($1)",
 			[data.usdt_quantity])
