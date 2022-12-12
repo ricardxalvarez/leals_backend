@@ -219,7 +219,7 @@ const earnings_by_level_keys = joi.object().keys({
 
 const businesses_types_categories_keys = joi.object().keys({
     type: joi.string().trim().required(),
-    categories: joi.array().required().items(joi.number().required()),
+    categories: joi.array().required().items(joi.string().required()),
     max_businesses_per_user: joi.number().required()
 })
 

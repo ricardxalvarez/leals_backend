@@ -179,7 +179,7 @@ export async function get_withdrawal_info(withdrawal_id) {
 // advertises
 
 export async function list_advertises(status) {
-    const advertises = await (await conexion.query('SELECT * FROM advertises WHERE status=($1) ORDER BY created_at DESC', [status])).rows
+    const advertises = await (await conexion.query('SELECT advertises.*, usuarios.nombre_usuario FROM advertises LEFT JOIN usuarios ON usuarios.id = advertises.owner  WHERE status=($1) ORDER BY created_at DESC', [status])).rows
     return advertises
 }
 
