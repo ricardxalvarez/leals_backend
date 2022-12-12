@@ -17,7 +17,7 @@ export const search = {
 export const update = {
     body: joi.object().keys({
         id_package: joi.string().required(),
-        usdt_quantity: joi.string().optional(),
+        usdt_quantity: joi.number().optional(),
         available_packages: joi.number().optional(),
         users_to_free_package: joi.number().optional()
     })
