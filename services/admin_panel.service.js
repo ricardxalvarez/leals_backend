@@ -488,12 +488,12 @@ export async function update_initial_split(new_value) {
 // businesses
 
 export async function list_businesses(status) {
-    const list = await (await conexion.query('SELECT * FROM businesses WHERE business_status=($1)', [status])).rows
+    const list = await (await conexion.query('SELECT businesses.*, usuarios.nombre_usuario FROM businesses LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE business_status=($1)', [status])).rows
     return list
 }
 
 export async function get_business_info(business_id) {
-    const business = await (await conexion.query('SELECT businesses.*, usuarios.nombre_usuario, usuarios.full_nombre LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE business_id=($1)', [business_id])).rows[0]
+    const business = await (await conexion.query('SELECT businesses.*, usuarios.nombre_usuario, usuarios.full_nombre FROM businesses LEFT JOIN usuarios ON usuarios.id = businesses.owner WHERE business_id=($1)', [business_id])).rows[0]
     return business
 }
 
