@@ -244,7 +244,7 @@ export async function approve_business(req, res, next) {
 export async function deny_business(req, res, next) {
     const { business_id } = req.body
     await adminService.deny_business(business_id)
-    res.send({ status: true, content: 'Business successfully approved' })
+    res.send({ status: true, content: 'Business successfully denied' })
 }
 
 export async function search_business_by_username(req, res, next) {
