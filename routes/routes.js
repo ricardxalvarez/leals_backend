@@ -132,6 +132,10 @@ router.post('/withdrawals/request', validate(withdrawalsValidation.request_withd
 // penalty fees
 router.get('/penalty_fees/info', penaltyFeesController.get_info)
 
+
+// get config
+router.get('/p2p/config', adminController.get_p2p_config)
+
 // admin
 router.post('/admin/login', validate(userValidation.login), usersController.postSigninAdmin)
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)

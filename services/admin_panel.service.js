@@ -534,3 +534,8 @@ export async function search_by_username(username) {
     const user = await (await conexion.query('SELECT * FROM usuarios WHERE nombre_usuario=($1)', [username])).rows[0]
     return user
 }
+
+export async function get_p2p_config() {
+    const config = await (await conexion.query('SELECT * FROM config')).rows[0]
+    return config
+}

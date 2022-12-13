@@ -268,3 +268,8 @@ export async function edit_business_type_name(req, res, next) {
     const response = await adminService.edit_business_type_name(old_name, new_name)
     res.send(response)
 }
+
+export async function get_p2p_config(req, res, next) {
+    const response = await adminService.get_p2p_config()
+    res.send({ status: true, content: response })
+}
