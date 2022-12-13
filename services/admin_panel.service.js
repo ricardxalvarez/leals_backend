@@ -405,7 +405,7 @@ export async function list_users(condition) {
             users = await (await conexion.query('SELECT DISTINCT usuarios.* FROM usuarios INNER JOIN businesses ON businesses.owner=usuarios.id')).rows
             break;
         case "no businesses":
-            users = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE id=usuarios.owner)')).rows
+            users = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE owner=u.id)')).rows
             break;
         case 'admins':
             users = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id')).rows
