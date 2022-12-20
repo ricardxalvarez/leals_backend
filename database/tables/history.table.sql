@@ -5,6 +5,7 @@ CREATE TYPE history_withdrawal_condition AS ENUM ('processing', 'denied', 'succe
 CREATE TYPE cash_flow_type AS ENUM ('income', 'outcome');
 
 CREATE TABLE history (
+    history_id BIGSERIAL NOT NULL PRIMARY KEY,
     owner BIGINT REFERENCES usuarios(id) NOT NULL,
     amount DOUBLE PRECISION,
     leals_amount DOUBLE PRECISION,
@@ -22,7 +23,8 @@ CREATE TABLE history (
     cash_flow CASH_FLOW_TYPE NOT NULL,
     surplus DOUBLE PRECISION,
     surplus_leals DOUBLE PRECISION,
-    percentage_commission DOUBLE PRECISION
+    percentage_commission DOUBLE PRECISION,
+    withdrawal_related BIGINT REFERENCES withdrawals(withdrawal_id)
 );
 
 ALTER TYPE history_type ADD VALUE 'penalty payment';

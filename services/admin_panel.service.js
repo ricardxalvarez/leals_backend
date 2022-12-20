@@ -147,7 +147,8 @@ export async function approve_withdrawal(withdrawal_id) {
     const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
     if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
     await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['successful', withdrawal_id])
-    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency, date) VALUES($1,$2,$3,$4,$5,$6,$7,$8)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt', new Date()])
+    const old_history_row = await (await conexion.query('SELECT * FROM history WHERE withdrawal_related=($1)', [withdrawal_request.withdrawal_id])).rows[0]
+    await conexion.query('UPDATE history SET widthdrawal_condition=($1), date=($2) WHERE history_id=($3)', ['successful', new Date(), old_history_row.history_id])
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `Your withdrawal has already been processed to the leals address you provided. Amount: ${withdrawal_request.amount / p2p_config.value_compared_usdt} leals`, new Date()])
     return { status: true, content: 'Withdrawal succesfully approved' }
 }
@@ -157,7 +158,8 @@ export async function deny_withdrawal(withdrawal_id) {
     const withdrawal_request = await (await conexion.query('SELECT * FROM withdrawals WHERE withdrawal_id=($1)', [withdrawal_id])).rows[0]
     if (!withdrawal_request) return { status: false, content: 'There is no withdrawal request with such id' }
     await conexion.query('UPDATE withdrawals SET status=($1) WHERE withdrawal_id=($2)', ['denied', withdrawal_id])
-    await conexion.query('INSERT INTO history (owner, history_type, cash_flow, amount, leals_amount, widthdrawal_condition,currency,date) VALUES($1,$2,$3,$4,$5,$6,$7,$8)', [withdrawal_request.owner, 'withdrawal', 'outcome', withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.amount, 'successful', 'usdt', new Date()])
+    const old_history_row = await (await conexion.query('SELECT * FROM history WHERE withdrawal_related=($1)', [withdrawal_request.withdrawal_id])).rows[0]
+    await conexion.query('UPDATE history SET widthdrawal_condition=($1), date=($2), cash_flow=($3) WHERE history_id=($4)', ['denied', new Date(), 'outcome', old_history_row.history_id])
     await conexion.query('INSERT INTO notifications (owner, message, date) VALUES($1,$2,$3)', [withdrawal_request.owner, `We are very sorry your withdrawal was not processed`, new Date()])
     const requester_wallet = await (await conexion.query('SELECT * FROM wallets WHERE owner=($1)', [withdrawal_request.owner])).rows[0]
     await conexion.query('UPDATE wallets SET balance=($1) WHERE owner=($2)', [requester_wallet.balance + withdrawal_request.amount * p2p_config.value_compared_usdt, withdrawal_request.owner])
