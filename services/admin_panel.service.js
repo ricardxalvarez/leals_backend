@@ -304,6 +304,8 @@ export async function get_team({ id_progenitor, level, id }) {
 
 export async function get_tree_by_username(text, id_progenitor, id) {
     const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
+    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
+    let indirect_users = 0
     const users = []
     for (let i = 0; i < tempUsers.length; i++) {
         const user = tempUsers[i];
@@ -324,6 +326,7 @@ export async function get_tree_by_username(text, id_progenitor, id) {
             const parent = toNodeData ? this.findBFS(toNodeData) : null;
             if (parent) {
                 parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
+                indirect_users++;
             } else {
                 if (!this.root) {
                     this.root = { ...node, user: { ...node.user, level: 0 } };
@@ -382,7 +385,7 @@ export async function get_tree_by_username(text, id_progenitor, id) {
         const matchingElement = results.find(object => object.user.nombre_usuario === text)
         results = { user: results[0].user, children: [matchingElement].filter(e => e) }
     } else results[0]
-    return { results, last_level: lastLevel, childs_count: childsCount }
+    return { results, last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
 }
 
 export async function list_users(condition) {
