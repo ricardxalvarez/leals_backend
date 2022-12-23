@@ -36,6 +36,8 @@ export async function checkEmailExists(email, emailUser) {
   } else return { status: false, content: "Already exists a user with that email" }
 }
 export async function addCuenta(data) {
+  const app_config = await (await conexion.query('SELECT * FROM config')).rows[0]
+  if (!app_config.is_registering_active) return { status: false, content: "Registering new users is not available in this moment, please try again sooner" }
   let name = data.fullname.toUpperCase();
   const userExists = await (await conexion.query("SELECT id FROM usuarios WHERE nombre_usuario=($1) OR email=($2)",
     [data.username, data.email])).rows[0];
