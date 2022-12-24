@@ -388,6 +388,7 @@ export async function get_tree_by_username(text, id_progenitor, id) {
     console.log(indirect_users)
     console.log(direct_users)
     console.log(text)
+    console.log(results)
     return { results, last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
 }
 
