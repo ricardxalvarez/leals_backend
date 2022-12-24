@@ -382,8 +382,7 @@ export async function get_tree_by_username(text) {
         const element = results.filter(object => object.user.level === i);
         childsCount.push(element.length)
     }
-    console.log(results[0])
-    return { ...results[0], last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
+    return { results: results[0], last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
 }
 
 export async function list_users(condition) {
