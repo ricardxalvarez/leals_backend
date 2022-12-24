@@ -387,7 +387,7 @@ export async function get_tree_by_username(text, id_progenitor, id) {
         console.log(matchingElement)
         console.log(matchingElement.children)
         console.log(matchingElement.user)
-        results = { user: matchingElement.user, children: [matchingElement].filter(e => e).children }
+        results = { user: matchingElement.user, children: matchingElement.children }
     } else results[0]
     console.log(indirect_users)
     console.log(direct_users)
