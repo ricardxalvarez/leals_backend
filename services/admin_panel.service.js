@@ -302,10 +302,12 @@ export async function get_team({ id_progenitor, level, id }) {
     return { results, last_level: lastLevel, childs_count: childsCount, direct_users, indirect_users }
 }
 
-export async function get_tree_by_username(text, id_progenitor, id) {
-    const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
-    let direct_users = 0
-    let indirect_users = 0
+export async function get_tree_by_username(text) {
+    const searched_user = await (await conexion.query('SELECT id, id_progenitor FROM usuarios WHERE nombre_usuario=($1)', [text])).rows[0]
+    if (!searched_user) return { status: false, content: 'No user matches this username' }
+    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
+    const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [id])).rowCount
+    const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [searched_user.id_progenitor])).rows
     const users = []
     for (let i = 0; i < tempUsers.length; i++) {
         const user = tempUsers[i];
@@ -366,8 +368,8 @@ export async function get_tree_by_username(text, id_progenitor, id) {
     let lastLevel
     let isChild = false
     for (const object of users) {
-        if (object.id_sponsor === id) isChild = true
-        if (object.id == id) {
+        if (object.id_sponsor === searched_id) isChild = true
+        if (object.id == searched_id) {
             tree.add(object)
         } else if (object.id_sponsor && isChild) tree.add(object, object.id_sponsor)
     }
@@ -381,17 +383,7 @@ export async function get_tree_by_username(text, id_progenitor, id) {
         const element = results.filter(object => object.user.level === i);
         childsCount.push(element.length)
     }
-    if (text) {
-        const matchingElement = await results.find(object => object.user.nombre_usuario === text)
-        direct_users = matchingElement?.children.length || 0
-        console.log(matchingElement)
-        console.log(matchingElement.children)
-        console.log(matchingElement.user)
-        results = { user: matchingElement.user, children: matchingElement.children }
-    } else results[0]
-    console.log(indirect_users)
-    console.log(direct_users)
-    return { results, last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
+    return { ...results[0], last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
 }
 
 export async function list_users(condition) {
