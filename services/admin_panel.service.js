@@ -368,8 +368,8 @@ export async function get_tree_by_username(text) {
     let lastLevel
     let isChild = false
     for (const object of users) {
-        if (object.id_sponsor === searched_id) isChild = true
-        if (object.id == searched_id) {
+        if (object.id_sponsor === searched_user.id) isChild = true
+        if (object.id == searched_user.id) {
             tree.add(object)
         } else if (object.id_sponsor && isChild) tree.add(object, object.id_sponsor)
     }
