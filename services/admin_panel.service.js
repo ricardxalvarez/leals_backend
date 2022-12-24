@@ -304,7 +304,7 @@ export async function get_team({ id_progenitor, level, id }) {
 
 export async function get_tree_by_username(text, id_progenitor, id) {
     const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [id_progenitor])).rows
-    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
+    let direct_users = 0
     let indirect_users = 0
     const users = []
     for (let i = 0; i < tempUsers.length; i++) {
@@ -383,12 +383,11 @@ export async function get_tree_by_username(text, id_progenitor, id) {
     }
     if (text) {
         const matchingElement = results.find(object => object.user.nombre_usuario === text)
-        results = { user: results[0].user, children: [matchingElement].filter(e => e) }
+        direct_users = matchingElement?.children.length || 0
+        results = { user: matchingElement.user, children: [matchingElement].filter(e => e) }
     } else results[0]
     console.log(indirect_users)
     console.log(direct_users)
-    console.log(text)
-    console.log(results)
     return { results, last_level: lastLevel, childs_count: childsCount, indirect_users, direct_users }
 }
 
