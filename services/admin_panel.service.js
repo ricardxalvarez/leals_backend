@@ -305,8 +305,8 @@ export async function get_team({ id_progenitor, level, id }) {
 export async function get_tree_by_username(text) {
     const searched_user = await (await conexion.query('SELECT id, id_progenitor FROM usuarios WHERE nombre_usuario=($1)', [text])).rows[0]
     if (!searched_user) return { status: false, content: 'No user matches this username' }
-    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [id])).rowCount
-    const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [id])).rowCount
+    const direct_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor=($1)', [searched_user.id])).rowCount
+    const indirect_users = await (await conexion.query('SELECT FROM usuarios WHERE id_sponsor<>($1) AND id_progenitor=($1)', [searched_user.id])).rowCount
     const tempUsers = await (await conexion.query("SELECT id, nombre_usuario, full_nombre, id_sponsor, avatar, codigo_pais FROM usuarios WHERE id_progenitor = ($1) OR id = ($1) ORDER BY id_sponsor NULLS FIRST", [searched_user.id_progenitor])).rows
     const users = []
     for (let i = 0; i < tempUsers.length; i++) {
