@@ -328,7 +328,6 @@ export async function get_tree_by_username(text) {
             const parent = toNodeData ? this.findBFS(toNodeData) : null;
             if (parent) {
                 parent.children.push({ ...node, user: { ...node.user, level: parent.user.level + 1 } })
-                indirect_users++;
             } else {
                 if (!this.root) {
                     this.root = { ...node, user: { ...node.user, level: 0 } };
