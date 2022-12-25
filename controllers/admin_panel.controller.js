@@ -188,6 +188,7 @@ export async function unblock_user_buttons(req, res, next) {
 }
 
 export async function make_admin(req, res, next) {
+    console.log(req.user)
     const { user_id } = req.body
     const response = await adminService.make_admin(user_id)
     res.send(response)
