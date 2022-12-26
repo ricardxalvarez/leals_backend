@@ -541,8 +541,37 @@ export async function edit_business_type_name(old_name, new_name) {
     return { status: true, content: 'Type name successfully updated' }
 }
 
-export async function search_by_username(username) {
-    const user = await (await conexion.query('SELECT * FROM usuarios WHERE nombre_usuario=($1)', [username])).rows[0]
+export async function search_by_username(username, condition) {
+    let user
+    switch (condition) {
+        case 'active':
+            user = await (await conexion.query('SELECT * FROM usuarios WHERE status_p2p=($1) AND nombre_usuario=($2)', ['active', username])).rows[0]
+            break;
+        case 'inactive':
+            user = await (await conexion.query('SELECT * FROM usuarios WHERE status_p2p=($1) AND nombre_usuario=($2)', ['inactive', username])).rows[0]
+            break;
+        case 'blocked':
+            user = await (await conexion.query('SELECT * FROM usuarios WHERE is_user_blocked_p2p=($1) AND nombre_usuario=($2)', [true, username])).rows[0]
+            break;
+        case 'deleted':
+            user = await (await conexion.query('SELECT * FROM usuarios WHERE is_user_deleted=($1) AND nombre_usuario=($2)', [true, username])).rows[0]
+            break;
+        case 'with buys':
+            user = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) AND usuarios.nombre_usuario=($3)', ['finished', 'buy', username])).rows[0]
+            break;
+        case 'with sells':
+            user = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) AND usuarios.nombre_usuario=($2)', ['finished', 'sell', username])).rows[0]
+            break;
+        case "with businesses":
+            user = await (await conexion.query('SELECT * FROM usuarios u WHERE EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND usuarios.nombre_usuario=($1)', [username])).rows[0]
+            break;
+        case "no businesses":
+            user = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id)')).rows
+            break;
+        case 'admins':
+            user = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id')).rows
+            break;
+    }
     return user
 }
 
