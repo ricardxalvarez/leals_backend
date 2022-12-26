@@ -1,6 +1,7 @@
 import conexion from '../database/conexion.js'
 import bcrypt from 'bcrypt'
 import cloudinary from '../config/cloudinary.js';
+import toPublicId from '../utils/cloudinary_to_publicId.js';
 
 export async function checkUser(data) {
   let user = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1) OR email=($2)',
@@ -157,7 +158,12 @@ export async function updateAvatar(userid, avatar) {
     upload_preset: 'avatars'
   })).url
   console.log(url_image)
-  let user = await conexion.query('UPDATE usuarios SET avatar=($1) WHERE id=($2)', [avatar, userid])
+  // avatar = url_image
+  const user = await (await conexion.query('SELECT avatar FROM usuarios WHERE id=($1)', [userid])).rows[0]
+  let old_avatar
+  if (user?.avatar) old_avatar = toPublicId(user.avatar)
+  console.log(old_avatar)
+  await conexion.query('UPDATE usuarios SET avatar=($1) WHERE id=($2)', [avatar, userid])
   return { status: true, content: 'avatar successfully updated' }
 }
 
