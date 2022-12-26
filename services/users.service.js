@@ -153,6 +153,10 @@ export async function updateUserPassword2(data) {
 }
 
 export async function updateAvatar(userid, avatar) {
+  const url_image = await (await cloudinary.uploader.upload(avatar, {
+    upload_preset: 'avatars'
+  })).url
+  console.log(url_image)
   let user = await conexion.query('UPDATE usuarios SET avatar=($1) WHERE id=($2)', [avatar, userid])
   return { status: true, content: 'avatar successfully updated' }
 }
