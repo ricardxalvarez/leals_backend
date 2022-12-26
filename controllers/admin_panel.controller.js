@@ -1,12 +1,16 @@
 import { adminService } from "../services/index.js";
 
 export async function add_balance(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { user_ids, amount } = req.body
     const response = await adminService.add_balance(user_ids, amount)
     res.send(response)
 }
 
 export async function decrease_balance(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { user_ids, amount } = req.body
     const response = await adminService.decrease_balance(user_ids, amount)
     res.send(response)
@@ -188,7 +192,8 @@ export async function unblock_user_buttons(req, res, next) {
 }
 
 export async function make_admin(req, res, next) {
-    console.log(req.user)
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { user_id } = req.body
     const response = await adminService.make_admin(user_id)
     res.send(response)
