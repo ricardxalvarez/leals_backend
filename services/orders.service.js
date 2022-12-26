@@ -2,6 +2,7 @@ import conexion from '../database/conexion.js'
 import create_wallet from '../utils/create_wallet.js';
 import get_countryname_by_id from '../utils/get_countryname_by_id.js';
 import fix_number from '../utils/fix_number.js';
+import cloudinary from '../config/cloudinary.js';
 
 export async function list_buy(userid) {
     const orders = await (await conexion.query('SELECT orders.*, tickets.ticket_id, tickets.owner FROM orders INNER JOIN tickets ON tickets.ticket_id=orders.ticket_buyer_id WHERE tickets.owner=($1) ORDER BY created_at DESC', [userid])).rows
@@ -101,6 +102,13 @@ export async function send_proof_order(order_id, userid, data) {
     if (order.owner !== userid) return { status: false, content: 'You are not the buyer of this order' }
     if (order.status === 'successfull' || order.status === 'cancelled') return { status: false, content: 'Order was already successfull or cancelled' }
     // update order status and
+
+    const proof_url = await (await cloudinary.uploader.upload(data.proof, {
+        upload_preset: "orders_proofs"
+    })).url
+
+    data.proof = proof_url
+
     const new_order_info = await (await conexion.query('UPDATE orders SET proof=($1), id_hash=($2), status=($3) WHERE order_id=($4) RETURNING *', [data.proof, data.id_hash, 'hashed', order_id])).rows[0]
     // update tickets status (buyer and seller)
     const ticket_seller = await (await conexion.query('SELECT status FROM tickets WHERE ticket_id=($1)', [order.ticket_seller_id])).rows[0]

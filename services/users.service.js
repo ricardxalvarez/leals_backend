@@ -163,7 +163,7 @@ export async function updateAvatar(userid, avatar) {
   let old_avatar
   if (user?.avatar) old_avatar = toPublicId(user.avatar)
   console.log(old_avatar)
-  if (old_avatar) await cloudinary.uploader.destroy(old_avatar)
+  if (old_avatar) cloudinary.uploader.destroy(old_avatar)
   await conexion.query('UPDATE usuarios SET avatar=($1) WHERE id=($2)', [avatar, userid])
   return { status: true, content: 'avatar successfully updated' }
 }
