@@ -483,6 +483,11 @@ export async function make_admin(user_id) {
     return { status: true, content: 'User successfully added to admins' }
 }
 
+export async function remove_admin(user_id) {
+    await conexion.query("DELETE FROM admins WHERE iduser=($1)", [user_id])
+    return { status: true, content: "User successfully deleted" }
+}
+
 export async function update_leal_value(new_value) {
     await conexion.query('UPDATE p2p_config SET value_compared_usdt=($1)', [new_value])
 }

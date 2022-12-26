@@ -160,6 +160,7 @@ router.post('/admin/get_user/info', validate(adminValidation.user_info), authAdm
 router.post('/admin/block/user', validate(adminValidation.block_unblock_buttons), authAdmin, adminController.block_user_buttons)
 router.post('/admin/unblock/user', validate(adminValidation.block_unblock_buttons), authAdmin, adminController.unblock_user_buttons)
 router.post('/admin/make_admin', validate(adminValidation.make_admin), authAdmin, adminController.make_admin)
+router.post('/admin/remove_admin', validate(adminValidation.make_admin), authAdmin, adminController.remove_admin)
 router.put('/admin/update/leal_value', validate(adminValidation.update_leal_value), authAdmin, adminController.update_leal_value)
 router.put('/admin/update/split', validate(adminValidation.update_split), authAdmin, adminController.update_initial_split)
 router.put('/admin/update/earnings_stop', validate(adminValidation.update_earnings_stop), authAdmin, adminController.update_earnings_stop)

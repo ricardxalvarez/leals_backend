@@ -208,7 +208,12 @@ export async function make_admin(req, res, next) {
 }
 
 export async function remove_admin(req, res, next) {
-
+    const { role, iduser } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
+    const { user_id } = req.body
+    if (iduser == user_id) return { status: false, content: "You cannot delete yourself" }
+    const response = await adminService.remove_admin(user_id)
+    res.send(response)
 }
 
 export async function update_leal_value(req, res, next) {
