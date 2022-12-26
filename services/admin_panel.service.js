@@ -566,10 +566,10 @@ export async function search_by_username(username, condition) {
             user = await (await conexion.query('SELECT * FROM usuarios u WHERE EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND u.nombre_usuario=($1)', [username])).rows[0]
             break;
         case "no businesses":
-            user = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND u.nombre_usuario=($1)', [username])).rows
+            user = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND u.nombre_usuario=($1)', [username])).rows[0]
             break;
         case 'admins':
-            user = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id AND usuarios.nombre_usuario=($1)', [username])).rows
+            user = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id AND usuarios.nombre_usuario=($1)', [username])).rows[0]
             break;
     }
     return user || {}
