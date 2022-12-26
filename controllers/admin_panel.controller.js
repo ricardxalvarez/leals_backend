@@ -52,6 +52,8 @@ export async function list_withdrawals(req, res, next) {
 }
 
 export async function rules_ads(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_list } = req.body
     await adminService.update_rules_ads(new_list)
     res.send({ status: true, content: 'Rules ads successfully updated' })
@@ -86,12 +88,16 @@ export async function handle_switches(req, res, next) {
 }
 
 export async function update_commissions_rules(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_list } = req.body
     await adminService.update_commissions_rules(new_list)
     res.send({ status: true, content: 'Commissions rules updated successfully' })
 }
 
 export async function update_rules_ads(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_list } = req.body
     await adminService.update_rules_ads(new_list)
     res.send({ status: true, content: 'Rules ads updated successfully' })
@@ -128,6 +134,8 @@ export async function get_advertises_by_username(req, res, next) {
 }
 
 export async function update_ads_config(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     await adminService.update_ads_config(req.body)
     res.send({ status: true, content: 'Ads config successfully updated' })
 }
@@ -199,31 +207,45 @@ export async function make_admin(req, res, next) {
     res.send(response)
 }
 
+export async function remove_admin(req, res, next) {
+
+}
+
 export async function update_leal_value(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_value } = req.body
     await adminService.update_leal_value(new_value)
     res.send({ status: true, content: 'Value successfully updated' })
 }
 
 export async function update_initial_split(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_value } = req.body
     await adminService.update_initial_split(new_value)
     res.send({ status: true, content: 'Value successfully updated' })
 }
 
 export async function update_earnings_stop(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_stop } = req.body
     await adminService.update_earnings_stop(new_stop)
     res.send({ status: true, content: 'New stop successfully updated' })
 }
 
 export async function update_sending_time_hash(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_time } = req.body
     await adminService.update_sending_time_hash(new_time)
     res.send({ status: true, content: 'New time updated' })
 }
 
 export async function update_wthdrawal_sell_minimun_amount(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
     const { new_amount } = req.body
     await adminService.update_wthdrawal_sell_minimun_amount(new_amount)
     res.send({ status: true, content: 'New amount updated' })
@@ -270,6 +292,7 @@ export async function get_businesses_config(req, res, next) {
 }
 
 export async function edit_business_type_name(req, res, next) {
+
     const { old_name, new_name } = req.body
     const response = await adminService.edit_business_type_name(old_name, new_name)
     res.send(response)
