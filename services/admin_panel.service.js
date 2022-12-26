@@ -560,19 +560,19 @@ export async function search_by_username(username, condition) {
             user = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) AND usuarios.nombre_usuario=($3)', ['finished', 'buy', username])).rows[0]
             break;
         case 'with sells':
-            user = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) AND usuarios.nombre_usuario=($2)', ['finished', 'sell', username])).rows[0]
+            user = await (await conexion.query('SELECT DISTINCT ON (owner) usuarios.* FROM tickets LEFT JOIN usuarios ON usuarios.id=tickets.owner WHERE tickets.status=($1) AND tickets.type=($2) AND usuarios.nombre_usuario=($3)', ['finished', 'sell', username])).rows[0]
             break;
         case "with businesses":
-            user = await (await conexion.query('SELECT * FROM usuarios u WHERE EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND usuarios.nombre_usuario=($1)', [username])).rows[0]
+            user = await (await conexion.query('SELECT * FROM usuarios u WHERE EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND u.nombre_usuario=($1)', [username])).rows[0]
             break;
         case "no businesses":
-            user = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id)')).rows
+            user = await (await conexion.query('SELECT * FROM usuarios u WHERE NOT EXISTS (SELECT FROM businesses WHERE businesses.owner=u.id) AND u.nombre_usuario=($1)', [username])).rows
             break;
         case 'admins':
-            user = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id')).rows
+            user = await (await conexion.query('SELECT * FROM admins INNER JOIN usuarios ON admins.iduser=usuarios.id AND usuarios.nombre_usuario=($1)', [username])).rows
             break;
     }
-    return user
+    return user || {}
 }
 
 export async function get_p2p_config() {
