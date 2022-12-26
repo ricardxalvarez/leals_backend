@@ -27,6 +27,9 @@ const env = joi.object().keys({
     TWILIO_ACCOUNT_SID: joi.string().required(),
     TWILIO_AUTH_TOKEN: joi.string().required(),
     TWILIO_PHONE_NUMBER: joi.string().required(),
+    CLOUDINARY_NAME: joi.string().required(),
+    CLOUDINARY_API_KEY: joi.string().required(),
+    CLODINARY_API_SECRET: joi.string().required()
     // SES_ACCESS_KEY: joi.string().required(),
     // SES_SECRET_KEY: joi.string().required(),
     // SES_REGION: joi.string().required()
@@ -69,6 +72,11 @@ const vars = {
         account_sid: value.TWILIO_ACCOUNT_SID,
         auth_token: value.TWILIO_AUTH_TOKEN,
         phone_number: value.TWILIO_PHONE_NUMBER
+    },
+    cloudinary: {
+        cloud_name: value.CLOUDINARY_NAME,
+        api_key: value.CLOUDINARY_API_KEY,
+        api_secret: value.CLODINARY_API_SECRET
     }
 }
 

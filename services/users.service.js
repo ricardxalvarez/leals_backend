@@ -1,5 +1,6 @@
 import conexion from '../database/conexion.js'
 import bcrypt from 'bcrypt'
+import cloudinary from '../config/cloudinary.js';
 
 export async function checkUser(data) {
   let user = await (await conexion.query('SELECT * from usuarios WHERE nombre_usuario=($1) OR email=($2)',
@@ -52,6 +53,10 @@ export async function addCuenta(data) {
   } else return { status: false, content: "Already exists an account with same email or username" }
 }
 export async function completeUserRegister(data) {
+  const url_image = await (await cloudinary.uploader.upload(data.avatar, {
+    upload_preset: 'avatars'
+  })).url
+  console.log(url_image)
   let skills = data.skills.toUpperCase();
   let user = await (await conexion.query("UPDATE usuarios SET password2=($1),habilidades=($2),avatar=($3) WHERE id=($4) RETURNING *",
     [data.pass2, skills, data.avatar, data.iduser])).rows[0]
