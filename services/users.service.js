@@ -158,7 +158,7 @@ export async function updateAvatar(userid, avatar) {
     upload_preset: 'avatars'
   })).url
   console.log(url_image)
-  // avatar = url_image
+  avatar = url_image
   const user = await (await conexion.query('SELECT avatar FROM usuarios WHERE id=($1)', [userid])).rows[0]
   let old_avatar
   if (user?.avatar) old_avatar = toPublicId(user.avatar)
