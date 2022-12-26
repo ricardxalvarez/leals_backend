@@ -182,8 +182,8 @@ export async function get_user_info(req, res, next) {
 }
 
 export async function search_by_username(req, res, next) {
-    const { username } = req.body
-    const response = await adminService.search_by_username(username)
+    const { username, condition } = req.body
+    const response = await adminService.search_by_username(username, condition)
     res.send({ status: true, content: response })
 }
 

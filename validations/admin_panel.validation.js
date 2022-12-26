@@ -115,7 +115,8 @@ export const list_users = {
 
 export const search_by_username = {
     body: joi.object().keys({
-        username: joi.string().trim().required()
+        username: joi.string().trim().required(),
+        condition: joi.string().valid('active', 'inactive', 'blocked', 'deleted', 'with buys', 'with sells', 'admins', 'with businesses', 'no businesses').required()
     })
 }
 
