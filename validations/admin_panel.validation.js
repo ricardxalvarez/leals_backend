@@ -45,7 +45,8 @@ export const commissions_rules = {
 
 const ads_rules_items = joi.object().keys({
     ads_quantity: joi.number().required(),
-    percentage: joi.number().required()
+    percentage: joi.number().required(),
+    new_businesses: joi.number().required()
 })
 
 export const ads_rules = {
