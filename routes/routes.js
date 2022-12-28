@@ -184,6 +184,9 @@ router.get('/admin/get_p2p_settings', authAdmin, adminController.get_p2p_setting
 router.get('/admin/get_split_settings', authAdmin, adminController.get_split_settings_page)
 router.get('/admin/get_ads_settings', authAdmin, adminController.get_ads_config)
 
+router.put('/admin/update/sells_vs_buys', authAdmin, validate(adminValidation.update_sell_vs_buys), adminController.update_sell_vs_buys)
+router.put('/admin/update/p2p_sells_fee', authAdmin, validate(adminValidation.update_p2p_sells_fee), adminController.update_p2p_sells_fee)
+
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
 router.get('/advertises/list', authPswd1, advertisesController.list_advertises)
 

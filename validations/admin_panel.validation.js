@@ -240,3 +240,15 @@ export const update_businesses_config = {
         businesses_rating: joi.array().optional().items(businesses_rating_keys)
     })
 }
+
+export const update_sell_vs_buys = {
+    body: joi.object().keys({
+        new_amount: joi.number().min(0).required()
+    })
+}
+
+export const update_p2p_sells_fee = {
+    body: joi.object().keys({
+        new_amount: joi.number().min(0).required()
+    })
+}

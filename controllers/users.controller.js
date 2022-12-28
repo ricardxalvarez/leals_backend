@@ -167,7 +167,8 @@ export function postSigninAdmin(req, res, next) {
             username: username,
             iduser: idusuario,
             token: token,
-            role: admin.role
+            role: admin.role,
+            avatar: user.avatar
           };
           res.status(200).send(result)
         } else {

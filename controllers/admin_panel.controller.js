@@ -307,3 +307,19 @@ export async function get_p2p_config(req, res, next) {
     const response = await adminService.get_p2p_config()
     res.send({ status: true, content: response })
 }
+
+export async function update_sell_vs_buys(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
+    const { new_amount } = req.body
+    const response = await adminService.update_sell_vs_buys(new_amount)
+    res.send(response)
+}
+
+export async function update_p2p_sells_fee(req, res, next) {
+    const { role } = req.user
+    if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
+    const { new_amount } = req.body
+    const response = await adminService.update_p2p_sells_fee(new_amount)
+    res.send(response)
+}

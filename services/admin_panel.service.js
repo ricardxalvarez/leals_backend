@@ -579,3 +579,13 @@ export async function get_p2p_config() {
     const config = await (await conexion.query('SELECT * FROM config')).rows[0]
     return config
 }
+
+export async function update_sell_vs_buys(new_amount) {
+    await conexion.query('UPDATE p2p_config SET sells_vs_buys=($1)', [new_amount])
+    return { status: true, content: 'Successfully updated' }
+}
+
+export async function update_p2p_sells_fee(new_amount) {
+    await conexion.query('UPDATE p2p_config SET p2p_sells_fee=($1)', [new_amount])
+    return { status: true, content: 'Successfully updated' }
+}
