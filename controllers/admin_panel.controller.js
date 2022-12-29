@@ -248,11 +248,10 @@ export async function update_sending_time_hash(req, res, next) {
     res.send({ status: true, content: 'New time updated' })
 }
 
-export async function update_wthdrawal_sell_minimun_amount(req, res, next) {
+export async function update_minimuns_amounts(req, res, next) {
     const { role } = req.user
     if (role !== 'superadmin') return { status: false, content: "Admin not authorized" }
-    const { new_amount } = req.body
-    await adminService.update_wthdrawal_sell_minimun_amount(new_amount)
+    await adminService.update_minimuns_amounts(req.body)
     res.send({ status: true, content: 'New amount updated' })
 }
 

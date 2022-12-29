@@ -136,8 +136,13 @@ export async function update_sending_time_hash(new_time) {
     await conexion.query('UPDATE p2p_config SET sending_time_hash_seconds=($1)', [new_time])
 }
 
-export async function update_wthdrawal_sell_minimun_amount(new_amount) {
-    await conexion.query('UPDATE config SET wthdrawal_sell_minimun_amount=($1)', [new_amount])
+export async function update_minimuns_amounts(data) {
+    const config = await (await conexion.query('SELECT transfer_minimun_amount, sell_minimun_amount, withdrawal_minimun_amount FROM config')).rows[0]
+    const new_data = {
+        ...config,
+        ...data
+    }
+    await conexion.query('UPDATE config SET withdrawal_minimun_amount=($1), transfer_minimun_amount=($2), sell_minimun_amount=($3)', [new_data.withdrawal_minimun_amount, new_data.transfer_minimun_amount, new_data.sell_minimun_amount])
 }
 
 // withdrawals

@@ -165,7 +165,7 @@ router.put('/admin/update/leal_value', validate(adminValidation.update_leal_valu
 router.put('/admin/update/split', validate(adminValidation.update_split), authAdmin, adminController.update_initial_split)
 router.put('/admin/update/earnings_stop', validate(adminValidation.update_earnings_stop), authAdmin, adminController.update_earnings_stop)
 router.put('/admin/update/sending_time_hash', validate(adminValidation.update_sending_time_hash), authAdmin, adminController.update_sending_time_hash)
-router.put('/admin/update/sell_withdrawal_minimun_amount', validate(adminValidation.update_wthdrawal_sell_minimun_amount), authAdmin, adminController.update_wthdrawal_sell_minimun_amount)
+router.put('/admin/update/minimuns_amounts', validate(adminValidation.update_minimuns_amounts), authAdmin, adminController.update_minimuns_amounts)
 
 router.post('/admin/business/list', validate(adminValidation.list_businesses), authAdmin, adminController.list_businesses)
 router.post('/admin/business/get_info', validate(adminValidation.get_business_info), authAdmin, adminController.get_business_info)

@@ -178,9 +178,11 @@ export const update_sending_time_hash = {
     })
 }
 
-export const update_wthdrawal_sell_minimun_amount = {
+export const update_minimuns_amounts = {
     body: joi.object().keys({
-        new_amount: joi.number().required()
+        wthdrawal_minimun_amount: joi.number().required(),
+        sell_minimun_amount: joi.number().required(),
+        transfer_minimun_amount: joi.number().required(),
     })
 }
 

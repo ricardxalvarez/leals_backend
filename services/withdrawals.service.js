@@ -1,6 +1,8 @@
 import conexion from '../database/conexion.js'
 
 export async function request_wihtdrawal(userid, amount) {
+    const config = await (await conexion.query('SELECT withdrawal_minimum_amount FROM config')).rows[0]
+    if (amount < config.withdrawal_minimum_amount) return { status: false, content: `The minimum amount to withdraw is ${config.withdrawal_minimum_amount}` }
     const p2p_config = await (await conexion.query('SELECT * FROM p2p_config')).rows[0]
     const user_info = await (await conexion.query('SELECT status_p2p, is_user_blocked_p2p, is_user_deleted FROM usuarios WHERE id=($1)', [userid])).rows[0]
     if (user_info?.is_user_blocked_p2p || user_info?.is_user_deleted) return { status: false, content: `You cannot make a withdrawal, because you have a sanction.` }
