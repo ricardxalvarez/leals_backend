@@ -137,7 +137,7 @@ export async function update_sending_time_hash(new_time) {
 }
 
 export async function update_minimuns_amounts(data) {
-    const config = await (await conexion.query('SELECT transfer_minimun_amount, sell_minimun_amount, withdrawal_minimun_amount FROM config')).rows[0]
+    const config = await (await conexion.query('SELECT transfer_minimum_amount, sell_minimum_amount, withdrawal_minimum_amount FROM config')).rows[0]
     const new_data = {
         ...config,
         ...data
