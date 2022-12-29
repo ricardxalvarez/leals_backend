@@ -142,7 +142,7 @@ export async function update_minimuns_amounts(data) {
         ...config,
         ...data
     }
-    await conexion.query('UPDATE config SET withdrawal_minimun_amount=($1), transfer_minimun_amount=($2), sell_minimun_amount=($3)', [new_data.withdrawal_minimun_amount, new_data.transfer_minimun_amount, new_data.sell_minimun_amount])
+    await conexion.query('UPDATE config SET withdrawal_minimum_amount=($1), transfer_minimum_amount=($2), sell_minimum_amount=($3)', [new_data.withdrawal_minimun_amount, new_data.transfer_minimun_amount, new_data.sell_minimun_amount])
 }
 
 // withdrawals
