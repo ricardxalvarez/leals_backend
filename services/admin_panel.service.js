@@ -81,7 +81,7 @@ export async function get_home_page() {
     const p2p_buys_amount_leals = p2p_buys_amount_usdt / p2p_config.value_compared_usdt
     const p2p_sells_amount_usdt = p2p_sells.map(object => object.amount).reduce((partialSum, a) => partialSum + a, 0)
     const p2p_sells_amount_leals = p2p_sells_amount_usdt / p2p_config.value_compared_usdt
-    const p2p_buys_users = nawait(await conexion.query('SELECT FROM tickets WHERE type=($1) GROUP BY owner', ['buy'])).rowCount
+    const p2p_buys_users = await (await conexion.query('SELECT FROM tickets WHERE type=($1) GROUP BY owner', ['buy'])).rowCount
     const p2p_sells_users = await (await conexion.query('SELECT FROM tickets WHERE type=($1) GROUP BY owner', ['sell'])).rowCount
     return {
         ...config,
