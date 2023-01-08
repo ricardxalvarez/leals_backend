@@ -594,3 +594,13 @@ export async function update_p2p_sells_fee(new_amount) {
     await conexion.query('UPDATE p2p_config SET p2p_sells_fee=($1)', [new_amount])
     return { status: true, content: 'Successfully updated' }
 }
+
+export async function update_business_type_name(old_name, new_name) {
+    const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    const business_type = businesses_config.businesses_types_categories.find(object => object.type == old_name)
+    if (!business_type) return { status: false, content: `There is no type with ${old_name} as name` }
+    const new_list = businesses_config.businesses_types_categories.filter(object => object.type !== old_name).push({ ...business_type, type: new_name })
+    await conexion.query('UPDATE businesses_config SET businesses_types_categories=($1)', [new_list])
+    await conexion.query('UPDATE businesses SET type=($1) WHERE type=($2)', [new_name, old_name])
+    return { status: true, content: 'List successfully updated' }
+}

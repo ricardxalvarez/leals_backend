@@ -7,11 +7,12 @@ CREATE TABLE businesses (
     category VARCHAR(50) NOT NULL,
     country VARCHAR(2) NOT NULL,
     lat VARCHAR(20),
-    long VARCHAR(20),
+    lng VARCHAR(20),
     number_phone VARCHAR(50),
     business_status BUSINESS_STATUS_TYPE DEFAULT('in review') NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
     business_name VARCHAR(70),
+    service_name VARCHAR(70),
     description VARCHAR(255),
     address VARCHAR(255),
     gift_percentage DOUBLE PRECISION NOT NULL,
@@ -26,5 +27,7 @@ CREATE TABLE businesses (
     driver_name VARCHAR(50),
     registration_number_car VARCHAR(25),
     product_name VARCHAR(70),
-    product_price DOUBLE PRECISION
+    product_price DOUBLE PRECISION,
+    business_images VARCHAR(120) ARRAY,
+    business_logo VARCHAR(120)
 );

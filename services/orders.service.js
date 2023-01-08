@@ -137,7 +137,7 @@ export async function approve_order(order_id, userid) {
 
     // get array of parents
     const parents = []
-    while (parents.length < 10) {
+    while (parents.length < p2p_config.rules_commissions.length) {
         // commmisions are going to parents of seller
         const last_parent_id = parents[parents.length - 1]?.id || buyer_ticket.owner
         const last_parent = await (await conexion.query('SELECT id, id_sponsor, id_progenitor FROM usuarios WHERE id=($1)', [last_parent_id])).rows[0]

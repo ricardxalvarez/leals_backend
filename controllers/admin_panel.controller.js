@@ -322,3 +322,9 @@ export async function update_p2p_sells_fee(req, res, next) {
     const response = await adminService.update_p2p_sells_fee(new_amount)
     res.send(response)
 }
+
+export async function update_business_type_name(req, res, next) {
+    const { old_name, new_name } = req.body
+    const response = await adminService.update_business_type_name(old_name, new_name)
+    res.send(response)
+}

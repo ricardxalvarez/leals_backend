@@ -254,3 +254,10 @@ export const update_p2p_sells_fee = {
         new_amount: joi.number().min(0).required()
     })
 }
+
+export const update_business_type_name = {
+    body: joi.object().keys({
+        old_name: joi.string().trim().required(),
+        new_name: joi.string().lowercase().trim().required()
+    })
+}

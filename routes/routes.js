@@ -17,7 +17,8 @@ import {
     transfersController,
     withdrawalsController,
     penaltyFeesController,
-    adsInfoController
+    adsInfoController,
+    businessesController
 } from '../controllers/index.js';
 import {
     packagesValidation,
@@ -31,7 +32,8 @@ import {
     advertisesValidation,
     adminValidation,
     transfersValidation,
-    withdrawalsValidation
+    withdrawalsValidation,
+    businessesValidation
 } from '../validations/index.js'
 import authPswd1 from '../middlewares/auth.pswd1.js'
 import authPswd2 from '../middlewares/auth.pswd2.js';
@@ -136,6 +138,22 @@ router.get('/penalty_fees/info', penaltyFeesController.get_info)
 // get config
 router.get('/p2p/config', adminController.get_p2p_config)
 
+// businesses
+router.post('/business/add', validate(businessesValidation.add_business), countries, authPswd1, businessesController.add_business)
+router.post('/business/list', validate(businessesValidation.list_businesses), authPswd1, countries, businessesController.list_businesses)
+router.post('/business/get_business', validate(businessesValidation.business_id), authPswd1, businessesController.get_business)
+router.post('/business/post_review', validate(businessesValidation.post_review), authPswd1, businessesController.post_review)
+router.post('/business/list_reviews', validate(businessesValidation.business_id), authPswd1, businessesController.list_reviews)
+router.get('/business/list_my_businesses', authPswd1, businessesController.list_my_businesses)
+router.delete('/business/delete_business', validate(businessesValidation.delete_business), authPswd1, businessesController.delete_business)
+router.post('/business/search_by_business_id', validate(businessesValidation.search_by_business_id), authPswd1, businessesController.search_by_business_id)
+router.post('/business/make_payment', validate(businessesValidation.make_payment), authPswd1, businessesController.make_payment)
+router.post('/business/list_business_history', authPswd1, businessesController.list_business_history)
+router.post('/business/list_business_history_customer', authPswd1, businessesController.list_business_history_customer)
+router.post('/business/search_businesses', validate(businessesValidation.search_businesses), authPswd1, businessesController.search_businesses)
+router.post('/business/deny_payment', validate(businessesValidation.payment_id), authPswd1, businessesController.deny_payment)
+router.post('/business/approve_payment', validate(businessesValidation.payment_id), authPswd1, businessesController.approve_payment)
+
 // admin
 router.post('/admin/login', validate(userValidation.login), usersController.postSigninAdmin)
 router.post('/admin/wallet/add_balance', validate(adminValidation.add_balance), authAdmin, adminController.add_balance)
@@ -186,6 +204,7 @@ router.get('/admin/get_ads_settings', authAdmin, adminController.get_ads_config)
 
 router.put('/admin/update/sells_vs_buys', authAdmin, validate(adminValidation.update_sell_vs_buys), adminController.update_sell_vs_buys)
 router.put('/admin/update/p2p_sells_fee', authAdmin, validate(adminValidation.update_p2p_sells_fee), adminController.update_p2p_sells_fee)
+router.put('/admin/update/business_type_name', authAdmin, validate(adminValidation.update_business_type_name), adminController.update_business_type_name)
 
 router.post('/advertises/post', validate(advertisesValidation.post_advertise), authPswd1, advertisesController.post_advertise)
 router.get('/advertises/list', authPswd1, advertisesController.list_advertises)
