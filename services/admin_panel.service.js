@@ -602,6 +602,7 @@ export async function update_business_type_name(old_name, new_name) {
     if (existing_type) return { status: false, content: `Already exists a type called ${new_name}` }
     if (!business_type) return { status: false, content: `There is no type with ${old_name} as name` }
     const new_list = businesses_config.businesses_types_categories.filter(object => object.type !== old_name).push({ ...business_type, type: new_name })
+    console.log(businesses_config.businesses_types_categories)
     console.log(new_list)
     await conexion.query('UPDATE businesses_config SET businesses_types_categories=($1)', [new_list])
     await conexion.query('UPDATE businesses SET type=($1) WHERE type=($2)', [new_name, old_name])
