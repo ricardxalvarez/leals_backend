@@ -29,7 +29,7 @@ export const add_business = {
     registration_number_car: joi.alternatives().conditional('type', { is: 'mobility', then: joi.string().trim().required() }),
     product_name: joi.alternatives().conditional('type', { is: 'buy s/p', then: joi.string().trim().required() }),
     product_price: joi.alternatives().conditional('type', { is: 'buy s/p', then: joi.string().trim().required() }),
-    business_images: joi.array().items(joi.string().required()).required().max(5).min(1),
+    business_images: joi.array().min(1).max(5).required().items(joi.string().required()),
     business_logo: joi.string().required(),
     lat: joi.string().regex(/^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/),
     lng: joi.string().regex(/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/),
