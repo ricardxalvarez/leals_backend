@@ -1,5 +1,6 @@
 import jimp from 'jimp'
 async function crop_image(image) {
+    let result
     if (!image) {
         return false
     }
@@ -20,11 +21,12 @@ async function crop_image(image) {
                 .crop(scroll_x > 0 ? scroll_x : 0, scroll_y > 0 ? scroll_y : 0, 80, 80)
                 .quality(70)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
-                    if (err) return false
-                    return src
+                    if (err) result = false
+                    result = src
                 })
         }
     })
+    return result
 }
 
 export default crop_image

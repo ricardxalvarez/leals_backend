@@ -25,9 +25,6 @@ export async function add_business(data, userid) {
     }
     for (let i = 0; i < data.business_images.length; i++) {
         const image = data.business_images[i];
-        console.log('\n')
-        console.log(image)
-        console.log('\n')
         const image_url = await (await cloudinary.uploader.upload(image, {
             upload_preset: 'businesses_images',
             timeout: 1000 * 60 * 60 * 3
@@ -37,6 +34,7 @@ export async function add_business(data, userid) {
     let business_logo
     if (!validate_image(data.business_logo)) return { status: false, content: 'Business logo is not a real image' }
     const cropped_business_logo = crop_image(data.business_logo)
+    console.log(cropped_business_logo)
     business_logo = await (await cloudinary.uploader.upload(cropped_business_logo, {
         upload_preset: 'businesses_logos',
         timeout: 1000 * 60 * 60 * 3
