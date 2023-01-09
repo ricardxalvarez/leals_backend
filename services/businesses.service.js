@@ -8,6 +8,8 @@ import get_currency_by_id from '../utils/get_currency_by_id.js'
 
 export async function add_business(data, userid) {
     const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    const gift_percentage = businesses_config.commission_businesses_gift.some(amount => amount === data.gift_percentage)
+    if (!gift_percentage) return { status: false, content: `Send a valid gift percentage ${businesses_config.commission_businesses_gift}` }
     const data_type = businesses_config.businesses_types_categories.find(object => object.type === data.type)
     if (!data_type) return { status: true, content: `Use a valid type key ${businesses_config.businesses_types_categories}` }
     const is_category_valid = data_type.categories.some(string => string === data.category)
@@ -105,17 +107,26 @@ export async function delete_business(userid, business_id) {
 }
 
 export async function edit_business(userid, data) {
-    const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
-    const data_type = businesses_config.businesses_types_categories.find(object => object.type === data.type)
-    if (!data_type) return { status: true, content: `Use a valid type key ${businesses_config.businesses_types_categories}` }
-    const is_category_valid = data_type.categories.some(string => string === data.category)
-    if (!is_category_valid) return { status: false, content: `Use a valid category according to type ${data_type.categories}` }
     const business = await (await conexion.query('SELECT * FROM businesses WHERE business_id=($1) AND owner=($2)', [data.business_id, userid])).rows[0]
+    const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    if (data.gift_percentage) {
+        const gift_percentage = businesses_config.commission_businesses_gift.some(amount => amount === data.gift_percentage)
+        if (!gift_percentage) return { status: false, content: `Send a valid gift percentage ${businesses_config.commission_businesses_gift}` }
+    }
+    if (data.type) {
+        const data_type = businesses_config.businesses_types_categories.find(object => object.type === data.type)
+        if (!data_type) return { status: true, content: `Use a valid type key ${businesses_config.businesses_types_categories}` }
+    }
+    if (data.category) {
+        const is_category_valid = data_type.categories.some(string => string === data.category || business.category)
+        if (!is_category_valid) return { status: false, content: `Use a valid category according to type ${data_type.categories}` }
+    }
     if (!business) return { status: false, content: "Either you are not the onwer of this business or this business does not exist" }
     const business_images = []
     if (data.business_images) {
         for (let i = 0; i < data.business_images.length; i++) {
             const image = data.business_images[i];
+            if (image.startsWith('http')) continue;
             if (!validate_image(image)) {
                 return { status: false, content: `${image} is not an image` }
             }
