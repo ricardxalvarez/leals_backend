@@ -5,6 +5,7 @@ import crop_image from '../utils/crop_image.js'
 import toPublicId from '../utils/cloudinary_to_publicId.js'
 import get_value_by_currency from '../utils/get_value_by_currency.js'
 import get_currency_by_id from '../utils/get_currency_by_id.js'
+import resize_business_image from '../utils/resize_businesses_images.js'
 
 export async function add_business(data, userid) {
     const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
@@ -25,7 +26,8 @@ export async function add_business(data, userid) {
     }
     for (let i = 0; i < data.business_images.length; i++) {
         const image = data.business_images[i];
-        const image_url = await (await cloudinary.uploader.upload(image, {
+        const resized_image = await resize_business_image(image)
+        const image_url = await (await cloudinary.uploader.upload(resized_image, {
             upload_preset: 'businesses_images',
             timeout: 1000 * 60 * 60 * 3
         })).url
@@ -146,7 +148,8 @@ export async function edit_business(userid, data) {
             }
 
             if (image !== new_image) {
-                await (await cloudinary.uploader.upload(new_image, {
+                const resized_image = await resize_business_image(new_image)
+                await (await cloudinary.uploader.upload(resized_image, {
                     public_id: toPublicId(image),
                     upload_preset: 'businesses_images',
                     timeout: 1000 * 60 * 60 * 3
@@ -160,7 +163,8 @@ export async function edit_business(userid, data) {
             const new_image = data.business_images[i];
             const image = business.business_images[i];
             if (!image) {
-                const new_url = await (await cloudinary.uploader.upload(new_image, {
+                const resized_image = await resize_business_image(image)
+                const new_url = await (await cloudinary.uploader.upload(resized_image, {
                     upload_preset: 'businesses_images',
                     timeout: 1000 * 60 * 60 * 3
                 })).url
@@ -170,7 +174,8 @@ export async function edit_business(userid, data) {
             }
 
             if (image !== new_image) {
-                await cloudinary.uploader.upload(new_image, {
+                const resized_image = await resize_business_image(image)
+                await cloudinary.uploader.upload(resized_image, {
                     public_id: toPublicId(image),
                     upload_preset: 'businesses_images',
                     timeout: 1000 * 60 * 60 * 3
