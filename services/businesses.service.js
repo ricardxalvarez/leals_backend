@@ -10,7 +10,7 @@ export async function add_business(data, userid) {
     const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
     const businesses_owner = await (await conexion.query('SELECT * FROM businesses WHERE owner=($1) AND type=($2)', [userid, data.type])).rowCount
     const data_type = businesses_config.businesses_types_categories.find(object => object.type === data.type)
-    if (data_type.max_businesses_per_user <= businesses_owner) return { status: false, content: "You've reached the max number of businesses of this type" }
+    if (data_type.max_businesses_per_user < businesses_owner) return { status: false, content: "You've reached the max number of businesses of this type" }
     const gift_percentage = businesses_config.commission_businesses_gift.some(amount => amount === data.gift_percentage)
     if (!gift_percentage) return { status: false, content: `Send a valid gift percentage ${businesses_config.commission_businesses_gift}` }
     if (!data_type) return { status: true, content: `Use a valid type key ${businesses_config.businesses_types_categories}` }
@@ -25,7 +25,7 @@ export async function add_business(data, userid) {
     }
     for (let i = 0; i < data.business_images.length; i++) {
         const image = data.business_images[i];
-
+        console.log(image)
         const image_url = await (await cloudinary.uploader.upload(image, {
             upload_preset: 'businesses_images',
             timeout: 1000 * 60 * 60 * 3
