@@ -242,7 +242,8 @@ export async function make_payment(data, userid) {
     if (!business) return { status: false, content: 'There is no business with such id' }
     if (business.owner === userid) return { status: false, content: 'You cannot make a payment to your own business' }
     if (!validate_image(data.image)) return { status: false, content: 'Image key is not a valid image' }
-    const image_url = await (await cloudinary.uploader.upload(data.image, {
+    const resized_image = await resize_business_image(data.image)
+    const image_url = await (await cloudinary.uploader.upload(resized_image, {
         upload_preset: 'businesses_payments_proofs'
     })).url
 
