@@ -140,7 +140,7 @@ router.get('/p2p/config', adminController.get_p2p_config)
 
 // businesses
 router.post('/business/add', validate(businessesValidation.add_business), countries, authPswd1, businessesController.add_business)
-router.put('/business/edit', validate(businessesValidation.add_business), countries, authPswd1, businessesController.edit_business)
+router.put('/business/edit', validate(businessesValidation.edit_business), countries, authPswd1, businessesController.edit_business)
 router.post('/business/list', validate(businessesValidation.list_businesses), authPswd1, countries, businessesController.list_businesses)
 router.post('/business/get_business', validate(businessesValidation.business_id), authPswd1, businessesController.get_business)
 router.post('/business/post_review', validate(businessesValidation.post_review), authPswd1, businessesController.post_review)
