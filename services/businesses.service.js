@@ -25,7 +25,9 @@ export async function add_business(data, userid) {
     }
     for (let i = 0; i < data.business_images.length; i++) {
         const image = data.business_images[i];
+        console.log('\n')
         console.log(image)
+        console.log('\n')
         const image_url = await (await cloudinary.uploader.upload(image, {
             upload_preset: 'businesses_images',
             timeout: 1000 * 60 * 60 * 3
