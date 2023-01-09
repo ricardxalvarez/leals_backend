@@ -8,9 +8,11 @@ import get_currency_by_id from '../utils/get_currency_by_id.js'
 
 export async function add_business(data, userid) {
     const businesses_config = await (await conexion.query('SELECT * FROM businesses_config')).rows[0]
+    const businesses_owner = await (await conexion.query('SELECT * FROM businesses WHERE owner=($1) AND type=($2)', [userid, data.type])).rowCount
+    const data_type = businesses_config.businesses_types_categories.find(object => object.type === data.type)
+    if (data_type.max_businesses_per_user <= businesses_owner) return { status: false, content: "You've reached the max number of businesses of this type" }
     const gift_percentage = businesses_config.commission_businesses_gift.some(amount => amount === data.gift_percentage)
     if (!gift_percentage) return { status: false, content: `Send a valid gift percentage ${businesses_config.commission_businesses_gift}` }
-    const data_type = businesses_config.businesses_types_categories.find(object => object.type === data.type)
     if (!data_type) return { status: true, content: `Use a valid type key ${businesses_config.businesses_types_categories}` }
     const is_category_valid = data_type.categories.some(string => string === data.category)
     if (!is_category_valid) return { status: false, content: `Use a valid category according to type ${data_type.categories}` }
@@ -25,7 +27,8 @@ export async function add_business(data, userid) {
         const image = data.business_images[i];
 
         const image_url = await (await cloudinary.uploader.upload(image, {
-            upload_preset: 'businesses_images'
+            upload_preset: 'businesses_images',
+            timeout: 1000 * 60 * 60 * 3
         })).url
         business_images.push(image_url)
     }
@@ -33,7 +36,8 @@ export async function add_business(data, userid) {
     if (!validate_image(data.business_logo)) return { status: false, content: 'Business logo is not a real image' }
     const cropped_business_logo = crop_image(data.business_logo)
     business_logo = await (await cloudinary.uploader.upload(cropped_business_logo, {
-        upload_preset: 'businesses_logos'
+        upload_preset: 'businesses_logos',
+        timeout: 1000 * 60 * 60 * 3
     })).url
     const info = {
         owner: userid,
@@ -145,7 +149,8 @@ export async function edit_business(userid, data) {
             if (image !== new_image) {
                 await (await cloudinary.uploader.upload(new_image, {
                     public_id: toPublicId(image),
-                    upload_preset: 'businesses_images'
+                    upload_preset: 'businesses_images',
+                    timeout: 1000 * 60 * 60 * 3
                 }))
             }
 
@@ -157,7 +162,8 @@ export async function edit_business(userid, data) {
             const image = business.business_images[i];
             if (!image) {
                 const new_url = await (await cloudinary.uploader.upload(new_image, {
-                    upload_preset: 'businesses_images'
+                    upload_preset: 'businesses_images',
+                    timeout: 1000 * 60 * 60 * 3
                 })).url
 
                 business_images.push(new_url)
@@ -167,7 +173,8 @@ export async function edit_business(userid, data) {
             if (image !== new_image) {
                 await cloudinary.uploader.upload(new_image, {
                     public_id: toPublicId(image),
-                    upload_preset: 'businesses_images'
+                    upload_preset: 'businesses_images',
+                    timeout: 1000 * 60 * 60 * 3
                 })
             }
 
