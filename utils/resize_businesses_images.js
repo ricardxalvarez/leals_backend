@@ -11,15 +11,15 @@ export default async function resize_business_image(business_image) {
             return result = false
         }
         else {
-            image.resize(jimp.AUTO, 200)
+            image
                 .quality(80)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
-                    console.log('image read')
+                    console.log(err)
+                    console.log(src)
                     if (err) return result = false
                     return result = src
                 })
         }
     })
-    console.log(result)
     return result
 }
