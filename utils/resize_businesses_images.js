@@ -14,6 +14,7 @@ export default async function resize_business_image(business_image) {
                 .quality(80)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
                     if (err) result = false
+                    console.log(src)
                     result = src
                 })
         }
