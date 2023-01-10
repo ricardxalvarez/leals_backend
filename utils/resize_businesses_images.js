@@ -7,17 +7,17 @@ export default async function resize_business_image(business_image) {
     const buf = Buffer.from(base64str, base);
     jimp.read(buf, (err, image) => {
         if (err || image.bitmap.width === 0 || image.bitmap.height === 0) {
-            result = false
+            return result = false
         }
         else {
             image.resize(jimp.AUTO, 200)
                 .quality(80)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
-                    if (err) result = false
-                    console.log(src)
+                    if (err) return result = false
                     result = src
                 })
         }
     })
+    console.log(result)
     return result
 }
