@@ -5,6 +5,7 @@ export default async function resize_business_image(image) {
     const base = 'base64'
     const base64str = image.slice(image.indexOf(base) + base.length + 1)
     const buf = Buffer.from(base64str, base);
+    console.log('reading image')
     await jimp.read(buf, (err, image) => {
         if (err || image.bitmap.width === 0 || image.bitmap.height === 0) {
             return result = false
@@ -13,6 +14,7 @@ export default async function resize_business_image(image) {
             image.resize(jimp.AUTO, 200)
                 .quality(80)
                 .getBase64(jimp.MIME_JPEG, function (err, src) {
+                    console.log('image read')
                     if (err) return result = false
                     result = src
                 })
